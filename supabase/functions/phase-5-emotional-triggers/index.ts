@@ -1,0 +1,112 @@
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
+serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const { projectId, persona, discData, valueData } = await req.json();
+    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+
+    if (!LOVABLE_API_KEY) {
+      throw new Error('LOVABLE_API_KEY not configured');
+    }
+
+    console.log('Starting Phase 5 - Emotional Triggers for project:', projectId);
+
+    const prompt = `You are an emotional trigger specialist combining buyer characteristics, DISC colors, and value equation variables.
+
+PERSONA:
+${JSON.stringify(persona, null, 2)}
+
+DISC DATA:
+${JSON.stringify(discData, null, 2)}
+
+VALUE DATA:
+${JSON.stringify(valueData, null, 2)}
+
+TASK: For each (buyer characteristic × DISC color × value variable) combination, create emotional triggers.
+
+Value variables:
+- S (Sueño/Dream): Amplify the dream outcome
+- P (Probabilidad/Probability): Increase perceived likelihood
+- T (Tiempo/Time): Reduce time perception
+- E (Esfuerzo/Effort): Minimize effort perception
+
+CRITICAL: Return a JSON object with this EXACT structure:
+{
+  "triggers": [
+    {
+      "characteristic": "Poco tiempo disponible",
+      "color": "Rojo",
+      "variable": "T",
+      "trigger": "Velocidad",
+      "example": "Hecho en 5 minutos al día",
+      "implementation": "Mostrar timer, destacar rapidez"
+    },
+    {
+      "characteristic": "Busca resultados visibles",
+      "color": "Amarillo",
+      "variable": "P",
+      "trigger": "Prueba social",
+      "example": "12.000 personas ya lo lograron",
+      "implementation": "Testimonios visuales, contador"
+    },
+    {
+      "characteristic": "Necesita seguridad",
+      "color": "Verde",
+      "variable": "E",
+      "trigger": "Acompañamiento",
+      "example": "Soporte 24/7 incluido",
+      "implementation": "Chat en vivo, email personal"
+    }
+  ]
+}
+
+Create 10-15 diverse triggers covering all DISC colors and value variables. Return ONLY valid JSON, no markdown.`;
+
+    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'google/gemini-2.5-flash',
+        messages: [
+          { role: 'system', content: 'You are an emotional trigger expert. Always return valid JSON.' },
+          { role: 'user', content: prompt }
+        ],
+        response_format: { type: "json_object" }
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('AI Gateway error:', response.status, errorText);
+      throw new Error(`AI Gateway error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const content = data.choices[0].message.content;
+    const result = JSON.parse(content);
+
+    console.log('Phase 5 completed successfully');
+
+    return new Response(JSON.stringify(result), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error('Error in phase-5-emotional-triggers:', error);
+    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+});

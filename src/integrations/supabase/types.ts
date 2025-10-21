@@ -14,7 +14,121 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      experiments: {
+        Row: {
+          channel: string
+          cost: string | null
+          created_at: string | null
+          cta: string
+          headline: string
+          hypothesis: string
+          id: string
+          kpi: string
+          owner: string | null
+          payload: Json | null
+          project_id: string
+          state: string | null
+          ttv: string | null
+        }
+        Insert: {
+          channel: string
+          cost?: string | null
+          created_at?: string | null
+          cta: string
+          headline: string
+          hypothesis: string
+          id?: string
+          kpi: string
+          owner?: string | null
+          payload?: Json | null
+          project_id: string
+          state?: string | null
+          ttv?: string | null
+        }
+        Update: {
+          channel?: string
+          cost?: string | null
+          created_at?: string | null
+          cta?: string
+          headline?: string
+          hypothesis?: string
+          id?: string
+          kpi?: string
+          owner?: string | null
+          payload?: Json | null
+          project_id?: string
+          state?: string | null
+          ttv?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "experiments_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      phase_outputs: {
+        Row: {
+          created_at: string | null
+          id: string
+          payload: Json
+          phase: number
+          project_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          payload: Json
+          phase: number
+          project_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          payload?: Json
+          phase?: number
+          project_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "phase_outputs_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      projects: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string
+          updated_at: string | null
+          url: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name: string
+          updated_at?: string | null
+          url?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string
+          updated_at?: string | null
+          url?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
