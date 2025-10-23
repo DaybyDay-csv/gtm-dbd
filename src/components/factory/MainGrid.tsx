@@ -3,6 +3,7 @@ import { BuyerPersona } from "./BuyerPersona";
 import { OfferFactory } from "./OfferFactory";
 import { DISCTranslator } from "./DISCTranslator";
 import { ProductNucleus } from "./ProductNucleus";
+import { ProductUnderstanding } from "./ProductUnderstanding";
 import { AnalysisState } from "@/hooks/useAnalysisOrchestrator";
 
 interface MainGridProps {
@@ -13,7 +14,15 @@ export const MainGrid = ({ analysisState }: MainGridProps) => {
   const { phases } = analysisState;
 
   return (
-    <section className="container mx-auto px-4 py-12">
+    <section className="container mx-auto px-4 py-12 space-y-8">
+      {/* Product Understanding - Full Width First */}
+      {phases.phase1?.productUnderstanding && (
+        <div className="w-full">
+          <ProductUnderstanding data={phases.phase1.productUnderstanding} />
+        </div>
+      )}
+
+      {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Top row */}
         <div className="lg:col-span-1">

@@ -35,7 +35,51 @@ INPUT DATA FOR THIS SPECIFIC ANALYSIS:
 
 IMPORTANT: Use ALL provided information (context, vision, mission, values, docs) to enhance your research and provide more accurate, personalized insights.
 
-YOUR MISSION - 360° DEEP RESEARCH (Minimum 20 minutes of analysis):
+═══════════════════════════════════════════════
+🎯 STEP 1: DEEP PRODUCT UNDERSTANDING (CRITICAL)
+═══════════════════════════════════════════════
+
+Before anything else, you MUST deeply understand the PRODUCT/SERVICE:
+
+1. **What is the MAIN product/service?**
+   - What is it called? (specific name)
+   - What category does it belong to?
+   - Is it B2B, B2C, SaaS, physical product, service, etc.?
+
+2. **What PROBLEMS does it solve?** (Be VERY specific)
+   - What pain points does it address?
+   - What needs does it fulfill?
+   - What frustrations does it eliminate?
+   - List 3-5 specific problems with examples
+
+3. **What UTILITY does it provide?**
+   - What can users DO with this product/service?
+   - What outcomes/results does it enable?
+   - What transformation does it create?
+   - What is the END BENEFIT for the user?
+
+4. **What VALUE does it bring?**
+   - Why would someone choose THIS over alternatives?
+   - What makes it valuable in the market?
+   - What is the economic/emotional/practical value?
+   - What is the pricing model and how does it relate to value?
+
+5. **How is it POSITIONED?**
+   - How do THEY describe themselves?
+   - What is their unique angle/approach?
+   - What promises do they make?
+   - What is their tone and brand personality?
+
+6. **What GAPS can it cover?**
+   Based on the product features, capabilities, and positioning:
+   - What market opportunities is it suited for?
+   - What underserved needs could it address?
+   - What pivots or expansions make sense?
+   - What adjacent problems could it solve?
+
+═══════════════════════════════════════════════
+YOUR MISSION - 360° DEEP RESEARCH
+═══════════════════════════════════════════════
 
 ═══════════════════════════════════════════════
 PHASE 1: WEBSITE & PRODUCT DEEP DIVE (30 min)
@@ -118,11 +162,31 @@ CRITICAL: Return a JSON object with this EXACT structure (this is what the UI wi
 {
   "summary": [
     "Company identity and what they do",
-    "Value proposition and problem solved", 
-    "Product specifics with pricing",
+    "SPECIFIC product/service name and category",
+    "DETAILED problems it solves (be specific with examples)",
+    "CLEAR utility and transformation it provides",
+    "VALUE proposition and why it matters",
+    "Current positioning and unique angle",
     "Market positioning and differentiation",
     "Key strengths"
   ],
+  "productUnderstanding": {
+    "mainProduct": "Exact product/service name",
+    "category": "Product category (SaaS, physical, service, etc.)",
+    "problemsSolved": [
+      "Specific problem 1 with context",
+      "Specific problem 2 with context",
+      "Specific problem 3 with context"
+    ],
+    "utility": "What users can DO with this - specific outcomes and transformations",
+    "value": "Why this matters - economic/emotional/practical value explained",
+    "positioning": "How they position themselves in the market - their unique angle",
+    "gapsCovered": [
+      "Market opportunity/gap 1 they can address",
+      "Market opportunity/gap 2 they can address",
+      "Market opportunity/gap 3 they can address"
+    ]
+  },
   "productAnalysis": {
     "averageTicket": "€XXX or price range",
     "pros": ["Strength 1", "Strength 2", "Strength 3"],
@@ -181,12 +245,14 @@ CRITICAL: Return a JSON object with this EXACT structure (this is what the UI wi
 }
 
 IMPORTANT REMINDERS:
+- START with deep product understanding - really understand what it does, solves, and provides
 - This is a FRESH analysis starting from ZERO - do not reference previous projects
 - Do NOT blend or carry over information from other analyses
-- Be exhaustive and specific - include real data and insights
+- Be SPECIFIC and DETAILED - no generic descriptions
 - Use actual competitor names when possible
 - Position competitors realistically across all quadrants (not all in one area)
 - Base all insights on the actual URL and market research
+- Show you TRULY understand the product by being detailed and specific
 - Return ONLY valid JSON, no markdown formatting`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
