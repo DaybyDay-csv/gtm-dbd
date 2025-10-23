@@ -19,21 +19,67 @@ serve(async (req) => {
     }
 
     console.log('Starting Phase 1 - Market Analysis for project:', projectId);
+    
+    // Step 1: Actually scrape the website
+    console.log('Fetching website content from:', url);
+    let websiteContent = '';
+    try {
+      const websiteResponse = await fetch(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (compatible; GTM-Factory-Bot/1.0)'
+        }
+      });
+      
+      if (!websiteResponse.ok) {
+        throw new Error(`Failed to fetch website: ${websiteResponse.status}`);
+      }
+      
+      const html = await websiteResponse.text();
+      
+      // Extract meaningful text content (remove scripts, styles, etc.)
+      const textContent = html
+        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+        .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      
+      websiteContent = textContent.substring(0, 50000); // Limit to ~50k chars
+      console.log('Website content scraped successfully, length:', websiteContent.length);
+    } catch (scrapeError) {
+      console.error('Error scraping website:', scrapeError);
+      websiteContent = `[Could not scrape website: ${scrapeError instanceof Error ? scrapeError.message : 'Unknown error'}]`;
+    }
 
     const prompt = `You are a Market Research Expert + Brand Strategist + Product Analyst conducting a REAL, EXHAUSTIVE deep-dive analysis from scratch.
 
 ⚠️ CRITICAL: This is a COMPLETELY NEW AND INDEPENDENT analysis. You start with a BLANK SLATE. Do NOT reference, blend, or carry over ANY information from previous analyses or projects.
 
-INPUT DATA FOR THIS SPECIFIC ANALYSIS:
+⚠️ CRITICAL: You are analyzing the ACTUAL SCRAPED CONTENT from the website below. DO NOT use any prior knowledge about this brand or URL. ONLY analyze what you see in the actual content provided.
+
+═══════════════════════════════════════════════
+📄 ACTUAL WEBSITE CONTENT (SCRAPED):
+═══════════════════════════════════════════════
+
+${websiteContent}
+
+═══════════════════════════════════════════════
+📋 ADDITIONAL INPUT DATA:
+═══════════════════════════════════════════════
+
 - Brand URL: ${url || 'Not provided'}
 - Additional Context: ${context || 'None provided'}
-- Competitors to analyze: ${competitors || 'Research and identify market leaders in this space'}
-- Vision: ${vision || 'Research from website'}
-- Mission: ${mission || 'Research from website'}
-- Values: ${values || 'Research from website'}
+- Competitors to analyze: ${competitors || 'To be researched based on the product'}
+- Vision: ${vision || 'Extract from website content'}
+- Mission: ${mission || 'Extract from website content'}
+- Values: ${values || 'Extract from website content'}
 - Additional documentation: ${docs || 'None provided'}
 
-IMPORTANT: Use ALL provided information (context, vision, mission, values, docs) to enhance your research and provide more accurate, personalized insights.
+IMPORTANT: 
+1. Base your ENTIRE analysis on the SCRAPED CONTENT above
+2. Use additional context to enhance understanding, but prioritize actual website content
+3. DO NOT use prior knowledge about this brand - only what's in the scraped content
+4. After understanding the product, research real competitors in this space
 
 ═══════════════════════════════════════════════
 🎯 STEP 1: DEEP PRODUCT UNDERSTANDING (CRITICAL)
