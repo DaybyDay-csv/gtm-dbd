@@ -49,7 +49,7 @@ export const ProgressBar = ({ currentPhase, isRunning }: ProgressBarProps) => {
                   isCompleted || isActive ? "opacity-100" : "opacity-50"
                 }`}
               >
-                <div className="mb-2">
+                <div className="mb-3">
                   {isActive ? (
                     <Loader2 className="w-8 h-8 text-primary animate-spin" />
                   ) : isCompleted ? (
@@ -58,8 +58,8 @@ export const ProgressBar = ({ currentPhase, isRunning }: ProgressBarProps) => {
                     <Circle className="w-8 h-8 text-muted-foreground" />
                   )}
                 </div>
-                <span className="text-sm font-medium mb-1">{phase.title}</span>
-                <span className="text-xs text-muted-foreground">{phase.desc}</span>
+                <span className="text-sm font-semibold mb-1.5">{phase.title}</span>
+                <span className="text-xs text-muted-foreground leading-tight">{phase.desc}</span>
               </li>
             );
           })}
