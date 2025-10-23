@@ -271,7 +271,7 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
                     className="min-h-[80px]"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Upload documents about your business, product details, market research, or paste text directly
+                    Upload documents that provide context about your business, product, or target market (e.g., product specs, market research, business plans, customer insights)
                   </p>
                 </div>
               </div>
