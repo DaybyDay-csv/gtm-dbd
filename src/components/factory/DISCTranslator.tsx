@@ -37,9 +37,46 @@ export const DISCTranslator = ({ data }: DISCTranslatorProps) => {
   return (
     <div className="p-6 border dotted-border rounded-lg bg-card h-full">
       <h3 className="text-xl font-semibold mb-2">Traductor DISC</h3>
-      <p className="text-sm text-muted-foreground mb-6">
+      <p className="text-sm text-muted-foreground mb-4">
         Adapta ofertas según personalidad del comprador (Tomas Erikson)
       </p>
+      
+      <div className="mb-6 p-4 bg-muted/50 rounded-lg border border-dashed">
+        <h4 className="font-semibold text-sm mb-2">¿Qué es DISC?</h4>
+        <p className="text-xs text-muted-foreground mb-3">
+          Las personas toman decisiones de compra de formas diferentes. DISC divide a los compradores en 4 tipos según su personalidad:
+        </p>
+        <div className="grid grid-cols-2 gap-3 text-xs">
+          <div className="flex items-start gap-2">
+            <div className="w-3 h-3 rounded-full mt-0.5" style={{ backgroundColor: colorMap["Rojo"] }} />
+            <div>
+              <span className="font-semibold">Rojo (Dominante):</span>
+              <p className="text-muted-foreground">Quiere resultados rápidos y directos. Dale datos y beneficios claros.</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-2">
+            <div className="w-3 h-3 rounded-full mt-0.5" style={{ backgroundColor: colorMap["Amarillo"] }} />
+            <div>
+              <span className="font-semibold">Amarillo (Influyente):</span>
+              <p className="text-muted-foreground">Quiere sentirse parte de algo. Dale comunidad y experiencias.</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-2">
+            <div className="w-3 h-3 rounded-full mt-0.5" style={{ backgroundColor: colorMap["Verde"] }} />
+            <div>
+              <span className="font-semibold">Verde (Estable):</span>
+              <p className="text-muted-foreground">Necesita confianza y seguridad. Dale garantías y apoyo continuo.</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-2">
+            <div className="w-3 h-3 rounded-full mt-0.5" style={{ backgroundColor: colorMap["Azul"] }} />
+            <div>
+              <span className="font-semibold">Azul (Analítico):</span>
+              <p className="text-muted-foreground">Quiere detalles y pruebas. Dale especificaciones y certificaciones.</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className="overflow-x-auto mb-6">
         <table className="w-full text-sm">

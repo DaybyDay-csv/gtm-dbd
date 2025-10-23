@@ -5,6 +5,7 @@ import { PhaseExplainer } from "@/components/factory/PhaseExplainer";
 import { ProductMetrics } from "@/components/factory/ProductMetrics";
 import { MainGrid } from "@/components/factory/MainGrid";
 import { ValidationMap } from "@/components/factory/ValidationMap";
+import { ClientReadiness } from "@/components/factory/ClientReadiness";
 import { useAnalysisOrchestrator } from "@/hooks/useAnalysisOrchestrator";
 
 const Index = () => {
@@ -27,6 +28,7 @@ const Index = () => {
         <>
           <PhaseRibbon currentPhase={state.currentPhase} isRunning={state.isRunning} />
           <PhaseExplainer currentPhase={state.currentPhase} isRunning={state.isRunning} />
+          {state.clientReadiness && <ClientReadiness data={state.clientReadiness} />}
           
           <ProductMetrics
             avatarReliability={avatarReliability}

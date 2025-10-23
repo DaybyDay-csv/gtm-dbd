@@ -6,6 +6,12 @@ export interface AnalysisState {
   projectId: string | null;
   currentPhase: number;
   isRunning: boolean;
+  clientReadiness?: {
+    score: number;
+    maturity: string;
+    recommendation: string;
+    reasoning: string;
+  };
   phases: {
     phase1: any | null;
     phase2: any | null;
@@ -85,6 +91,7 @@ export const useAnalysisOrchestrator = () => {
 
       setState(prev => ({
         ...prev,
+        clientReadiness: phase1Data.clientReadiness,
         phases: { ...prev.phases, phase1: phase1Data },
       }));
 

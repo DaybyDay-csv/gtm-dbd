@@ -58,6 +58,27 @@ serve(async (req) => {
 ⚠️ CRITICAL: You are analyzing the ACTUAL SCRAPED CONTENT from the website below. DO NOT use any prior knowledge about this brand or URL. ONLY analyze what you see in the actual content provided.
 
 ═══════════════════════════════════════════════
+🔍 STEP 0: CLIENT READINESS ASSESSMENT (CRITICAL FIRST)
+═══════════════════════════════════════════════
+
+Before doing the full analysis, assess if this client has sufficient resources to benefit from paid media strategies and full GTM implementation:
+
+**Evaluate these indicators from the website and content:**
+1. Business Maturity: Startup, early growth, established, or mature?
+2. Budget Signals: Website sophistication, pricing visible, enterprise features, team size indicators
+3. Marketing Capability: Existing marketing content, SEO efforts, paid ads mentions, content quality
+4. Scale Indicators: Customer testimonials, case studies, team size, office locations, funding mentions
+
+**Client Readiness Score (1-5):**
+- 1-2: Limited resources - Need simplified, cost-effective approach
+- 3: Moderate resources - Can test paid media with guidance
+- 4-5: Strong resources - Ready for full paid media and validation system
+
+**Recommendation:**
+- If score 1-2: Focus on organic positioning, messaging framework, and low-cost validation
+- If score 3+: Full analysis with paid media strategies and experimentation framework
+
+═══════════════════════════════════════════════
 📄 ACTUAL WEBSITE CONTENT (SCRAPED):
 ═══════════════════════════════════════════════
 
@@ -222,6 +243,13 @@ OUTPUT STRUCTURE
 
 CRITICAL: Return a JSON object with this EXACT structure (this is what the UI will render):
 {
+  "clientReadiness": {
+    "score": 3,
+    "maturity": "Early growth stage",
+    "budgetSignals": ["Website quality", "Pricing model", "Team indicators"],
+    "recommendation": "Specific recommendation based on score - full or simplified approach",
+    "reasoning": "Why you gave this score - 2-3 sentences explaining the assessment"
+  },
   "summary": [
     "Company identity and what they do",
     "SPECIFIC product/service name and category",
