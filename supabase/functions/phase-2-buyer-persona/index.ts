@@ -20,49 +20,89 @@ serve(async (req) => {
 
     console.log('Starting Phase 2 - Buyer Persona for project:', projectId);
 
-    const prompt = `You are a Buyer Persona Architect creating a detailed ideal buyer profile.
+    const prompt = `You are a Buyer Persona Architect creating a detailed ideal buyer profile. This is a COMPLETELY NEW AND INDEPENDENT persona creation. Do NOT reference any previous personas.
 
-CONTEXT:
-${JSON.stringify(brandInfo, null, 2)}
+INPUT DATA FOR THIS SPECIFIC ANALYSIS:
+Brand Information: ${JSON.stringify(brandInfo, null, 2)}
+Market Context: ${JSON.stringify(marketData, null, 2)}
 
-TASK: Create ONE ideal buyer persona with Spain-specific insights including:
-- Demographics (name, age, city, socioeconomic status)
-- Deep desires and aspirations
-- Pain points and frustrations
-- Top 3 ambitions
-- Objectives and goals
-- "What would make life easier"
-- "Peace of mind" needs
-- Final expected result
+YOUR MISSION - CREATE A DEEPLY ALIGNED BUYER PERSONA:
+
+CRITICAL ALIGNMENT REQUIREMENTS:
+1. The persona MUST match the product/service being offered
+2. The persona MUST reflect the problem that the product solves
+3. The persona MUST align with the current market positioning identified in the analysis
+4. The persona can be EITHER male or female - choose based on the actual target market
+5. Demographics should reflect the realistic buyer for THIS specific product/service
+
+COMPREHENSIVE PERSONA ELEMENTS TO DEFINE:
+- Accurate demographics (name, age, city, socioeconomic level matching the product's price point)
+- Professional context (job, income level consistent with average ticket price)
+- Deep psychological profile (desires, fears, aspirations)
+- Specific pain points that THIS product addresses
+- Top 3 life/professional ambitions
+- Clear objectives and goals
+- What would genuinely make their life easier
+- What provides them peace of mind
+- The transformation they expect from this product
+
+PERSONA AUTHENTICITY CHECKLIST:
+✓ Does the socioeconomic status match the product's price point?
+✓ Do the pain points align with what the product solves?
+✓ Are the desires connected to the product benefits?
+✓ Does the persona's context fit the market positioning?
+✓ Is the persona realistic for the Spanish market?
 
 CRITICAL: Return a JSON object with this EXACT structure:
 {
   "avatar": {
-    "name": "María",
-    "age": 32,
-    "city": "Madrid",
-    "ses": "Clase media-alta",
-    "description": "Mujer profesional, valora su tiempo y busca eficiencia"
+    "name": "Name (male or female, appropriate for Spain)",
+    "age": 28-45,
+    "city": "Spanish city matching target market",
+    "ses": "Socioeconomic level matching product price point",
+    "description": "One-sentence professional profile that explains why they need this product"
   },
-  "intro": "Hola, soy María. Trabajo en el sector financiero y busco soluciones que me ahorren tiempo sin sacrificar calidad...",
+  "intro": "First-person introduction (150-200 words) where the persona explains their situation, challenges, and what they're looking for. Must connect directly to the product offering.",
   "clouds": [
-    "Le preocupa el tiempo limitado",
-    "Desea resultados visibles rápido",
-    "Quiere sentirse segura con su elección",
-    "Le da pereza lo complicado"
+    "Specific concern #1 directly related to product",
+    "Specific concern #2 directly related to product",
+    "Specific concern #3 directly related to product",
+    "Specific concern #4 directly related to product"
   ],
   "profile": {
-    "desires": ["desire 1", "desire 2", "desire 3"],
-    "pains": ["pain 1", "pain 2", "pain 3"],
-    "ambitionsTop3": ["ambition 1", "ambition 2", "ambition 3"],
-    "objectives": ["objective 1", "objective 2"],
-    "makeLifeEasier": "what would help",
-    "peaceOfMind": "what provides security",
-    "expectedResult": "final transformation"
+    "desires": [
+      "Deep desire #1 that the product fulfills",
+      "Deep desire #2 that the product fulfills",
+      "Deep desire #3 that the product fulfills"
+    ],
+    "pains": [
+      "Specific pain point #1 the product solves",
+      "Specific pain point #2 the product solves", 
+      "Specific pain point #3 the product solves"
+    ],
+    "ambitionsTop3": [
+      "Life/professional ambition #1",
+      "Life/professional ambition #2",
+      "Life/professional ambition #3"
+    ],
+    "objectives": [
+      "Concrete objective #1",
+      "Concrete objective #2",
+      "Concrete objective #3"
+    ],
+    "makeLifeEasier": "Specific description of what would genuinely improve their daily life",
+    "peaceOfMind": "What would make them feel secure and confident in their decision",
+    "expectedResult": "The concrete transformation or outcome they expect after using this product"
   }
 }
 
-Use Spanish context and consumption patterns. Return ONLY valid JSON, no markdown.`;
+IMPORTANT REMINDERS:
+- This is a FRESH persona - do not reference previous projects
+- Gender should be determined by the actual target market, not assumed
+- All elements must be coherent with the product's positioning and price
+- Use realistic Spanish names, cities, and cultural context
+- Return ONLY valid JSON, no markdown formatting
+- Write all content in Spanish`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
