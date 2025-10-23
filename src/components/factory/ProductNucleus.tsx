@@ -1,7 +1,25 @@
-export const ProductNucleus = () => {
+interface ProductNucleusProps {
+  data?: {
+    product?: string;
+    problemsSolved?: string[];
+    gaps?: string[];
+    value?: string;
+  };
+}
+
+export const ProductNucleus = ({ data }: ProductNucleusProps) => {
+  const product = data?.product || "Tu Producto Principal";
+  const problemsSolved = data?.problemsSolved || ["Resuelve X problema", "Ofrece Y solución"];
+  const gaps = data?.gaps || ["Puede cubrir Z gap"];
+  const value = data?.value || "Propuesta de valor única";
+
   return (
-    <div className="p-6 border-2 border-primary/30 rounded-lg bg-gradient-to-br from-primary/5 to-background text-center max-w-sm">
+    <div className="p-6 border-2 border-primary/30 rounded-lg bg-gradient-to-br from-primary/5 to-background text-center max-w-sm h-full flex flex-col">
       <h3 className="text-2xl font-bold mb-4 text-primary">Producto</h3>
+      
+      <div className="text-lg font-semibold mb-3 text-foreground">
+        {product}
+      </div>
       
       <div className="mb-6 flex justify-center">
         <div className="relative w-24 h-32">
@@ -12,14 +30,38 @@ export const ProductNucleus = () => {
         </div>
       </div>
 
-      <p className="text-sm font-medium mb-3">
-        El núcleo que conecta mercado, cliente y ofertas
-      </p>
-      
-      <p className="text-xs text-muted-foreground leading-relaxed">
-        Describe de forma simple qué problema resuelve tu producto y cómo encaja 
-        en el mercado. Esta es la pieza central que da sentido a toda la estrategia.
-      </p>
+      <div className="mb-4 space-y-2 flex-1">
+        <div className="text-left">
+          <p className="text-xs font-medium text-muted-foreground mb-1">Problemas que resuelve:</p>
+          <ul className="text-xs space-y-1">
+            {problemsSolved.map((problem, idx) => (
+              <li key={idx} className="flex items-start gap-1">
+                <span className="text-primary mt-0.5">•</span>
+                <span>{problem}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        
+        {gaps.length > 0 && (
+          <div className="text-left">
+            <p className="text-xs font-medium text-muted-foreground mb-1">Gaps que puede cubrir:</p>
+            <ul className="text-xs space-y-1">
+              {gaps.map((gap, idx) => (
+                <li key={idx} className="flex items-start gap-1">
+                  <span className="text-primary mt-0.5">•</span>
+                  <span>{gap}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        
+        <div className="text-left pt-2 border-t dotted-border-t">
+          <p className="text-xs font-medium text-muted-foreground mb-1">Valor único:</p>
+          <p className="text-xs italic">{value}</p>
+        </div>
+      </div>
 
       <div className="mt-4 pt-4 border-t dotted-border-t">
         <div className="flex justify-center gap-4 text-xs">

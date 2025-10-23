@@ -22,12 +22,35 @@ serve(async (req) => {
 
     const prompt = `You are an expert in Alex Hormozi's Value Equation: Value = (Dream × Probability) / (Time × Effort)
 
-BUYER PERSONA:
+Your mission is to EXPLODE the potential of the product by creating high-value offers that fill market gaps and serve the buyer persona.
+
+BUYER PERSONA (with all desires, pains, ambitions, objectives):
 ${JSON.stringify(persona, null, 2)}
 
-TASK: For each buyer field (desires, pains, ambitions, objectives) create offers that:
-1. Increase numerator (Dream Outcome × Perceived Probability)
-2. Reduce denominator (Time Delay × Effort & Sacrifice)
+BRAND & PRODUCT INFO (including gaps and positioning):
+${JSON.stringify(brandInfo, null, 2)}
+
+YOUR PROCESS:
+
+## STEP 1: MAP BUYER NEEDS TO MARKET OPPORTUNITIES
+   - Review ALL buyer fields: desires, pains, ambitions, objectives
+   - Identify which needs align with market gaps/opportunities
+   - Prioritize the needs with highest urgency + market fit
+
+## STEP 2: CRAFT VALUE-EQUATION OFFERS
+   For EACH key buyer need, create an offer that:
+   1. MAXIMIZES the numerator (Dream Outcome × Perceived Probability)
+      - Make the dream MORE desirable
+      - Make success feel MORE certain (guarantees, proof, testimonials)
+   
+   2. MINIMIZES the denominator (Time Delay × Effort & Sacrifice)
+      - Reduce time to get results (speed)
+      - Reduce effort required (ease, done-for-you elements)
+
+## STEP 3: ENSURE OFFERS EXPLOIT THE GAPS
+   - Each offer should leverage a market gap or pivot opportunity
+   - Each offer should be IRRESISTIBLE based on the value equation
+   - Each offer should be positioned to beat competitors
 
 CRITICAL: Return a JSON object with this EXACT structure:
 {
@@ -66,7 +89,9 @@ CRITICAL: Return a JSON object with this EXACT structure:
   "overallValue": 75
 }
 
-Create 3-4 compelling offers. Value scores 0-100. Return ONLY valid JSON, no markdown.`;
+Create 4-6 compelling offers covering desires, pains, ambitions, and objectives. Value scores 0-100. 
+Each offer should be SPECIFIC, ACTIONABLE, and aligned with a market gap.
+Return ONLY valid JSON, no markdown.`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',

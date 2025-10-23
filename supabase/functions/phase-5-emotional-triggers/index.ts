@@ -20,7 +20,9 @@ serve(async (req) => {
 
     console.log('Starting Phase 5 - Emotional Triggers for project:', projectId);
 
-    const prompt = `You are an emotional trigger specialist combining buyer characteristics, DISC colors, and value equation variables.
+    const prompt = `You are an emotional trigger specialist. Your mission is to create specific triggers that activate buying decisions.
+
+PROCESS: Combine (buyer characteristic × DISC color × value variable) to create triggers that MOVE people to action.
 
 PERSONA:
 ${JSON.stringify(persona, null, 2)}

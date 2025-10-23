@@ -20,86 +20,132 @@ serve(async (req) => {
 
     console.log('Starting Phase 1 - Market Analysis for project:', projectId);
 
-    const prompt = `You are an expert Market Researcher + Brand Strategist conducting a comprehensive market analysis. This is a COMPLETELY NEW AND INDEPENDENT analysis starting with a BLANK SLATE. Do NOT reference, blend, or carry over ANY information from previous analyses.
+    const prompt = `You are a Market Research Expert + Brand Strategist + Product Analyst conducting a REAL, EXHAUSTIVE deep-dive analysis from scratch.
+
+⚠️ CRITICAL: This is a COMPLETELY NEW AND INDEPENDENT analysis. You start with a BLANK SLATE. Do NOT reference, blend, or carry over ANY information from previous analyses or projects.
 
 INPUT DATA FOR THIS SPECIFIC ANALYSIS:
 - Brand URL: ${url || 'Not provided'}
-- Competitors to analyze: ${competitors || 'Research and identify market leaders'}
+- Competitors to analyze: ${competitors || 'Research and identify market leaders in this space'}
 - Additional documentation: ${docs || 'None provided'}
 
-YOUR MISSION - CONDUCT A DEEP, EXHAUSTIVE MARKET ANALYSIS:
+YOUR MISSION - 360° DEEP RESEARCH (Minimum 20 minutes of analysis):
 
-STEP 1 - COMPREHENSIVE BRAND ANALYSIS:
-Visit and thoroughly analyze the provided URL. Extract and document:
-- Company identity: Who are they? What is their core business?
-- Value proposition: What specific problem do they solve?
-- Product/Service details: Features, benefits, pricing tiers if visible
-- Average ticket price (estimate based on pricing page or market position)
-- Unique selling points: What differentiates them from competitors?
-- Target market indicators: Who are they speaking to in their messaging?
-- Brand positioning: Premium, mid-market, budget? B2B or B2C?
-- Product strengths (minimum 3 specific pros)
-- Product weaknesses or limitations (minimum 3 specific cons)
-- How the product connects with the current market reality
+═══════════════════════════════════════════════
+PHASE 1: WEBSITE & PRODUCT DEEP DIVE (30 min)
+═══════════════════════════════════════════════
 
-STEP 2 - MACRO MARKET VIEW (10,000-ft perspective):
-- Current market state: Size, growth trends, maturity level
-- Historical gaps: What problems have existed in this market?
-- Emerging opportunities: Where is the market heading?
-- Market dynamics: Key drivers, barriers, trends
+🔍 STEP 1 - UNDERSTAND THE CLIENT:
+Visit the URL and conduct a comprehensive analysis:
+- Who is this company? Name, industry, years in market
+- What is their vision, mission, and core values?
+- What is their brand personality and tone of voice?
+- What stage are they in? (startup, growth, mature)
 
-STEP 3 - COMPETITIVE LANDSCAPE:
-Research and analyze 5-7 competitors in this space:
-- Identify their positioning (price vs quality)
-- Document their key differences vs our brand
+🎯 STEP 2 - UNDERSTAND THE OFFERING (Main Product Focus):
+Identify the MAIN product or service they offer:
+- What is it called?
+- What EXACT problem does it solve? (Be specific)
+- HOW does it solve it? (mechanism, process, approach)
+- What is the average ticket/price point? (Estimate if not visible)
+- What is the business model? (B2B, B2C, SaaS, e-commerce, subscription, one-time, etc.)
+
+💎 STEP 3 - UNDERSTAND THE POSITIONING:
+- How does this brand position itself vs competitors?
+- Premium, mid-market, or budget?
+- What are the PROS of this product? (3-5 specific strengths)
+- What are the CONS? (3-5 limitations or weaknesses)
+- What makes it different? (differentiation factors)
+- How does it connect with current market needs?
+
+═══════════════════════════════════════════════
+PHASE 2: PRODUCT NUCLEUS (Core Understanding)
+═══════════════════════════════════════════════
+
+📦 STEP 4 - DEFINE THE PRODUCT NUCLEUS:
+This is the HEART of everything. You must define:
+- Main product name (what is it called?)
+- 3-5 specific problems it solves
+- 2-3 market gaps it could potentially cover (based on your research)
+- Unique value proposition (what makes it special)
+- How it connects to the market opportunity you identify
+
+═══════════════════════════════════════════════
+PHASE 3: MARKET RESEARCH (10,000 feet view)
+═══════════════════════════════════════════════
+
+🌍 STEP 5 - MACRO MARKET VIEW:
+Analyze the market from a high-level perspective:
+- What is the current state of this market? (size, growth, maturity)
+- What historical gaps have existed in this space?
+- What emerging opportunities are there?
+- What are the key market dynamics, drivers, and barriers?
+
+🏆 STEP 6 - COMPETITIVE LANDSCAPE (REAL competitors from web research):
+Research and analyze 5-7 REAL competitors:
+- Use actual company names
+- Document their positioning (price vs quality)
+- Identify their key differences vs our brand
 - Expose their weaknesses and gaps
 - Identify pivot opportunities for our brand
-- Strategic recommendations based on competitive gaps
 
-STEP 4 - TAM ESTIMATION:
-Provide a realistic Total Addressable Market estimate with:
-- Concrete market size range
+💡 STEP 7 - MARKET GAPS & PIVOT OPPORTUNITIES:
+Identify specific opportunities:
+- What are the top 3 gaps in the market?
+- What opportunities exist that competitors are missing?
+- What pivots could this company make to capture more value?
+- What underserved segments exist?
+
+💰 STEP 8 - TAM (TOTAL ADDRESSABLE MARKET):
+Estimate the Total Addressable Market:
+- Market size range (be realistic)
 - Data-driven assumptions
 - Geographic scope
 - Market segment focus
 - Confidence level (low/medium/high)
 
-CRITICAL FORMATTING REQUIREMENTS:
-Return a JSON object with this EXACT structure:
+═══════════════════════════════════════════════
+OUTPUT STRUCTURE
+═══════════════════════════════════════════════
+
+CRITICAL: Return a JSON object with this EXACT structure (this is what the UI will render):
 {
   "summary": [
-    "Detailed point about company identity and business",
-    "Specific value proposition and problem solved", 
-    "Product/service specifics with pricing insights",
+    "Company identity and what they do",
+    "Value proposition and problem solved", 
+    "Product specifics with pricing",
     "Market positioning and differentiation",
-    "Key strengths and unique advantages"
+    "Key strengths"
   ],
   "productAnalysis": {
-    "averageTicket": "€XXX or price range with justification",
-    "pros": [
-      "Specific strength #1 with evidence",
-      "Specific strength #2 with evidence", 
-      "Specific strength #3 with evidence"
-    ],
-    "cons": [
-      "Specific limitation #1 with context",
-      "Specific limitation #2 with context",
-      "Specific limitation #3 with context"
-    ],
-    "differentiation": "Clear explanation of how this product stands out in the market",
-    "marketConnection": "Analysis of how the product connects with current market needs and trends"
+    "averageTicket": "€XXX or price range",
+    "pros": ["Strength 1", "Strength 2", "Strength 3"],
+    "cons": ["Limitation 1", "Limitation 2", "Limitation 3"],
+    "differentiation": "How this product stands out",
+    "marketConnection": "How the product connects with market needs"
+  },
+  "productNucleus": {
+    "product": "Main product name",
+    "problemsSolved": ["Problem 1 it solves", "Problem 2 it solves", "Problem 3 it solves"],
+    "gaps": ["Market gap 1 it could cover", "Market gap 2 it could cover"],
+    "value": "Unique value proposition that makes it different"
   },
   "macroView": {
-    "marketState": "Comprehensive description of current market size, maturity, growth rate, and key dynamics in this specific industry",
-    "historicalGaps": "Detailed analysis of problems that have historically existed in this market and how they've evolved",
-    "opportunities": "Specific emerging opportunities based on market trends, technological changes, and unmet needs"
+    "marketState": "Current market description (size, maturity, growth)",
+    "historicalGaps": "Historical problems in this market",
+    "opportunities": "Emerging opportunities"
   },
+  "marketGaps": [
+    "Gap 1: Description",
+    "Gap 2: Description", 
+    "Gap 3: Description"
+  ],
   "competitors": {
-    "analysis": "In-depth competitive analysis covering 5-7 specific competitors, their positioning, strengths, weaknesses, market share, and strategic approaches. Include specific company names and concrete details.",
+    "analysis": "In-depth competitive analysis (5-7 competitors with names and details)",
     "recommendations": [
-      "Specific strategic recommendation based on competitive gap #1",
-      "Actionable pivot opportunity based on competitor weakness #2",
-      "Market positioning suggestion based on identified opportunity #3"
+      "Strategic recommendation 1",
+      "Pivot opportunity 2",
+      "Market positioning suggestion 3"
     ]
   },
   "xyChart": {

@@ -20,7 +20,7 @@ export const MainGrid = ({ analysisState }: MainGridProps) => {
           <PositioningMap data={phases.phase1} />
         </div>
         <div className="lg:col-span-1 flex items-center justify-center">
-          <ProductNucleus />
+          <ProductNucleus data={phases.phase1?.productNucleus} />
         </div>
         <div className="lg:col-span-1">
           <BuyerPersona data={phases.phase2} />

@@ -14,12 +14,42 @@ interface PhaseRibbonProps {
 }
 
 const phases = [
-  { number: 1, label: "Market", icon: Map, tooltip: "Understand your competitive landscape" },
-  { number: 2, label: "Buyer", icon: User, tooltip: "Define your ideal customer" },
-  { number: 3, label: "Offers", icon: Package, tooltip: "Create high-value propositions" },
-  { number: 4, label: "DISC", icon: Palette, tooltip: "Translate to 4 emotional languages" },
-  { number: 5, label: "Triggers", icon: MessageSquare, tooltip: "Generate emotional hooks" },
-  { number: 6, label: "Validation", icon: TestTube, tooltip: "Test hypotheses across channels" },
+  { 
+    number: 1, 
+    label: "Mercado", 
+    icon: Map, 
+    tooltip: "Análisis profundo de tu web, producto, competidores y oportunidades de mercado"
+  },
+  { 
+    number: 2, 
+    label: "Buyer", 
+    icon: User, 
+    tooltip: "Definición del cliente ideal basado en el mercado real y tu producto"
+  },
+  { 
+    number: 3, 
+    label: "Ofertas", 
+    icon: Package, 
+    tooltip: "Ofertas de alto valor usando la ecuación de Hormozi para cada necesidad"
+  },
+  { 
+    number: 4, 
+    label: "DISC", 
+    icon: Palette, 
+    tooltip: "Traducción a 4 lenguajes emocionales: Rojo, Amarillo, Verde y Azul"
+  },
+  { 
+    number: 5, 
+    label: "Triggers", 
+    icon: MessageSquare, 
+    tooltip: "Disparadores emocionales que activan la decisión de compra"
+  },
+  { 
+    number: 6, 
+    label: "Validación", 
+    icon: TestTube, 
+    tooltip: "Mapa de hipótesis testeables por canal con KPIs y siguiente acción"
+  },
 ];
 
 export const PhaseRibbon = ({ currentPhase, isRunning }: PhaseRibbonProps) => {

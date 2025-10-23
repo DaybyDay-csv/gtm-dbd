@@ -20,38 +20,62 @@ serve(async (req) => {
 
     console.log('Starting Phase 2 - Buyer Persona for project:', projectId);
 
-    const prompt = `You are a Buyer Persona Architect creating a detailed ideal buyer profile. This is a COMPLETELY NEW AND INDEPENDENT persona creation. Do NOT reference any previous personas.
+    const prompt = `You are a Buyer Persona Architect with deep psychology, market intelligence, and human behavior expertise.
+
+⚠️ CRITICAL: This is a COMPLETELY NEW AND INDEPENDENT persona creation. Do NOT reference any previous personas or projects.
 
 INPUT DATA FOR THIS SPECIFIC ANALYSIS:
-Brand Information: ${JSON.stringify(brandInfo, null, 2)}
-Market Context: ${JSON.stringify(marketData, null, 2)}
+BRAND INFORMATION: ${JSON.stringify(brandInfo, null, 2)}
+MARKET DATA (including product nucleus, gaps, and opportunities): ${JSON.stringify(marketData, null, 2)}
 
-YOUR MISSION - CREATE A DEEPLY ALIGNED BUYER PERSONA:
+YOUR MISSION - CREATE THE PERFECT BUYER PERSONA:
 
-CRITICAL ALIGNMENT REQUIREMENTS:
-1. The persona MUST match the product/service being offered
-2. The persona MUST reflect the problem that the product solves
-3. The persona MUST align with the current market positioning identified in the analysis
-4. The persona can be EITHER male or female - choose based on the actual target market
-5. Demographics should reflect the realistic buyer for THIS specific product/service
+═══════════════════════════════════════════════
+PROCESS TO CREATE THE PERSONA
+═══════════════════════════════════════════════
 
-COMPREHENSIVE PERSONA ELEMENTS TO DEFINE:
-- Accurate demographics (name, age, city, socioeconomic level matching the product's price point)
-- Professional context (job, income level consistent with average ticket price)
-- Deep psychological profile (desires, fears, aspirations)
-- Specific pain points that THIS product addresses
-- Top 3 life/professional ambitions
-- Clear objectives and goals
-- What would genuinely make their life easier
-- What provides them peace of mind
-- The transformation they expect from this product
+🎯 STEP 1: UNDERSTAND THE MARKET-PRODUCT-GAP FIT
+Before creating the persona, you must understand:
+- What is the product nucleus? (main product, problems it solves, how it solves them)
+- What market gaps or opportunities exist?
+- Where is the product positioned vs competitors?
+- What value does it offer that others don't?
 
-PERSONA AUTHENTICITY CHECKLIST:
-✓ Does the socioeconomic status match the product's price point?
-✓ Do the pain points align with what the product solves?
-✓ Are the desires connected to the product benefits?
-✓ Does the persona's context fit the market positioning?
-✓ Is the persona realistic for the Spanish market?
+👤 STEP 2: IDENTIFY THE IDEAL BUYER
+Based on the above, identify:
+- Who is the PERFECT customer for THIS product to solve THIS problem and fill THIS gap?
+- Should this persona be MALE or FEMALE? (decide based on market research and product)
+- What is their socioeconomic reality in Spain? (must match the product's price point)
+- What is their professional and personal context?
+- Why would they care about THIS specific product?
+
+💭 STEP 3: DEEP PSYCHOLOGICAL PROFILE
+Remember: A buyer persona is a MIX of qualities. Many people can coincide in this mix.
+
+Create a comprehensive profile:
+- Demographics: Name (Spanish), Age, City (Spain), SES (must match product price!)
+- Professional context: Job, income level, work situation
+- Desires: What they want to achieve (3-5 specific desires)
+- Pains: What frustrates or worries them (3-5 specific pains)
+- Top-3 ambitions: Long-term life/professional goals
+- Objectives: Short-term goals (next 6-12 months)
+- What makes life easier: Daily conveniences they value
+- Peace of mind: What helps them feel secure and calm
+- Final effect: The ultimate transformation they seek
+- Expected result: Tangible outcome they want from solutions
+- Consumption patterns: How they make buying decisions (Spain-specific cultural context)
+
+✅ STEP 4: VALIDATE ALIGNMENT (Make sure):
+- Does the persona PERFECTLY fit the product's solution? ✓
+- Does the persona exist in the GAP/OPPORTUNITY identified? ✓
+- Will this persona VALUE the unique positioning? ✓
+- Does the SES match the product price? ✓
+- Do pains align with what the product solves? ✓
+- Is this realistic for the Spanish market? ✓
+
+═══════════════════════════════════════════════
+OUTPUT STRUCTURE
+═══════════════════════════════════════════════
 
 CRITICAL: Return a JSON object with this EXACT structure:
 {

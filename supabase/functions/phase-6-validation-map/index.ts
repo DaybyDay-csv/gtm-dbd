@@ -20,7 +20,9 @@ serve(async (req) => {
 
     console.log('Starting Phase 6 - Validation Map for project:', projectId);
 
-    const prompt = `You are a growth experiment designer creating testable hypotheses.
+    const prompt = `You are a growth experiment designer. Your mission is to turn all the strategic work into TESTABLE HYPOTHESES.
+
+CONTEXT: We've done deep research on market, buyer, offers, DISC translations, and emotional triggers. Now we need to VALIDATE these hypotheses in real channels with real people.
 
 ALL PREVIOUS PHASE DATA:
 ${JSON.stringify(allPhaseData, null, 2)}

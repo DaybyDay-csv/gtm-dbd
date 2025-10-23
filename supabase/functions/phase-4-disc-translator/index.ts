@@ -20,15 +20,39 @@ serve(async (req) => {
 
     console.log('Starting Phase 4 - DISC Translator for project:', projectId);
 
-    const prompt = `You are an expert in Tomas Erikson's DISC personality framework (Red/Yellow/Green/Blue).
+    const prompt = `You are a DISC communication expert who understands that a buyer persona is a MIX of qualities, and many people can share similar mixes.
+
+═══════════════════════════════════════════════
+IMPORTANT CONTEXT - WHY WE USE DISC
+═══════════════════════════════════════════════
+
+A buyer persona is NOT just one color. It's a combination of traits. Many different people can match the same persona profile because they share similar desires, pains, and ambitions. 
+
+However, these people may respond to DIFFERENT communication styles based on their dominant DISC personality color.
+
+🎯 Our job is to translate the SAME value proposition into 4 different emotional languages:
+- 🔴 RED personalities understand through ACTION and RESULTS
+- 🟡 YELLOW personalities understand through EXCITEMENT and SOCIAL PROOF
+- 🟢 GREEN personalities understand through TRUST and SECURITY
+- 🔵 BLUE personalities understand through LOGIC and DATA
+
+This way, we can communicate effectively with everyone who fits the buyer persona, regardless of their communication preference.
+
+═══════════════════════════════════════════════
+INPUT DATA
+═══════════════════════════════════════════════
 
 OFFERS TO TRANSLATE:
 ${JSON.stringify(offers, null, 2)}
 
-PERSONA:
+PERSONA CONTEXT:
 ${JSON.stringify(persona, null, 2)}
 
-TASK: Translate each offer into 4 DISC color variants:
+═══════════════════════════════════════════════
+YOUR TASK
+═══════════════════════════════════════════════
+
+Translate each offer into 4 DISC color variants:
 - RED (Dominance): Direct, results-focused, wants speed and power
 - YELLOW (Influence): Enthusiastic, social, wants fun and recognition
 - GREEN (Steadiness): Supportive, patient, wants harmony and security

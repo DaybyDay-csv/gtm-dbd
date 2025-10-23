@@ -1,6 +1,7 @@
 import { Hero } from "@/components/factory/Hero";
 import { EvidenceDrawer } from "@/components/factory/EvidenceDrawer";
 import { PhaseRibbon } from "@/components/factory/PhaseRibbon";
+import { PhaseExplainer } from "@/components/factory/PhaseExplainer";
 import { ProductMetrics } from "@/components/factory/ProductMetrics";
 import { MainGrid } from "@/components/factory/MainGrid";
 import { ValidationMap } from "@/components/factory/ValidationMap";
@@ -25,6 +26,7 @@ const Index = () => {
       {state.currentPhase > 0 && (
         <>
           <PhaseRibbon currentPhase={state.currentPhase} isRunning={state.isRunning} />
+          <PhaseExplainer currentPhase={state.currentPhase} isRunning={state.isRunning} />
           
           <ProductMetrics
             avatarReliability={avatarReliability}
