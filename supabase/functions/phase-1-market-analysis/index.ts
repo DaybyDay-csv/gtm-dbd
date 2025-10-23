@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { projectId, url, context, competitors, vision, mission, values, docs } = await req.json();
+    const { projectId, url, productDescription, context, competitors, vision, mission, values, docs } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
@@ -58,6 +58,14 @@ serve(async (req) => {
 ⚠️ CRITICAL: You are analyzing the ACTUAL SCRAPED CONTENT from the website below. DO NOT use any prior knowledge about this brand or URL. ONLY analyze what you see in the actual content provided.
 
 ═══════════════════════════════════════════════
+🎯 CORE PRODUCT/SERVICE DESCRIPTION (PROVIDED BY CLIENT - USE THIS AS PRIMARY CONTEXT):
+═══════════════════════════════════════════════
+
+${productDescription}
+
+⚠️ This is the CLIENT'S OWN DESCRIPTION of what they sell/provide. Use this as the PRIMARY source of truth about their offering. Cross-reference with the website content to get additional details, but this description should anchor your entire analysis.
+
+═══════════════════════════════════════════════
 🔍 STEP 0: CLIENT READINESS ASSESSMENT (CRITICAL FIRST)
 ═══════════════════════════════════════════════
 
@@ -89,6 +97,7 @@ ${websiteContent}
 ═══════════════════════════════════════════════
 
 - Brand URL: ${url || 'Not provided'}
+- Product/Service Description (from client): ${productDescription}
 - Additional Context: ${context || 'None provided'}
 - Competitors to analyze: ${competitors || 'To be researched based on the product'}
 - Vision: ${vision || 'Extract from website content'}
@@ -96,11 +105,12 @@ ${websiteContent}
 - Values: ${values || 'Extract from website content'}
 - Additional documentation: ${docs || 'None provided'}
 
-IMPORTANT: 
-1. Bas analysis on the SCRAPED CONTENT above
-2. Use additional context to enhance understanding, but prioritize actual website content
-3. DO NOT use prior knowledge about this brand - only what's in the scraped content
-4. After understanding the product, research real competitors in this space
+IMPORTANT - ANALYSIS PRIORITY ORDER:
+1. START with the client's product description above - this is your anchor
+2. Cross-reference and expand with the scraped website content
+3. Use additional context to enhance understanding
+4. DO NOT use prior knowledge about this brand - only what's provided
+5. After understanding the product deeply, research real competitors in this space
 
 ═══════════════════════════════════════════════
 🎯 STEP 1: DEEP PRODUCT UNDERSTANDING (CRITICAL)

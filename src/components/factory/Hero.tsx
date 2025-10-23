@@ -7,12 +7,13 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { useState } from "react";
 
 interface HeroProps {
-  onRunAnalysis: (projectName: string, url: string, competitors?: string, docs?: string, context?: string, vision?: string, mission?: string, values?: string) => void;
+  onRunAnalysis: (projectName: string, url: string, productDescription: string, competitors?: string, docs?: string, context?: string, vision?: string, mission?: string, values?: string) => void;
   isRunning: boolean;
 }
 
 export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
   const [url, setUrl] = useState("");
+  const [productDescription, setProductDescription] = useState("");
   const [context, setContext] = useState("");
   const [competitors, setCompetitors] = useState("");
   const [vision, setVision] = useState("");
@@ -23,11 +24,12 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (url.trim()) {
+    if (url.trim() && productDescription.trim()) {
       const projectName = `Analysis ${new Date().toISOString().split('T')[0]}`;
       onRunAnalysis(
         projectName,
         url.trim(),
+        productDescription.trim(),
         competitors.trim() || undefined,
         docs.trim() || undefined,
         context.trim() || undefined,
@@ -50,7 +52,7 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
         </h1>
 
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4">
-          <div className="flex gap-3">
+          <div className="space-y-3">
             <Input
               type="url"
               placeholder="https://yourwebsite.com"
@@ -58,12 +60,21 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
               onChange={(e) => setUrl(e.target.value)}
               className="text-lg h-14"
               disabled={isRunning}
+              required
+            />
+            <Textarea
+              placeholder="What do you sell or provide? (Required) - Describe your main product or service in 2-3 sentences"
+              value={productDescription}
+              onChange={(e) => setProductDescription(e.target.value)}
+              className="text-base min-h-[100px]"
+              disabled={isRunning}
+              required
             />
             <Button
               type="submit"
               size="lg"
-              className="h-14 px-8"
-              disabled={isRunning || !url.trim()}
+              className="w-full h-14"
+              disabled={isRunning || !url.trim() || !productDescription.trim()}
             >
               <Sparkles className="mr-2 h-5 w-5" />
               Run Analysis
