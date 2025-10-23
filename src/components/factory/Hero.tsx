@@ -44,11 +44,8 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
     <section className="container mx-auto px-4 py-16 text-center">
       <div className="max-w-4xl mx-auto space-y-8">
         <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
-          Wasting ad budget on speculations?
-          <br />
-          <span className="text-primary">Know exactly who buys and why.</span>
-          <br />
-          In minutes, not months.
+          Stop wasting ad budget on speculations—
+          <span className="text-primary">know exactly who buys and why</span> in minutes, not months.
         </h1>
 
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4">
