@@ -44,7 +44,7 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
     <section className="container mx-auto px-4 py-16 text-center">
       <div className="max-w-4xl mx-auto space-y-8">
         <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
-          Wasting ad budget on hunches?
+          Wasting ad budget on speculations?
           <br />
           <span className="text-primary">Know exactly who buys and why.</span>
           <br />
