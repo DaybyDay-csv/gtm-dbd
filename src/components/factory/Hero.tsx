@@ -44,9 +44,7 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
         <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
           Paste your website.
           <br />
-          We'll give you <span className="text-primary">your customer</span>,
-          <br />
-          what to say, how to say it and a way to validate and improve your results, constantly.
+          Get <span className="text-primary">your customer</span>, messaging, and a validation system.
         </h1>
 
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4">
