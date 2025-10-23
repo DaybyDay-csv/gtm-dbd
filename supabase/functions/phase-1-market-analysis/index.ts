@@ -20,7 +20,7 @@ serve(async (req) => {
 
     console.log('Starting Phase 1 - Market Analysis for project:', projectId);
 
-    const prompt = `You are an expert Brand Strategist conducting a comprehensive market analysis. This is a COMPLETELY NEW AND INDEPENDENT analysis. Do NOT reference any previous analyses.
+    const prompt = `You are an expert Market Researcher + Brand Strategist conducting a comprehensive market analysis. This is a COMPLETELY NEW AND INDEPENDENT analysis starting with a BLANK SLATE. Do NOT reference, blend, or carry over ANY information from previous analyses.
 
 INPUT DATA FOR THIS SPECIFIC ANALYSIS:
 - Brand URL: ${url || 'Not provided'}
@@ -62,6 +62,7 @@ Provide a realistic Total Addressable Market estimate with:
 - Data-driven assumptions
 - Geographic scope
 - Market segment focus
+- Confidence level (low/medium/high)
 
 CRITICAL FORMATTING REQUIREMENTS:
 Return a JSON object with this EXACT structure:
@@ -73,6 +74,21 @@ Return a JSON object with this EXACT structure:
     "Market positioning and differentiation",
     "Key strengths and unique advantages"
   ],
+  "productAnalysis": {
+    "averageTicket": "€XXX or price range with justification",
+    "pros": [
+      "Specific strength #1 with evidence",
+      "Specific strength #2 with evidence", 
+      "Specific strength #3 with evidence"
+    ],
+    "cons": [
+      "Specific limitation #1 with context",
+      "Specific limitation #2 with context",
+      "Specific limitation #3 with context"
+    ],
+    "differentiation": "Clear explanation of how this product stands out in the market",
+    "marketConnection": "Analysis of how the product connects with current market needs and trends"
+  },
   "macroView": {
     "marketState": "Comprehensive description of current market size, maturity, growth rate, and key dynamics in this specific industry",
     "historicalGaps": "Detailed analysis of problems that have historically existed in this market and how they've evolved",
@@ -87,10 +103,10 @@ Return a JSON object with this EXACT structure:
     ]
   },
   "xyChart": {
-    "xAxis": {"label": "Precio (bajo → alto)"},
-    "yAxis": {"label": "Calidad (baja → alta)"},
+    "xAxis": {"label": "Price (low → high)"},
+    "yAxis": {"label": "Quality (low → high)"},
     "points": [
-      {"id":"our_brand","x":0.55,"y":0.78,"label":"Tu marca","color":"#dc2626","size":8},
+      {"id":"our_brand","x":0.55,"y":0.78,"label":"Your brand","color":"#dc2626","size":8},
       {"id":"comp_A","x":0.18,"y":0.80,"label":"[Real Competitor Name]"},
       {"id":"comp_B","x":0.80,"y":0.22,"label":"[Real Competitor Name]"},
       {"id":"comp_C","x":0.15,"y":0.25,"label":"[Real Competitor Name]"},
@@ -107,30 +123,17 @@ Return a JSON object with this EXACT structure:
       "Market segment definition and size",
       "Geographic scope and penetration rate",
       "Growth rate and timeline assumptions"
-    ]
-  },
-  "productAnalysis": {
-    "averageTicket": "€XXX or price range with justification",
-    "pros": [
-      "Specific strength #1 with evidence",
-      "Specific strength #2 with evidence", 
-      "Specific strength #3 with evidence"
     ],
-    "cons": [
-      "Specific limitation #1 with context",
-      "Specific limitation #2 with context",
-      "Specific limitation #3 with context"
-    ],
-    "differentiation": "Clear explanation of how this product stands out in the market",
-    "marketConnection": "Analysis of how the product connects with current market needs and trends"
+    "confidence": "low/medium/high"
   }
 }
 
 IMPORTANT REMINDERS:
-- This is a FRESH analysis - do not reference previous projects
+- This is a FRESH analysis starting from ZERO - do not reference previous projects
+- Do NOT blend or carry over information from other analyses
 - Be exhaustive and specific - include real data and insights
 - Use actual competitor names when possible
-- Position competitors realistically across all quadrants
+- Position competitors realistically across all quadrants (not all in one area)
 - Base all insights on the actual URL and market research
 - Return ONLY valid JSON, no markdown formatting`;
 
