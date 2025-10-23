@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { projectId, url, competitors, docs } = await req.json();
+    const { projectId, url, context, competitors, vision, mission, values, docs } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
@@ -26,8 +26,14 @@ serve(async (req) => {
 
 INPUT DATA FOR THIS SPECIFIC ANALYSIS:
 - Brand URL: ${url || 'Not provided'}
+- Additional Context: ${context || 'None provided'}
 - Competitors to analyze: ${competitors || 'Research and identify market leaders in this space'}
+- Vision: ${vision || 'Research from website'}
+- Mission: ${mission || 'Research from website'}
+- Values: ${values || 'Research from website'}
 - Additional documentation: ${docs || 'None provided'}
+
+IMPORTANT: Use ALL provided information (context, vision, mission, values, docs) to enhance your research and provide more accurate, personalized insights.
 
 YOUR MISSION - 360° DEEP RESEARCH (Minimum 20 minutes of analysis):
 

@@ -32,7 +32,16 @@ export const useAnalysisOrchestrator = () => {
     },
   });
 
-  const runAnalysis = async (projectName: string, url: string, competitors?: string, docs?: string) => {
+  const runAnalysis = async (
+    projectName: string,
+    url: string,
+    competitors?: string,
+    docs?: string,
+    context?: string,
+    vision?: string,
+    mission?: string,
+    values?: string
+  ) => {
     try {
       // Reset state for fresh analysis
       setState({
@@ -64,7 +73,7 @@ export const useAnalysisOrchestrator = () => {
       setState(prev => ({ ...prev, currentPhase: 1 }));
       const { data: phase1Data, error: phase1Error } = await supabase.functions.invoke(
         "phase-1-market-analysis",
-        { body: { projectId: project.id, url, competitors, docs } }
+        { body: { projectId: project.id, url, competitors, docs, context, vision, mission, values } }
       );
       if (phase1Error) throw phase1Error;
 

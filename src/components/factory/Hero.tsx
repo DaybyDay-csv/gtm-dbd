@@ -1,21 +1,40 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Sparkles } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Sparkles, ChevronDown, ChevronUp, Upload } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useState } from "react";
 
 interface HeroProps {
-  onRunAnalysis: (projectName: string, url: string, competitors?: string, docs?: string) => void;
+  onRunAnalysis: (projectName: string, url: string, competitors?: string, docs?: string, context?: string, vision?: string, mission?: string, values?: string) => void;
   isRunning: boolean;
 }
 
 export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
   const [url, setUrl] = useState("");
+  const [context, setContext] = useState("");
+  const [competitors, setCompetitors] = useState("");
+  const [vision, setVision] = useState("");
+  const [mission, setMission] = useState("");
+  const [values, setValues] = useState("");
+  const [docs, setDocs] = useState("");
+  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (url.trim()) {
       const projectName = `Analysis ${new Date().toISOString().split('T')[0]}`;
-      onRunAnalysis(projectName, url);
+      onRunAnalysis(
+        projectName,
+        url.trim(),
+        competitors.trim() || undefined,
+        docs.trim() || undefined,
+        context.trim() || undefined,
+        vision.trim() || undefined,
+        mission.trim() || undefined,
+        values.trim() || undefined
+      );
     }
   };
 
@@ -50,6 +69,100 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
               Run Analysis
             </Button>
           </div>
+
+          <Collapsible open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
+            <CollapsibleTrigger asChild>
+              <Button 
+                type="button" 
+                variant="ghost" 
+                size="sm"
+                className="w-full gap-2"
+                disabled={isRunning}
+              >
+                {isAdvancedOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                Add Context, Competitors & Documents (Optional)
+              </Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="space-y-4 pt-4">
+              <div className="space-y-2">
+                <Label htmlFor="context">Additional Context</Label>
+                <Textarea
+                  id="context"
+                  placeholder="Any specific context, goals, or information about your business..."
+                  value={context}
+                  onChange={(e) => setContext(e.target.value)}
+                  disabled={isRunning}
+                  className="min-h-[80px]"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="competitors">Known Competitors</Label>
+                <Input
+                  id="competitors"
+                  placeholder="competitor1.com, competitor2.com..."
+                  value={competitors}
+                  onChange={(e) => setCompetitors(e.target.value)}
+                  disabled={isRunning}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="vision">Vision</Label>
+                  <Textarea
+                    id="vision"
+                    placeholder="Your vision..."
+                    value={vision}
+                    onChange={(e) => setVision(e.target.value)}
+                    disabled={isRunning}
+                    className="min-h-[60px]"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="mission">Mission</Label>
+                  <Textarea
+                    id="mission"
+                    placeholder="Your mission..."
+                    value={mission}
+                    onChange={(e) => setMission(e.target.value)}
+                    disabled={isRunning}
+                    className="min-h-[60px]"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="values">Values</Label>
+                  <Textarea
+                    id="values"
+                    placeholder="Your core values..."
+                    value={values}
+                    onChange={(e) => setValues(e.target.value)}
+                    disabled={isRunning}
+                    className="min-h-[60px]"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="docs">Documents/Additional Info</Label>
+                <Textarea
+                  id="docs"
+                  placeholder="Paste any additional documents, descriptions, or information here..."
+                  value={docs}
+                  onChange={(e) => setDocs(e.target.value)}
+                  disabled={isRunning}
+                  className="min-h-[100px]"
+                />
+                <p className="text-xs text-muted-foreground">
+                  <Upload className="w-3 h-3 inline mr-1" />
+                  Paste content from your documents, PDFs, or any relevant information
+                </p>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+
           <p className="text-sm text-muted-foreground">
             Optional: Connect data later for validation & learning
           </p>
