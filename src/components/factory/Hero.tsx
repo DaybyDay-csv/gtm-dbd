@@ -63,10 +63,10 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
               required
             />
             <Textarea
-              placeholder="What do you sell or provide? (Required) - Describe your main product or service in 2-3 sentences"
+              placeholder="What do you sell or provide? (e.g., 'We help B2B SaaS companies...')"
               value={productDescription}
               onChange={(e) => setProductDescription(e.target.value)}
-              className="text-base min-h-[100px]"
+              className="text-base min-h-[70px]"
               disabled={isRunning}
               required
             />
