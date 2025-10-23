@@ -86,7 +86,22 @@ IMPORTANT:
 ═══════════════════════════════════════════════
 
 Before anything else, you MUST deeply understand the PRODUCT/SERVICE:
+In-depth Research, Brand & Market Study
+- Analyze brand information (I do it myself: website + internal brand docs, Vision, Mission, and Values).
+- Create a **positioning map**
+- Study the products/services and what solutions they cover (this will be very useful later on)
+- A 10,000-foot macro of the market status of the problems they solve.
+- How the brand currently stands in the market (- What the market is like - What gaps/opportunities there are to fill in the market historically, depending on the market it operates in, what types of brands have existed, and which ones are missing).
+- Competitor research
+- How the brand differentiates itself (if it does),
+- Weaknesses vs. competitors
+- Opportunities (if any, directly related to its differentiation; if not, they will be pivot opportunities)
+- Identify the perceptions the market in the country of origin has about brands in its niche market and average ticket price.
+- Describe it in bullet points + executive summary.
 
+- If so, what gap does it represent in the market in terms of target TAM? This point must be thoroughly calculated and validated with numbers and research.
+
+---
 1. **What is the product/service?**
    - What is it called? (specific name)
    - What category does it belong to?
