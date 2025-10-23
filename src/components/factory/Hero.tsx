@@ -2,9 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Sparkles, ChevronDown, ChevronUp, Upload } from "lucide-react";
+import { Sparkles, ChevronDown, ChevronUp, Upload, FileText, X } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
 
 interface HeroProps {
   onRunAnalysis: (projectName: string, url: string, productDescription: string, competitors?: string, docs?: string, context?: string, vision?: string, mission?: string, values?: string) => void;
@@ -21,17 +22,67 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
   const [values, setValues] = useState("");
   const [docs, setDocs] = useState("");
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const { toast } = useToast();
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    const validFiles = files.filter(file => {
+      const validTypes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.ms-powerpoint',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      ];
+      return validTypes.includes(file.type);
+    });
+
+    if (validFiles.length !== files.length) {
+      toast({
+        title: "Invalid file type",
+        description: "Please upload only PDF, Word, PowerPoint, or Excel documents",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setUploadedFiles(prev => [...prev, ...validFiles]);
+    toast({
+      title: "Files added",
+      description: `${validFiles.length} document(s) added successfully`
+    });
+  };
+
+  const removeFile = (index: number) => {
+    setUploadedFiles(prev => prev.filter((_, i) => i !== index));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (url.trim() && productDescription.trim()) {
       const projectName = `Analysis ${new Date().toISOString().split('T')[0]}`;
+      
+      // Combine manual docs text with uploaded files note
+      let docsContent = docs.trim();
+      if (uploadedFiles.length > 0) {
+        const fileList = uploadedFiles.map(f => f.name).join(', ');
+        docsContent = docsContent 
+          ? `${docsContent}\n\n[Uploaded documents: ${fileList}]`
+          : `[Uploaded documents: ${fileList}]`;
+      }
+      
       onRunAnalysis(
         projectName,
         url.trim(),
         productDescription.trim(),
         competitors.trim() || undefined,
-        docs.trim() || undefined,
+        docsContent || undefined,
         context.trim() || undefined,
         vision.trim() || undefined,
         mission.trim() || undefined,
@@ -157,19 +208,72 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="docs">Documents/Additional Info</Label>
-                <Textarea
-                  id="docs"
-                  placeholder="Paste any additional documents, descriptions, or information here..."
-                  value={docs}
-                  onChange={(e) => setDocs(e.target.value)}
-                  disabled={isRunning}
-                  className="min-h-[100px]"
-                />
-                <p className="text-xs text-muted-foreground">
-                  <Upload className="w-3 h-3 inline mr-1" />
-                  Paste content from your documents, PDFs, or any relevant information
-                </p>
+                <Label htmlFor="docs">Business Documents</Label>
+                <div className="space-y-3">
+                  <div className="border-2 border-dashed rounded-lg p-6 text-center hover:border-primary/50 transition-colors">
+                    <input
+                      type="file"
+                      id="file-upload"
+                      multiple
+                      accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"
+                      onChange={handleFileUpload}
+                      disabled={isRunning || isProcessing}
+                      className="hidden"
+                    />
+                    <label
+                      htmlFor="file-upload"
+                      className="cursor-pointer flex flex-col items-center gap-2"
+                    >
+                      <Upload className="w-8 h-8 text-muted-foreground" />
+                      <div className="text-sm">
+                        <span className="font-semibold text-primary">Click to upload</span>
+                        <span className="text-muted-foreground"> or drag and drop</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        PDF, Word, PowerPoint, Excel (max 20MB each)
+                      </p>
+                    </label>
+                  </div>
+
+                  {uploadedFiles.length > 0 && (
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium">Uploaded documents:</p>
+                      <div className="space-y-1">
+                        {uploadedFiles.map((file, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center gap-2 p-2 bg-muted rounded-md text-sm"
+                          >
+                            <FileText className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                            <span className="flex-1 truncate">{file.name}</span>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => removeFile(index)}
+                              disabled={isRunning}
+                              className="h-6 w-6 p-0"
+                            >
+                              <X className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <Textarea
+                    id="docs"
+                    placeholder="Or paste any additional information here..."
+                    value={docs}
+                    onChange={(e) => setDocs(e.target.value)}
+                    disabled={isRunning}
+                    className="min-h-[80px]"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Upload documents about your business, product details, market research, or paste text directly
+                  </p>
+                </div>
               </div>
             </CollapsibleContent>
           </Collapsible>
