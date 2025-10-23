@@ -44,11 +44,11 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
     <section className="container mx-auto px-4 py-16 text-center">
       <div className="max-w-4xl mx-auto space-y-8">
         <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
-          Share your site + what you sell.
+          Don't know who buys from you
           <br />
-          <span className="text-primary">Get your customer</span>, messaging,
+          <span className="text-primary">or what makes them buy?</span>
           <br />
-          and full GTM strategy.
+          We'll tell you. In minutes.
         </h1>
 
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4">
