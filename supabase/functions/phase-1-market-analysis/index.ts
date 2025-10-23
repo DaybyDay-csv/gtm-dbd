@@ -76,7 +76,7 @@ ${websiteContent}
 - Additional documentation: ${docs || 'None provided'}
 
 IMPORTANT: 
-1. Base your ENTIRE analysis on the SCRAPED CONTENT above
+1. Bas analysis on the SCRAPED CONTENT above
 2. Use additional context to enhance understanding, but prioritize actual website content
 3. DO NOT use prior knowledge about this brand - only what's in the scraped content
 4. After understanding the product, research real competitors in this space
@@ -87,10 +87,11 @@ IMPORTANT:
 
 Before anything else, you MUST deeply understand the PRODUCT/SERVICE:
 
-1. **What is the MAIN product/service?**
+1. **What is the product/service?**
    - What is it called? (specific name)
    - What category does it belong to?
    - Is it B2B, B2C, SaaS, physical product, service, etc.?
+   - What large niche does it belong to?
 
 2. **What PROBLEMS does it solve?** (Be VERY specific)
    - What pain points does it address?
@@ -131,7 +132,7 @@ YOUR MISSION - 360° DEEP RESEARCH
 PHASE 1: WEBSITE & PRODUCT DEEP DIVE (30 min)
 ═══════════════════════════════════════════════
 
-🔍 STEP 1 - UNDERSTAND THE CLIENT:
+🔍 STEP 1 - UNDERSTAND THE CLIENT, extract this information from the actual website or from the imputs:
 Visit the URL and conduct a comprehensive analysis:
 - Who is this company? Name, industry, years in market
 - What is their vision, mission, and core values?
@@ -160,9 +161,9 @@ PHASE 2: PRODUCT NUCLEUS (Core Understanding)
 
 📦 STEP 4 - DEFINE THE PRODUCT NUCLEUS:
 This is the HEART of everything. You must define:
-- Main product name (what is it called?)
+- Main product or general service name (what is it called?)
 - 3-5 specific problems it solves
-- 2-3 market gaps it could potentially cover (based on your research)
+- 2-3 market gaps it could potentially cover (based on your research from the competitors and rememer acting as a brand strategist)
 - Unique value proposition (what makes it special)
 - How it connects to the market opportunity you identify
 
