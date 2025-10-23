@@ -77,11 +77,20 @@ export const useAnalysisOrchestrator = () => {
 
       // Phase 1: Market Analysis
       setState(prev => ({ ...prev, currentPhase: 1 }));
-      const { data: phase1Data, error: phase1Error } = await supabase.functions.invoke(
+      const phase1Response = await supabase.functions.invoke(
         "phase-1-market-analysis",
         { body: { projectId: project.id, url, competitors, docs, context, vision, mission, values } }
       );
-      if (phase1Error) throw phase1Error;
+      
+      if (phase1Response.error) {
+        const errorMessage = phase1Response.error.message || 'Error desconocido';
+        if (errorMessage.includes('402') || errorMessage.includes('Payment required') || errorMessage.includes('credits')) {
+          throw new Error('No tienes suficientes créditos de Lovable AI. Ve a Settings → Workspace → Usage para añadir créditos.');
+        }
+        throw phase1Response.error;
+      }
+      
+      const phase1Data = phase1Response.data;
 
       await supabase.from("phase_outputs").insert({
         project_id: project.id,
