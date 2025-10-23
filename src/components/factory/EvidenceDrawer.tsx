@@ -21,9 +21,10 @@ export const EvidenceDrawer = () => {
     {
       hypothesis: "Ambition + DISC Blue + Landing",
       metric: "CPL",
-      range: "€45 - €120",
-      trend: "neutral" as const,
+      range: "$147 → $95",
+      trend: "down" as const,
       note: "Data-driven approach varies by segment",
+      decrease: "35%",
     },
   ];
 
@@ -45,11 +46,14 @@ export const EvidenceDrawer = () => {
                   {c.hypothesis}
                 </Badge>
                 {c.trend === "up" && <TrendingUp className="h-4 w-4 text-green-600" />}
-                {c.trend === "neutral" && <Minus className="h-4 w-4 text-muted-foreground" />}
+                {c.trend === "down" && <TrendingDown className="h-4 w-4 text-green-600" />}
               </div>
               <div>
                 <p className="text-sm font-medium">{c.metric}</p>
-                <p className="text-2xl font-bold">{c.range}</p>
+                <div className="flex items-baseline gap-2">
+                  <p className="text-2xl font-bold">{c.range}</p>
+                  {'decrease' in c && <span className="text-sm font-medium text-green-600">-{c.decrease}</span>}
+                </div>
               </div>
               <p className="text-xs text-muted-foreground">{c.note}</p>
             </Card>
