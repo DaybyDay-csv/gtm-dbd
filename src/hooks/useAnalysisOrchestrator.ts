@@ -34,23 +34,25 @@ export const useAnalysisOrchestrator = () => {
 
   const runAnalysis = async (projectName: string, url: string, competitors?: string, docs?: string) => {
     try {
-      setState(prev => ({ ...prev, isRunning: true, currentPhase: 0 }));
+      // Reset state for fresh analysis
+      setState({
+        projectId: null,
+        currentPhase: 0,
+        isRunning: true,
+        phases: {
+          phase1: null,
+          phase2: null,
+          phase3: null,
+          phase4: null,
+          phase5: null,
+          phase6: null,
+        },
+      });
 
-      // Get current user
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        toast({
-          title: "Error",
-          description: "Debes iniciar sesión para ejecutar el análisis",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      // Create project
+      // Create project (no user_id required for public access)
       const { data: project, error: projectError } = await supabase
         .from("projects")
-        .insert({ name: projectName, url, user_id: user.id })
+        .insert({ name: projectName, url })
         .select()
         .single();
 
