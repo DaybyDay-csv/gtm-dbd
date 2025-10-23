@@ -1,12 +1,22 @@
-export const OfferFactory = () => {
-  const offers = [
+interface OfferFactoryProps {
+  data?: {
+    offers?: Array<{
+      offer: string;
+      valueGauge?: { value: number };
+    }>;
+    overallValue?: number;
+  };
+}
+
+export const OfferFactory = ({ data }: OfferFactoryProps) => {
+  const offers = data?.offers?.map((o) => o.offer) || [
     "Obtén piel radiante en 14 días",
     "Rutina de 5 minutos garantizada",
     "Entrega en 48 horas o gratis",
     "Primera caja con 20% descuento"
   ];
 
-  const valueScore = 78; // 0-100
+  const valueScore = data?.overallValue || 78;
 
   return (
     <div className="p-6 border dotted-border rounded-lg bg-card h-full">

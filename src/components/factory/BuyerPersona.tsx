@@ -1,5 +1,21 @@
-export const BuyerPersona = () => {
-  const thoughtClouds = [
+interface BuyerPersonaProps {
+  data?: {
+    avatar?: {
+      name: string;
+      age: number;
+      city: string;
+      ses: string;
+      description: string;
+    };
+    intro?: string;
+    clouds?: string[];
+  };
+}
+
+export const BuyerPersona = ({ data }: BuyerPersonaProps) => {
+  const avatar = data?.avatar || { name: "Lucía", age: 32, city: "Madrid", ses: "Clase media–alta" };
+  const intro = data?.intro || "Hola, soy Lucía. Busco soluciones que me hagan la vida más fácil...";
+  const thoughtClouds = data?.clouds || [
     "Le preocupa el tiempo",
     "Desea resultados visibles",
     "Quiere sentirse segura",
@@ -18,9 +34,9 @@ export const BuyerPersona = () => {
         </div>
         
         <p className="text-sm font-medium text-center mb-4">
-          Lucía, 32 años, Madrid
+          {avatar.name}, {avatar.age} años, {avatar.city}
           <br />
-          <span className="text-muted-foreground">Clase media–alta</span>
+          <span className="text-muted-foreground">{avatar.ses}</span>
         </p>
 
         <div className="space-y-2 w-full">
@@ -35,10 +51,7 @@ export const BuyerPersona = () => {
         </div>
 
         <div className="mt-6 p-4 bg-primary/5 rounded-lg border dotted-border w-full">
-          <p className="text-sm italic text-muted-foreground">
-            "Hi, soy Lucía. Busco soluciones que me hagan la vida más fácil sin complicarme. 
-            Valoro mi tiempo y quiero resultados que pueda ver."
-          </p>
+          <p className="text-sm italic text-muted-foreground">"{intro}"</p>
         </div>
       </div>
     </div>

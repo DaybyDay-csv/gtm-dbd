@@ -1,42 +1,24 @@
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export const ValidationMap = () => {
-  const experiments = [
-    {
-      hypothesis: "Deseo→14 días→Rojo",
-      channel: "Meta",
-      headline: "Resultados visibles en 14 días",
-      cta: "Empieza hoy",
-      kpi: "CPL",
-      cost: "€50",
-      ttv: "7d",
-      state: "Discover",
-      owner: "PMM"
-    },
-    {
-      hypothesis: "Tiempo→5 min→Verde",
-      channel: "Email",
-      headline: "Solo 5 minutos al día",
-      cta: "Prueba gratis",
-      kpi: "Open rate",
-      cost: "€20",
-      ttv: "3d",
-      state: "Test",
-      owner: "CRM"
-    },
-    {
-      hypothesis: "Certificación→Azul",
-      channel: "Google",
-      headline: "Ingredientes certificados",
-      cta: "Más info",
-      kpi: "CTR",
-      cost: "€75",
-      ttv: "14d",
-      state: "Discover",
-      owner: "Growth"
-    }
-  ];
+interface ValidationMapProps {
+  data?: {
+    experiments?: Array<{
+      hypothesis: string;
+      channel: string;
+      headline: string;
+      cta: string;
+      kpi: string;
+      cost: string;
+      ttv: string;
+      state: string;
+      owner: string;
+    }>;
+  };
+}
+
+export const ValidationMap = ({ data }: ValidationMapProps) => {
+  const experiments = data?.experiments || [];
 
   const stateColors: Record<string, string> = {
     "Discover": "bg-yellow-100 text-yellow-800 border-yellow-300",

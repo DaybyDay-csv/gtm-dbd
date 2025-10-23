@@ -1,10 +1,31 @@
-export const DISCTranslator = () => {
-  const translations = [
-    { color: "Rojo", copy: "Resultados en 14 días", channel: "Meta", purpose: "Venta" },
-    { color: "Amarillo", copy: "¡Únete a la comunidad!", channel: "WPP", purpose: "Educación" },
-    { color: "Verde", copy: "Cuidamos de ti paso a paso", channel: "Email", purpose: "Fidelizar" },
-    { color: "Azul", copy: "Ingredientes certificados", channel: "Meta", purpose: "Venta" }
-  ];
+interface DISCTranslatorProps {
+  data?: {
+    discTable?: Array<{
+      offer: string;
+      red: { copy: string; channel: string; purpose: string };
+      yellow: { copy: string; channel: string; purpose: string };
+      green: { copy: string; channel: string; purpose: string };
+      blue: { copy: string; channel: string; purpose: string };
+    }>;
+  };
+}
+
+export const DISCTranslator = ({ data }: DISCTranslatorProps) => {
+  const discTable = data?.discTable || [];
+  
+  const translations = discTable.length > 0
+    ? [
+        { color: "Rojo", copy: discTable[0].red.copy, channel: discTable[0].red.channel, purpose: discTable[0].red.purpose },
+        { color: "Amarillo", copy: discTable[0].yellow.copy, channel: discTable[0].yellow.channel, purpose: discTable[0].yellow.purpose },
+        { color: "Verde", copy: discTable[0].green.copy, channel: discTable[0].green.channel, purpose: discTable[0].green.purpose },
+        { color: "Azul", copy: discTable[0].blue.copy, channel: discTable[0].blue.channel, purpose: discTable[0].blue.purpose }
+      ]
+    : [
+        { color: "Rojo", copy: "Resultados en 14 días", channel: "Meta", purpose: "Venta" },
+        { color: "Amarillo", copy: "¡Únete a la comunidad!", channel: "WPP", purpose: "Educación" },
+        { color: "Verde", copy: "Cuidamos de ti paso a paso", channel: "Email", purpose: "Fidelizar" },
+        { color: "Azul", copy: "Ingredientes certificados", channel: "Meta", purpose: "Venta" }
+      ];
 
   const colorMap: Record<string, string> = {
     "Rojo": "hsl(var(--disc-red))",
