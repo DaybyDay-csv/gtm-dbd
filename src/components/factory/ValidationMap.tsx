@@ -15,10 +15,12 @@ interface ValidationMapProps {
       owner: string;
     }>;
   };
+  isRunning?: boolean;
 }
 
-export const ValidationMap = ({ data }: ValidationMapProps) => {
+export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
   const experiments = data?.experiments || [];
+  const hasData = experiments.length > 0;
 
   const stateColors: Record<string, string> = {
     "Discover": "bg-yellow-100 text-yellow-800 border-yellow-300",
@@ -27,7 +29,7 @@ export const ValidationMap = ({ data }: ValidationMapProps) => {
   };
 
   return (
-    <section className="container mx-auto px-4 py-12 border-t dotted-border-t">
+    <section className={`container mx-auto px-4 py-12 border-t dotted-border-t ${isRunning && !hasData ? 'charging' : ''} ${hasData ? 'magic-reveal' : ''}`}>
       <div className="flex justify-between items-center mb-6">
         <div>
           <h2 className="text-2xl font-bold mb-2">Mapa de validación</h2>

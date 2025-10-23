@@ -7,9 +7,20 @@ import { MainGrid } from "@/components/factory/MainGrid";
 import { ValidationMap } from "@/components/factory/ValidationMap";
 import { ClientReadiness } from "@/components/factory/ClientReadiness";
 import { useAnalysisOrchestrator } from "@/hooks/useAnalysisOrchestrator";
+import { useEffect, useRef } from "react";
 
 const Index = () => {
   const { state, runAnalysis } = useAnalysisOrchestrator();
+  const contentRef = useRef<HTMLDivElement>(null);
+  const prevRunningState = useRef(state.isRunning);
+
+  // Auto-scroll when analysis starts
+  useEffect(() => {
+    if (state.isRunning && !prevRunningState.current && state.currentPhase > 0) {
+      contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    prevRunningState.current = state.isRunning;
+  }, [state.isRunning, state.currentPhase]);
 
   // Extract metrics from analysis state
   const avatarReliability = state.phases.phase2?.profile?.reliability || 0;
@@ -25,7 +36,7 @@ const Index = () => {
       {!state.isRunning && state.currentPhase === 0 && <EvidenceDrawer />}
       
       {state.currentPhase > 0 && (
-        <>
+        <div ref={contentRef}>
           <PhaseRibbon currentPhase={state.currentPhase} isRunning={state.isRunning} />
           <PhaseExplainer currentPhase={state.currentPhase} isRunning={state.isRunning} />
           {state.clientReadiness && <ClientReadiness data={state.clientReadiness} />}
@@ -43,8 +54,8 @@ const Index = () => {
           />
 
           <MainGrid analysisState={state} />
-          <ValidationMap data={state.phases.phase6} />
-        </>
+          <ValidationMap data={state.phases.phase6} isRunning={state.isRunning} />
+        </div>
       )}
       
       <footer className="border-t dotted-border-t py-6 mt-12">
