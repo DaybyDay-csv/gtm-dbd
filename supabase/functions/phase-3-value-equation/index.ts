@@ -20,14 +20,20 @@ serve(async (req) => {
 
     console.log('Starting Phase 3 - Value Equation for project:', projectId);
 
-    const prompt = `You are an expert in Alex Hormozi's Value Equation: Value = (Dream × Probability) / (Time × Effort)
+    const prompt = `You are an expert in Alex Hormozi's Value Equation: Value = (Dream outcome × Percieved likelyhood of achievement) / (Time delayed × Effort & Sacrifice )
 
-Your mission is to EXPLODE the potential of the product by creating high-value offers that fill market gaps and serve the buyer persona.
+Your mission is to EXPLODE the potential of the product by creating high-value offers that fill market gaps and serve the buyer persona. That help the buyers 
+Sees themselves in dream outcome
+Sees higher chances of success
+Sees shorter time to results
+Sees less effort and sacrifice
+Without false promisses, based on showcasinc correctly the product real value, what he brings to the table and exploding hte differentiators and gaps on the market if existed.
+The ressult comes from a clear value communication, not flase promisses. 
 
-BUYER PERSONA (with all desires, pains, ambitions, objectives):
+BUYER PERSONA (with all desires, pains, ambitions, real peace givers and objectives):
 ${JSON.stringify(persona, null, 2)}
 
-BRAND & PRODUCT INFO (including gaps and positioning):
+BRAND & PRODUCT INFO (including gaps if existed and positioning):
 ${JSON.stringify(brandInfo, null, 2)}
 
 YOUR PROCESS:
@@ -40,12 +46,12 @@ YOUR PROCESS:
 ## STEP 2: CRAFT VALUE-EQUATION OFFERS
    For EACH key buyer need, create an offer that:
    1. MAXIMIZES the numerator (Dream Outcome × Perceived Probability)
-      - Make the dream MORE desirable
-      - Make success feel MORE certain (guarantees, proof, testimonials)
+      - Make the dream MORE clear and real, showcasing the long-lasting impact if well used on the life of the user/buyer/client.
+      - Make success feel MORE certain (guarantees, proof, testimonials if existing, if not, use real market researched studies or surveys with citation)
    
    2. MINIMIZES the denominator (Time Delay × Effort & Sacrifice)
-      - Reduce time to get results (speed)
-      - Reduce effort required (ease, done-for-you elements)
+      - Reduce time they wait to get the first value of the prodcut, realisticly. (not fake outcome, just a first-gowth proof of the process)
+      - Reduce the bad percieved view on effor of the desired outcome and show the mental-psicological-phisical benefits of doing this effort to get the desired outcome. Elevating the outcome. 
 
 ## STEP 3: ENSURE OFFERS EXPLOIT THE GAPS
    - Each offer should leverage a market gap or pivot opportunity
