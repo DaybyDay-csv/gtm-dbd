@@ -63,7 +63,7 @@ serve(async (req) => {
 
 ${productDescription}
 
-⚠️ This is the CLIENT'S OWN DESCRIPTION of what they sell/provide. Use this as the PRIMARY source of truth about their offering. Cross-reference with the website content to get additional details, but this description should anchor your entire analysis.
+⚠️ This is the CLIENT'S OWN DESCRIPTION of what they sell/provide. Use this as the north star source of truth about their offering. Cross-reference with the website content to get additional details, but this description should anchor your entire analysis.
 
 ═══════════════════════════════════════════════
 🔍 STEP 0: CLIENT READINESS ASSESSMENT (CRITICAL FIRST)
@@ -106,35 +106,38 @@ ${websiteContent}
 - Additional documentation: ${docs || 'None provided'}
 
 IMPORTANT - ANALYSIS PRIORITY ORDER:
-1. START with the client's product description above - this is your anchor
+1. START with the client's product description above - this is your north star
 2. Cross-reference and expand with the scraped website content
-3. Use additional context to enhance understanding
-4. DO NOT use prior knowledge about this brand - only what's provided
-5. After understanding the product deeply, research real competitors in this space
+3. With the scraped website content identify, Brand Name, Main product and Main Market (country, industry and niche).
+4. DO NOT use prior knowledge about this brand - only what's provided, but you can develop a historic-investigation on what this brand ahas done trough the years to add context for the analisys. 
+5. After understanding the product deeply, research real competitors in this space,
+
 
 ═══════════════════════════════════════════════
-🎯 STEP 1: DEEP PRODUCT UNDERSTANDING (CRITICAL)
+ STEP 1: DEEP PRODUCT UNDERSTANDING (CRITICAL)
 ═══════════════════════════════════════════════
 
-Before anything else, you MUST deeply understand the PRODUCT/SERVICE:
+Before anything else, you MUST deeply understand the PRODUCT/SERVICE in order to provide a legitimate, real help by exploding the benefits from it, and giving solutions or upgrades as recomendations to the weak points in form of messagign and hypothesis to check if the market willl lik those changes or upgrades or not of the bad things:
 In-depth Research, Brand & Market Study
-- Analyze brand information (I do it myself: website + internal brand docs, Vision, Mission, and Values).
+- Analyze brand information: website + internal brand docs, Vision, Mission, and Values if provided.
 - Create a **positioning map**
 - Study the products/services and what solutions they cover (this will be very useful later on)
-- A 10,000-foot macro of the market status of the problems they solve.
+- A 10,000-foot macro of the market status of the problems they solve. 
+- Is the problem real and demanded? (research studies and tendencies) If not, "Weakness & opportunity to help with recommendations and hipothesis founded"
 - How the brand currently stands in the market (- What the market is like - What gaps/opportunities there are to fill in the market historically, depending on the market it operates in, what types of brands have existed, and which ones are missing).
 - Competitor research
-- How the brand differentiates itself (if it does),
+- How the brand differentiates itself (if it does),If not "Weakness & opportunity to help with recommendations and hipothesis  founded"
 - Weaknesses vs. competitors
-- Opportunities (if any, directly related to its differentiation; if not, they will be pivot opportunities)
-- Identify the perceptions the market in the country of origin has about brands in its niche market and average ticket price.
+- Opportunities (if any, directly related to its differentiation; if not, & opportunity to help with recommendations and hipothesis, they will be pivot opportunities)
+- Identify the perceptions the market in the main market (previous country, industry and niche focus) of focus  has about brands in its niche market and average ticket price.
 - Describe it in bullet points + executive summary.
 
-- If so, what gap does it represent in the market in terms of target TAM? This point must be thoroughly calculated and validated with numbers and research.
+- If so, what gap does it represent in the market in terms of target TAM? 
+This point must be thoroughly calculated and validated with numbers and research. Dees researchit.
 
 ---
 1. **What is the product/service?**
-   - What is it called? (specific name)
+   - What is it called? (specific name or category)
    - What category does it belong to?
    - Is it B2B, B2C, SaaS, physical product, service, etc.?
    - What large niche does it belong to?
@@ -162,6 +165,9 @@ In-depth Research, Brand & Market Study
    - What is their unique angle/approach?
    - What promises do they make?
    - What is their tone and brand personality?
+   - Is it the description they relate themseles real? 
+   - check with the market feedback about the product/service they provide with the demand the market givs and is this positioning usefull?
+   
 
 6. **What GAPS can it cover?**
    Based on the product features, capabilities, and positioning:
@@ -350,9 +356,9 @@ IMPORTANT REMINDERS:
 - Do NOT blend or carry over information from other analyses
 - Be SPECIFIC and DETAILED - no generic descriptions
 - Use actual competitor names when possible
-- Position competitors realistically across all quadrants (not all in one area)
+- Position competitors realistically based on real product price and market feedback on theyr quality across all quadrants (not all in one area)
 - Base all insights on the actual URL and market research
-- Show you TRULY understand the product by being detailed and specific
+- Show you TRULY understand the product by being detailed and specific, no generic assumptions ad no specilations, real market feedback
 - Return ONLY valid JSON, no markdown formatting`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {

@@ -28,7 +28,7 @@ INPUT DATA FOR THIS SPECIFIC ANALYSIS:
 BRAND INFORMATION: ${JSON.stringify(brandInfo, null, 2)}
 MARKET DATA (including product nucleus, gaps, and opportunities): ${JSON.stringify(marketData, null, 2)}
 
-YOUR MISSION - CREATE THE PERFECT BUYER PERSONA:
+YOUR MISSION - CREATE PREFECT BUTTERFLY EFFECT BUYER PERSONA:
 
 ═══════════════════════════════════════════════
 PROCESS TO CREATE THE PERSONA
@@ -36,16 +36,20 @@ PROCESS TO CREATE THE PERSONA
 
 🎯 STEP 1: UNDERSTAND THE MARKET-PRODUCT-GAP FIT
 Before creating the persona, you must understand:
-- What is the product nucleus? (main product, problems it solves, how it solves them)
-- What market gaps or opportunities exist?
+- What is the product nucleus? 
+- What problem this prodcut solve?
+- How does hevolves it?
+- Compared to the market competitors,what difference does he bring to the table?
+- Doses this problem that the produt solves,has a real demand on the market based on research, tendencies and surveys.
+- If so, What market gaps or opportunities exist?
+- What value and does it offer that others don't?
 - Where is the product positioned vs competitors?
-- What value does it offer that others don't?
 
 👤 STEP 2: IDENTIFY THE IDEAL BUYER
 Based on the above, identify:
-- Who is the PERFECT customer for THIS product to solve THIS problem and fill THIS gap?
+- Who is the PERFECT customer for THIS product to solve THIS problem and eventually fill the differentiative/value gap that exists between the business and the competitors?
 - Should this persona be MALE or FEMALE? (decide based on market research and product)
-- What is their socioeconomic reality in Spain? (must match the product's price point)
+- What is their socioeconomic reality in the business main market country? (must match the product's price point)
 - What is their professional and personal context?
 - Why would they care about THIS specific product?
 
@@ -53,7 +57,7 @@ Based on the above, identify:
 Remember: A buyer persona is a MIX of qualities. Many people can coincide in this mix.
 
 Create a comprehensive profile:
-- Demographics: Name (Spanish), Age, City (Spain), SES (must match product price!)
+- Demographics: Name (Main Market), Age, City (Main Market), SES (must match product price!)
 - Professional context: Job, income level, work situation
 - Desires: What they want to achieve (3-5 specific desires)
 - Pains: What frustrates or worries them (3-5 specific pains)
@@ -64,14 +68,20 @@ Create a comprehensive profile:
 - Final effect: The ultimate transformation they seek
 - Expected result: Tangible outcome they want from solutions
 - Consumption patterns: How they make buying decisions (Spain-specific cultural context)
+- What bothers / unsettles / he/she would like to change.
+- What would make he or her life happier and easier.
+- What kind of peace of mind he is  looking for.
+- What end-effect you want.
+- What final result you expect from the product.
+¡¡¡Use common sense, cultural consumer insights for the target country and sector-specific data.!!!
 
 ✅ STEP 4: VALIDATE ALIGNMENT (Make sure):
-- Does the persona PERFECTLY fit the product's solution? ✓
-- Does the persona exist in the GAP/OPPORTUNITY identified? ✓
-- Will this persona VALUE the unique positioning? ✓
-- Does the SES match the product price? ✓
-- Do pains align with what the product solves? ✓
-- Is this realistic for the Spanish market? ✓
+- Does the persona PERFECTLY fit the product's solution? If not: Weakness & opportunity to help with recommendations and hipothesis founded, analyze and propose one.
+- Does the persona exist in the GAP/OPPORTUNITY identified? If not: Weakness & opportunity to help with recommendations and hipothesis founded, analyze and propose one.
+- Will this persona VALUE the unique positioning? If not: Weakness & opportunity to help with recommendations and hipothesis founded, analyze and propose one.
+- Does the SES match the product price? If not: Weakness & opportunity to help with recommendations and hipothesis founded, analyze and propose one.
+- Do pains align with what the product solves? If not: Weakness & opportunity to help with recommendations and hipothesis founded, analyze and propose one.
+- Is this realistic for the Spanish market? If not: Weakness & opportunity to help with recommendations and hipothesis founded, analyze and propose one.
 
 ═══════════════════════════════════════════════
 OUTPUT STRUCTURE
@@ -81,8 +91,8 @@ CRITICAL: Return a JSON object with this EXACT structure:
 {
   "avatar": {
     "name": "Name (male or female, appropriate for Spain)",
-    "age": 28-45,
-    "city": "Spanish city matching target market",
+    "age": "proper age for a person with the characteristics with the problems the product/service solve"
+    "city": "City matching the target market",
     "ses": "Socioeconomic level matching product price point",
     "description": "One-sentence professional profile that explains why they need this product"
   },
@@ -123,10 +133,10 @@ CRITICAL: Return a JSON object with this EXACT structure:
 IMPORTANT REMINDERS:
 - This is a FRESH persona - do not reference previous projects
 - Gender should be determined by the actual target market, not assumed
-- All elements must be coherent with the product's positioning and price
-- Use realistic Spanish names, cities, and cultural context
+- All elements must be coherent with the product's positioning on the market, gap and price
+- Use realistic market scope names, cities, and cultural context
 - Return ONLY valid JSON, no markdown formatting
-- Write all content in Spanish`;
+- Write all content in english`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
