@@ -12,6 +12,7 @@ import { useAnalysisOrchestrator } from "@/hooks/useAnalysisOrchestrator";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { mockAnalysisState } from "@/utils/mockData";
 
 const Index = () => {
   const { state, runAnalysis } = useAnalysisOrchestrator();
@@ -20,6 +21,10 @@ const Index = () => {
   const prevRunningState = useRef(state.isRunning);
   const [showSignupGate, setShowSignupGate] = useState(false);
   const [projectId, setProjectId] = useState<string | null>(null);
+  
+  // Developer mode: Check for ?dev=true in URL
+  const isDevMode = new URLSearchParams(window.location.search).get('dev') === 'true';
+  const displayState = isDevMode ? mockAnalysisState : state;
 
   // Auto-scroll when analysis starts
   useEffect(() => {
@@ -55,8 +60,8 @@ const Index = () => {
   };
 
   // Extract metrics from analysis state
-  const avatarReliability = state.phases.phase2?.profile?.reliability || 0;
-  const topOffers = state.phases.phase3?.offers?.slice(0, 3).map((o: any) => ({
+  const avatarReliability = displayState.phases.phase2?.profile?.reliability || 0;
+  const topOffers = displayState.phases.phase3?.offers?.slice(0, 3).map((o: any) => ({
     offer: o.offer,
     value: o.valueGauge?.value || 0,
   })) || [];
@@ -66,13 +71,13 @@ const Index = () => {
       <AppHeader />
       <Hero onRunAnalysis={runAnalysis} isRunning={state.isRunning} />
       
-      {!state.isRunning && state.currentPhase === 0 && <EvidenceDrawer />}
+      {!displayState.isRunning && displayState.currentPhase === 0 && <EvidenceDrawer />}
       
-      {state.currentPhase > 0 && (
+      {displayState.currentPhase > 0 && (
         <div ref={contentRef}>
-          <PhaseRibbon currentPhase={state.currentPhase} isRunning={state.isRunning} />
-          <PhaseExplainer currentPhase={state.currentPhase} isRunning={state.isRunning} />
-          {state.clientReadiness && <ClientReadiness data={state.clientReadiness} />}
+          <PhaseRibbon currentPhase={displayState.currentPhase} isRunning={displayState.isRunning} />
+          <PhaseExplainer currentPhase={displayState.currentPhase} isRunning={displayState.isRunning} />
+          {displayState.clientReadiness && <ClientReadiness data={displayState.clientReadiness} />}
           
           <ProductMetrics
             avatarReliability={avatarReliability}
@@ -80,24 +85,24 @@ const Index = () => {
             topMessages={[]}
             topOffers={topOffers}
             nextAction={
-              state.phases.phase6?.experiments?.[0]
-                ? `Test: ${state.phases.phase6.experiments[0].hypothesis} on ${state.phases.phase6.experiments[0].channel}`
+              displayState.phases.phase6?.experiments?.[0]
+                ? `Test: ${displayState.phases.phase6.experiments[0].hypothesis} on ${displayState.phases.phase6.experiments[0].channel}`
                 : undefined
             }
           />
 
-          <MainGrid analysisState={state} showBlurOnPhase4Plus={showSignupGate} />
+          <MainGrid analysisState={displayState} showBlurOnPhase4Plus={isDevMode ? false : showSignupGate} />
           
-          <div className={showSignupGate ? "relative" : ""}>
-            {showSignupGate && (
+          <div className={isDevMode ? "" : (showSignupGate ? "relative" : "")}>
+            {!isDevMode && showSignupGate && (
               <div className="absolute inset-0 backdrop-blur-md z-10 rounded-lg" />
             )}
-            <ValidationMap data={state.phases.phase6} isRunning={state.isRunning} />
+            <ValidationMap data={displayState.phases.phase6} isRunning={displayState.isRunning} />
           </div>
         </div>
       )}
 
-      {showSignupGate && <SignupGate onComplete={handleSignupComplete} />}
+      {!isDevMode && showSignupGate && <SignupGate onComplete={handleSignupComplete} />}
       
       <footer className="border-t dotted-border-t py-6 mt-12">
         <p className="text-center text-sm text-muted-foreground">
