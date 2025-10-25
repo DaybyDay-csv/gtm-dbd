@@ -16,6 +16,7 @@ const phaseExplanations = [
       "🔍 Investigando el mercado: competidores, gaps y oportunidades",
       "💡 Detectando dónde puedes diferenciarte y ganar",
     ],
+    dataSource: "Análisis basado en: contenido real de tu web, descripción del producto, información de competidores y contexto del mercado que proporcionaste.",
   },
   {
     phase: 2,
@@ -26,6 +27,7 @@ const phaseExplanations = [
       "🎨 Generando un avatar visual que representa a tu buyer",
       "📈 Calculando la confiabilidad inicial de este perfil",
     ],
+    dataSource: "Perfil construido a partir de: análisis de mercado previo, características de tu producto y posicionamiento competitivo identificado en la fase anterior.",
   },
   {
     phase: 3,
@@ -36,6 +38,7 @@ const phaseExplanations = [
       "⬇️ Reduciendo el tiempo de espera y el esfuerzo percibido",
       "🎁 Creando ofertas irresistibles para cada necesidad de tu buyer",
     ],
+    dataSource: "Ofertas diseñadas usando: perfil completo del buyer persona, gaps del mercado identificados y características únicas de tu producto.",
   },
   {
     phase: 4,
@@ -46,6 +49,7 @@ const phaseExplanations = [
       "🟢 Versión VERDE: Mensaje cercano y basado en confianza",
       "🔵 Versión AZUL: Mensaje lógico y basado en datos",
     ],
+    dataSource: "Mensajes adaptados desde: las ofertas de valor creadas y el perfil psicológico del buyer persona, traducidos a cada estilo de comunicación DISC.",
   },
   {
     phase: 5,
@@ -56,6 +60,7 @@ const phaseExplanations = [
       "💬 Diseñando ejemplos de copy para cada trigger",
       "🛠️ Definiendo cómo implementar cada disparador",
     ],
+    dataSource: "Triggers generados combinando: perfil emocional del buyer, mensajes DISC personalizados y ecuación de valor de tus ofertas.",
   },
   {
     phase: 6,
@@ -66,6 +71,7 @@ const phaseExplanations = [
       "📊 Estableciendo KPIs, costes y tiempos para cada test",
       "🚀 Priorizando la siguiente mejor acción a ejecutar",
     ],
+    dataSource: "Experimentos diseñados integrando: todas las fases anteriores (buyer, ofertas, mensajes DISC y triggers emocionales) en tests accionables.",
   },
 ];
 
@@ -97,9 +103,14 @@ export const PhaseExplainer = ({ currentPhase, isRunning }: PhaseExplainerProps)
                 </li>
               ))}
             </ul>
-            <p className="text-xs text-muted-foreground mt-4 italic">
-              Este análisis es 100% personalizado para tu negocio basado en investigación real del mercado.
-            </p>
+            {currentExplanation.dataSource && (
+              <div className="mt-4 pt-3 border-t border-primary/10">
+                <p className="text-xs text-muted-foreground italic flex items-start gap-2">
+                  <span className="text-primary mt-0.5">ℹ️</span>
+                  <span>{currentExplanation.dataSource}</span>
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </Card>
