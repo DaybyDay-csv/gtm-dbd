@@ -68,18 +68,41 @@ export const useAnalysisOrchestrator = () => {
       // Get current user session (can be null for unauthenticated users)
       const { data: { session } } = await supabase.auth.getSession();
 
-      // Create project (user_id can be null for unauthenticated users)
-      const { data: project, error: projectError } = await supabase
+      // Check if project with this name already exists for this user
+      const { data: existingProjects } = await supabase
         .from("projects")
-        .insert({ 
-          name: projectName, 
-          url, 
-          user_id: session?.user?.id || null 
-        })
         .select()
-        .single();
+        .eq("name", projectName)
+        .eq("user_id", session?.user?.id || null);
 
-      if (projectError) throw projectError;
+      let project;
+      
+      if (existingProjects && existingProjects.length > 0) {
+        // Update existing project
+        const { data: updatedProject, error: updateError } = await supabase
+          .from("projects")
+          .update({ url, updated_at: new Date().toISOString() })
+          .eq("id", existingProjects[0].id)
+          .select()
+          .single();
+        
+        if (updateError) throw updateError;
+        project = updatedProject;
+      } else {
+        // Create new project
+        const { data: newProject, error: projectError } = await supabase
+          .from("projects")
+          .insert({ 
+            name: projectName, 
+            url, 
+            user_id: session?.user?.id || null 
+          })
+          .select()
+          .single();
+
+        if (projectError) throw projectError;
+        project = newProject;
+      }
 
       setState(prev => ({ ...prev, projectId: project.id }));
 
