@@ -26,7 +26,7 @@ export const BuyerPersona = ({ data }: BuyerPersonaProps) => {
     <div className="p-6 border dotted-border rounded-lg bg-card h-full">
       <h3 className="text-xl font-semibold mb-2">Buyer Persona</h3>
       <div className="mt-2 mb-4 px-3 py-1.5 bg-primary/5 border border-primary/20 rounded-full text-xs text-muted-foreground inline-flex items-center gap-1 w-fit">
-        <span className="text-primary font-semibold">👤</span>
+        <span className="text-primary font-semibold"></span>
         Mercado + Producto + Posicionamiento
       </div>
       
