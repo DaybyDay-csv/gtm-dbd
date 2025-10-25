@@ -5,8 +5,10 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { ArrowLeft, ExternalLink, CheckCircle2, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { claimUnclaimedProjects } from "@/utils/claimProjects";
 
 interface Project {
   id: string;
@@ -19,11 +21,18 @@ interface Project {
   updated_at: string;
 }
 
+interface EnrichedProject extends Project {
+  phasesCompleted: number;
+  lastPhase: number;
+  summary: string;
+  subtitle: string;
+}
+
 export default function Projects() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<EnrichedProject[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -37,14 +46,90 @@ export default function Projects() {
 
   const loadProjects = async () => {
     try {
-      const { data, error } = await supabase
+      // First, claim any unclaimed projects from localStorage
+      if (user?.id) {
+        const claimed = await claimUnclaimedProjects(user.id);
+        if (claimed > 0) {
+          toast({
+            title: "Proyectos recuperados",
+            description: `Se han asociado ${claimed} proyecto(s) a tu cuenta`,
+          });
+        }
+      }
+
+      // Load all user projects
+      const { data: projectsData, error: projectsError } = await supabase
         .from("projects")
         .select("*")
         .eq("user_id", user?.id)
         .order("updated_at", { ascending: false });
 
-      if (error) throw error;
-      setProjects(data || []);
+      if (projectsError) throw projectsError;
+      
+      if (!projectsData || projectsData.length === 0) {
+        setProjects([]);
+        return;
+      }
+
+      // Get all phase outputs for these projects
+      const projectIds = projectsData.map((p) => p.id);
+      const { data: phasesData, error: phasesError } = await supabase
+        .from("phase_outputs")
+        .select("project_id, phase, payload")
+        .in("project_id", projectIds);
+
+      if (phasesError) throw phasesError;
+
+      // Map phases by project_id for O(1) access
+      const phasesByProject = (phasesData || []).reduce((acc, phase) => {
+        if (!acc[phase.project_id]) acc[phase.project_id] = [];
+        acc[phase.project_id].push(phase);
+        return acc;
+      }, {} as Record<string, any[]>);
+
+      // Enrich projects with phase data
+      const enrichedProjects: EnrichedProject[] = projectsData.map((project) => {
+        const phases = phasesByProject[project.id] || [];
+        const phasesCompleted = new Set(phases.map((p) => p.phase)).size;
+        const lastPhase = phases.length > 0 ? Math.max(...phases.map((p) => p.phase)) : 0;
+
+        // Build subtitle from product_name or phase 1 data
+        let subtitle = project.product_name || "";
+        if (!subtitle && phases.length > 0) {
+          const phase1 = phases.find((p) => p.phase === 1);
+          if (phase1?.payload?.summary?.brandName) {
+            subtitle = phase1.payload.summary.brandName;
+          }
+        }
+
+        // Build summary from key_insights or derive from phases
+        let summary = project.key_insights || "";
+        if (!summary && phases.length > 0) {
+          const summaryParts: string[] = [];
+          
+          const phase1 = phases.find((p) => p.phase === 1);
+          if (phase1?.payload?.summary?.category) {
+            summaryParts.push(`Mercado: ${phase1.payload.summary.category}`);
+          }
+
+          const phase2 = phases.find((p) => p.phase === 2);
+          if (phase2?.payload?.profile?.painPoints?.[0]) {
+            summaryParts.push(phase2.payload.profile.painPoints[0]);
+          }
+
+          summary = summaryParts.join(" • ");
+        }
+
+        return {
+          ...project,
+          phasesCompleted,
+          lastPhase,
+          summary,
+          subtitle,
+        };
+      });
+
+      setProjects(enrichedProjects);
     } catch (error: any) {
       toast({
         title: "Error cargando proyectos",
@@ -110,12 +195,14 @@ export default function Projects() {
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
                     <div className="flex-1">
-                      {project.company_name && project.product_name ? (
+                      {project.company_name ? (
                         <div>
                           <div className="text-lg">{project.company_name}</div>
-                          <div className="text-sm text-muted-foreground font-normal">
-                            {project.product_name}
-                          </div>
+                          {project.subtitle && (
+                            <div className="text-sm text-muted-foreground font-normal">
+                              {project.subtitle}
+                            </div>
+                          )}
                         </div>
                       ) : (
                         project.name
@@ -132,10 +219,26 @@ export default function Projects() {
                       </a>
                     )}
                   </CardTitle>
-                  <CardDescription>
-                    {project.key_insights && (
-                      <div className="mb-2 text-sm line-clamp-2">
-                        {project.key_insights}
+                  <div className="flex gap-2 mt-2">
+                    <Badge variant="secondary" className="text-xs">
+                      {project.phasesCompleted} fase{project.phasesCompleted !== 1 ? 's' : ''}
+                    </Badge>
+                    {project.lastPhase === 6 ? (
+                      <Badge variant="default" className="text-xs flex items-center gap-1">
+                        <CheckCircle2 className="h-3 w-3" />
+                        Completado
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className="text-xs flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        Fase {project.lastPhase}
+                      </Badge>
+                    )}
+                  </div>
+                  <CardDescription className="mt-3">
+                    {project.summary && (
+                      <div className="mb-2 text-sm line-clamp-3">
+                        {project.summary}
                       </div>
                     )}
                     <div className="text-xs">

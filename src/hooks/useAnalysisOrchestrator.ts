@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { saveUnclaimedProject } from "@/utils/claimProjects";
 
 export interface AnalysisState {
   projectId: string | null;
@@ -82,6 +83,11 @@ export const useAnalysisOrchestrator = () => {
 
       if (projectError) throw projectError;
       const project = newProject;
+
+      // Save to localStorage if user is not logged in
+      if (!session?.user?.id) {
+        saveUnclaimedProject(project.id);
+      }
 
       setState(prev => ({ ...prev, projectId: project.id }));
 
