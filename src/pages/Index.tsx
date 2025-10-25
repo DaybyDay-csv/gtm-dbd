@@ -89,41 +89,63 @@ const Index = () => {
       
       {displayState.currentPhase > 0 && (
         <div ref={contentRef}>
-          <PhaseRibbon currentPhase={displayState.currentPhase} isRunning={displayState.isRunning} />
-          <PhaseExplainer currentPhase={displayState.currentPhase} isRunning={displayState.isRunning} />
-          {displayState.clientReadiness && <ClientReadiness data={displayState.clientReadiness} />}
-          
-          <ProductMetrics
-            avatarReliability={avatarReliability}
-            hypothesesValidated={0}
-            topMessages={[]}
-            topOffers={topOffers}
-            nextAction={
-              displayState.phases.phase7?.variations?.[0]
-                ? `Test: ${displayState.phases.phase7.variations[0].effect} on ${displayState.phases.phase7.variations[0].channel}`
-                : undefined
-            }
-          />
+          {/* UNLOCKED CONTENT - Phases 1-3 without blur */}
+          <div id="unlocked-content">
+            <PhaseRibbon currentPhase={displayState.currentPhase} isRunning={displayState.isRunning} />
+            <PhaseExplainer currentPhase={displayState.currentPhase} isRunning={displayState.isRunning} />
+            {displayState.clientReadiness && <ClientReadiness data={displayState.clientReadiness} />}
+            
+            <ProductMetrics
+              avatarReliability={avatarReliability}
+              hypothesesValidated={0}
+              topMessages={[]}
+              topOffers={topOffers}
+              nextAction={
+                displayState.phases.phase7?.variations?.[0]
+                  ? `Test: ${displayState.phases.phase7.variations[0].effect} on ${displayState.phases.phase7.variations[0].channel}`
+                  : undefined
+              }
+            />
 
-          <MainGrid analysisState={displayState} showBlurOnPhase4Plus={false} />
+            <MainGrid analysisState={displayState} showBlurOnPhase4Plus={false} />
+          </div>
 
-          {/* Budget Input - shown after Phase 5 */}
-          {state.awaitingBudgetInput && (
-            <BudgetInput onSubmit={handleBudgetSubmit} />
+          {/* SIGNUP GATE - Sticky between unlocked and locked content */}
+          {shouldShowGate && <SignupGate onComplete={handleSignupComplete} />}
+
+          {/* LOCKED CONTENT - Phases 4-7 with progressive blur */}
+          {shouldShowGate ? (
+            <div id="locked-content" className="relative">
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background/80 backdrop-blur-[8px] z-40 pointer-events-none" />
+              
+              <div className="relative z-30 opacity-60">
+                {state.awaitingBudgetInput && (
+                  <BudgetInput onSubmit={handleBudgetSubmit} />
+                )}
+
+                {displayState.phases.phase6 && !state.awaitingBudgetInput && (
+                  <ChannelStrategy data={displayState.phases.phase6} isRunning={displayState.isRunning && displayState.currentPhase === 6} />
+                )}
+                
+                <ValidationMap data={displayState.phases.phase7} isRunning={displayState.isRunning && displayState.currentPhase === 7} />
+              </div>
+            </div>
+          ) : (
+            <>
+              {/* UNLOCKED - Show phases 4-7 without blur when user is authenticated */}
+              {state.awaitingBudgetInput && (
+                <BudgetInput onSubmit={handleBudgetSubmit} />
+              )}
+
+              {displayState.phases.phase6 && !state.awaitingBudgetInput && (
+                <ChannelStrategy data={displayState.phases.phase6} isRunning={displayState.isRunning && displayState.currentPhase === 6} />
+              )}
+              
+              <ValidationMap data={displayState.phases.phase7} isRunning={displayState.isRunning && displayState.currentPhase === 7} />
+            </>
           )}
-
-          {/* Channel Strategy - shown after Phase 6 */}
-          {displayState.phases.phase6 && !state.awaitingBudgetInput && (
-            <ChannelStrategy data={displayState.phases.phase6} isRunning={displayState.isRunning && displayState.currentPhase === 6} />
-          )}
-          
-          {/* Validation Map - shown after Phase 7 */}
-          <ValidationMap data={displayState.phases.phase7} isRunning={displayState.isRunning && displayState.currentPhase === 7} />
         </div>
       )}
-
-      {/* Signup Gate - overlay after Phase 3 to unlock phases 4-7 */}
-      {shouldShowGate && <SignupGate onComplete={handleSignupComplete} />}
       
       <footer className="border-t dotted-border-t py-6 mt-12">
         <p className="text-center text-sm text-muted-foreground">

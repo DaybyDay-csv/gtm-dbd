@@ -177,4 +177,35 @@ All colors MUST be HSL.
   .magic-reveal {
     animation: magic-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
+
+  /* Locked content blur effect */
+  #locked-content {
+    position: relative;
+    overflow: visible;
+    min-height: 100vh;
+  }
+
+  #locked-content::before {
+    content: '';
+    position: absolute;
+    top: -150px;
+    left: 0;
+    right: 0;
+    height: 300px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      hsl(var(--background) / 0.1) 30%,
+      hsl(var(--background) / 0.3) 60%,
+      hsl(var(--background) / 0.5) 100%
+    );
+    pointer-events: none;
+    z-index: 35;
+  }
+
+  #locked-content > div {
+    filter: blur(6px);
+    transform: scale(0.98);
+    transition: filter 0.3s ease, transform 0.3s ease;
+  }
 }
