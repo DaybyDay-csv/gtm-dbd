@@ -43,14 +43,14 @@ const Index = () => {
 
   // Show signup gate after phase 3 if user is not authenticated
   useEffect(() => {
-    if (!user && state.currentPhase >= 4 && !state.isRunning) {
+    if (!user && state.currentPhase >= 4) {
       setShowSignupGate(true);
       // Store project ID for later association
       if (state.projectId) {
         setProjectId(state.projectId);
       }
     }
-  }, [user, state.currentPhase, state.isRunning, state.projectId]);
+  }, [user, state.currentPhase, state.projectId]);
 
   // Associate project with user after signup
   const handleSignupComplete = async () => {
@@ -107,25 +107,23 @@ const Index = () => {
 
           <MainGrid analysisState={displayState} showBlurOnPhase4Plus={false} />
 
-          {/* Signup Gate - shown after Phase 3 to unlock phases 4-7 */}
-          {shouldShowGate && <SignupGate onComplete={handleSignupComplete} />}
-
           {/* Budget Input - shown after Phase 5 */}
-          {state.awaitingBudgetInput && !shouldShowGate && (
+          {state.awaitingBudgetInput && (
             <BudgetInput onSubmit={handleBudgetSubmit} />
           )}
 
           {/* Channel Strategy - shown after Phase 6 */}
-          {displayState.phases.phase6 && !state.awaitingBudgetInput && !shouldShowGate && (
+          {displayState.phases.phase6 && !state.awaitingBudgetInput && (
             <ChannelStrategy data={displayState.phases.phase6} isRunning={displayState.isRunning && displayState.currentPhase === 6} />
           )}
           
           {/* Validation Map - shown after Phase 7 */}
-          {!shouldShowGate && (
-            <ValidationMap data={displayState.phases.phase7} isRunning={displayState.isRunning && displayState.currentPhase === 7} />
-          )}
+          <ValidationMap data={displayState.phases.phase7} isRunning={displayState.isRunning && displayState.currentPhase === 7} />
         </div>
       )}
+
+      {/* Signup Gate - overlay after Phase 3 to unlock phases 4-7 */}
+      {shouldShowGate && <SignupGate onComplete={handleSignupComplete} />}
       
       <footer className="border-t dotted-border-t py-6 mt-12">
         <p className="text-center text-sm text-muted-foreground">
