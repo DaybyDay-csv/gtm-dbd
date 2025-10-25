@@ -37,7 +37,6 @@ export const SystemLiveIndicator = ({ status, connectedPlatforms = [], lastSync 
         className="group relative"
         aria-label="Estado del sistema"
       >
-        <div className={`w-3 h-3 rounded-full ${config.color} ${config.animation}`} />
         <div className="absolute right-0 top-6 w-64 bg-popover text-popover-foreground border rounded-lg p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 text-xs shadow-lg z-50">
           <p className="font-semibold mb-2">{config.tooltip}</p>
           {status === 'theoretical' ? (

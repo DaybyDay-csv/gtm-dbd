@@ -59,12 +59,11 @@ ${JSON.stringify(allPhaseData.phase1.marketplacePresence, null, 2)}
    - Si producto está en Amazon → Amazon Sponsored Products DEBE estar en top 3
    - Si está en TikTok Shop → TikTok Shop Ads + estrategia orgánica debe evaluarse
    - Si tiene Shopify → Necesita presupuesto robusto para Meta/Google (validar si lo tiene)
-   - Estrategia ideal: Nativo para validación rápida + externo para diversificación
-   NO RECOMENDAR EL CANAL DE MARKETPLACE ANTIVO SOLO PORQUE ESTÉ DISPOBILE, ANALIZA CRÍTICAMENTE TRAS HABER HECHO EL ANALISIS COMPLETO DE TODOS LOS CANALES
+    - Estrategia ideal: Nativo para validación rápida + externo para diversificación
+    NO RECOMENDAR EL CANAL DE MARKETPLACE ANTIVO SOLO PORQUE ESTÉ DISPOBILE, ANALIZA CRÍTICAMENTE TRAS HABER HECHO EL ANALISIS COMPLETO DE TODOS LOS CANALES
+`
       : `
-═══════════════════════════════════════════════
 ℹ️ NO SE DETECTARON MARKETPLACES ESPECÍFICOS
-═══════════════════════════════════════════════
 
 El producto/servicio NO se vende en marketplaces tradicionales (Amazon, TikTok Shop, etc.).
 
