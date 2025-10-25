@@ -1,1 +1,8 @@
 project_id = "sehdzomhwoehmxrnwlsa"
+
+# Allow phases 1-2 to run without authentication for freemium access
+[functions.phase-1-market-analysis]
+verify_jwt = false
+
+[functions.phase-2-buyer-persona]
+verify_jwt = false

@@ -33,17 +33,23 @@ const Index = () => {
   useEffect(() => {
     if (!user && state.currentPhase >= 2 && !state.isRunning) {
       setShowSignupGate(true);
+      // Store project ID for later association
+      if (state.projectId) {
+        setProjectId(state.projectId);
+      }
     }
-  }, [user, state.currentPhase, state.isRunning]);
+  }, [user, state.currentPhase, state.isRunning, state.projectId]);
 
   // Associate project with user after signup
   const handleSignupComplete = async () => {
     setShowSignupGate(false);
     
-    if (projectId && user) {
+    const { data: { user: currentUser } } = await supabase.auth.getUser();
+    
+    if (projectId && currentUser) {
       await supabase
         .from("projects")
-        .update({ user_id: user.id })
+        .update({ user_id: currentUser.id })
         .eq("id", projectId);
     }
   };

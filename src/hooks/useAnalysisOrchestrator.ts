@@ -65,16 +65,17 @@ export const useAnalysisOrchestrator = () => {
         },
       });
 
-      // Get current user session
+      // Get current user session (can be null for unauthenticated users)
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) {
-        throw new Error('You must be logged in to run analysis');
-      }
 
-      // Create project linked to authenticated user
+      // Create project (user_id can be null for unauthenticated users)
       const { data: project, error: projectError } = await supabase
         .from("projects")
-        .insert({ name: projectName, url, user_id: session.user.id })
+        .insert({ 
+          name: projectName, 
+          url, 
+          user_id: session?.user?.id || null 
+        })
         .select()
         .single();
 
