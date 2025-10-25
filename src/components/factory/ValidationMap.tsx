@@ -1,4 +1,4 @@
-import { Download } from "lucide-react";
+import { Download, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,6 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 interface ValidationMapProps {
   data?: {
@@ -26,6 +27,7 @@ interface ValidationMapProps {
 }
 
 export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
+  const { toast } = useToast();
   const experiments = data?.experiments || [];
   const hasData = experiments.length > 0;
   
@@ -45,6 +47,35 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
   
   const handleStateChange = (index: number, newState: string) => {
     setExperimentStates(prev => ({ ...prev, [index]: newState }));
+  };
+
+  // Platform mapping based on channel
+  const platformOptions: Record<string, Array<{ name: string; url: string }>> = {
+    "Meta Ads": [{ name: "Meta Business Suite", url: "https://business.facebook.com/" }],
+    "Facebook": [{ name: "Meta Business Suite", url: "https://business.facebook.com/" }],
+    "Instagram": [
+      { name: "Instagram Business", url: "https://business.instagram.com/" },
+      { name: "Meta Business Suite", url: "https://business.facebook.com/" }
+    ],
+    "Google Ads": [{ name: "Google Ads", url: "https://ads.google.com/" }],
+    "TikTok Ads": [{ name: "TikTok Ads Manager", url: "https://ads.tiktok.com/" }],
+    "TikTok": [
+      { name: "TikTok Ads Manager", url: "https://ads.tiktok.com/" },
+      { name: "TikTok Business", url: "https://www.tiktok.com/business/" }
+    ],
+    "Email": [{ name: "Klaviyo", url: "https://www.klaviyo.com/" }],
+    "LinkedIn": [{ name: "LinkedIn Campaign Manager", url: "https://business.linkedin.com/marketing-solutions/ads" }],
+    "YouTube": [{ name: "Google Ads", url: "https://ads.google.com/" }],
+    "Twitter": [{ name: "Twitter Ads", url: "https://ads.twitter.com/" }],
+    "Pinterest": [{ name: "Pinterest Ads", url: "https://ads.pinterest.com/" }]
+  };
+
+  const handleConnect = (platform: string, url: string) => {
+    toast({
+      title: `Conectando con ${platform}`,
+      description: "Abriendo plataforma en nueva ventana...",
+    });
+    window.open(url, '_blank');
   };
 
   return (
@@ -75,6 +106,7 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
               <th className="text-left p-3 font-semibold">TTV</th>
               <th className="text-left p-3 font-semibold">Estado</th>
               <th className="text-left p-3 font-semibold">Owner</th>
+              <th className="text-left p-3 font-semibold">Conectar</th>
             </tr>
           </thead>
           <tbody>
@@ -114,6 +146,60 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
                   </DropdownMenu>
                 </td>
                 <td className="p-3 text-muted-foreground">{exp.owner}</td>
+                <td className="p-3">
+                  {(() => {
+                    const platforms = platformOptions[exp.channel] || platformOptions[exp.channel.split(' ')[0]] || [];
+                    
+                    if (platforms.length === 0) {
+                      return (
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          disabled
+                          className="opacity-50"
+                        >
+                          No disponible
+                        </Button>
+                      );
+                    }
+                    
+                    if (platforms.length === 1) {
+                      return (
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleConnect(platforms[0].name, platforms[0].url)}
+                        >
+                          <ExternalLink className="w-3 h-3 mr-1" />
+                          {platforms[0].name}
+                        </Button>
+                      );
+                    }
+                    
+                    return (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" size="sm">
+                            <ExternalLink className="w-3 h-3 mr-1" />
+                            Conectar
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="bg-background border z-50">
+                          {platforms.map((platform) => (
+                            <DropdownMenuItem
+                              key={platform.name}
+                              onClick={() => handleConnect(platform.name, platform.url)}
+                              className="cursor-pointer"
+                            >
+                              <ExternalLink className="w-3 h-3 mr-2" />
+                              {platform.name}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    );
+                  })()}
+                </td>
               </tr>
             ))}
           </tbody>
