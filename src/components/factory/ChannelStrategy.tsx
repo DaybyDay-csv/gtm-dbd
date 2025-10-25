@@ -276,12 +276,14 @@ export const ChannelStrategy = ({ data, isRunning }: ChannelStrategyProps) => {
                 <div className="flex items-center gap-4">
                   <div className="text-right">
                     <p className="text-2xl font-bold">{channel.score}/100</p>
-                    <div className="flex gap-0.5 mt-1">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <span key={i} className={i < stars ? "text-yellow-500" : "text-gray-300"}>
-                          ⭐
-                        </span>
-                      ))}
+                    <div className="w-32 h-2 bg-gray-300 rounded-full overflow-hidden mt-2">
+                      <div 
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{
+                          width: `${channel.score}%`,
+                          background: `linear-gradient(90deg, rgb(209, 213, 219) 0%, rgb(251, 191, 36) 50%, rgb(217, 119, 6) 100%)`,
+                        }}
+                      />
                     </div>
                   </div>
                 </div>
