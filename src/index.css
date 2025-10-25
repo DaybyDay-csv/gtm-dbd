@@ -185,23 +185,25 @@ All colors MUST be HSL.
     min-height: 100vh;
   }
 
-  #locked-content::before {
-    content: '';
-    position: absolute;
-    top: -150px;
-    left: 0;
-    right: 0;
-    height: 300px;
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      hsl(var(--background) / 0.1) 30%,
-      hsl(var(--background) / 0.3) 60%,
-      hsl(var(--background) / 0.5) 100%
-    );
-    pointer-events: none;
-    z-index: 35;
-  }
+#locked-content::before {
+  content: '';
+  position: absolute;
+  top: -250px;
+  left: 0;
+  right: 0;
+  height: 400px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    hsl(var(--background) / 0.05) 20%,
+    hsl(var(--background) / 0.15) 40%,
+    hsl(var(--background) / 0.3) 60%,
+    hsl(var(--background) / 0.5) 80%,
+    hsl(var(--background) / 0.7) 100%
+  );
+  pointer-events: none;
+  z-index: 35;
+}
 
   #locked-content > div,
   #locked-content > section {

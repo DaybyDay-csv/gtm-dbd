@@ -17,6 +17,7 @@ import { ProductNucleus } from "@/components/factory/ProductNucleus";
 import { BuyerPersona } from "@/components/factory/BuyerPersona";
 import { OfferFactory } from "@/components/factory/OfferFactory";
 import { DISCTranslator } from "@/components/factory/DISCTranslator";
+import { DISCTranslatorPreview } from "@/components/factory/DISCTranslatorPreview";
 import { ClientReadiness } from "@/components/factory/ClientReadiness";
 import { SignupGate } from "@/components/factory/SignupGate";
 import { BudgetInput } from "@/components/factory/BudgetInput";
@@ -148,6 +149,17 @@ const Index = () => {
                 )}
               </div>
             </section>
+
+            {/* Preview de DISC sin blur cuando hay SignupGate */}
+            {shouldShowGate && displayState.phases.phase4 && (
+              <div className="container mx-auto px-4 pb-0 pt-6">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  <div className="lg:col-span-3">
+                    <DISCTranslatorPreview />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* LOCKED CONTENT - Phases 4-7 with progressive blur */}
