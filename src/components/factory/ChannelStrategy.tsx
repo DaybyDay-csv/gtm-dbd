@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Target } from "lucide-react";
 import { CheckCircle2, AlertCircle, TrendingUp, Clock, Euro } from "lucide-react";
 import { RadarChart, PolarGrid, PolarAngleAxis, Radar, ResponsiveContainer, Tooltip } from "recharts";
 
@@ -19,6 +20,12 @@ interface ChannelStrategyProps {
       estimatedCPL: string;
       timeToResults: string;
       rank: number;
+      isNativePlatform?: boolean;
+      platformDetails?: {
+        adTypes: string[];
+        organicBoost: string;
+        budgetSplit: string;
+      };
     }>;
     recommendation?: {
       primary: string;
@@ -95,9 +102,17 @@ export const ChannelStrategy = ({ data, isRunning }: ChannelStrategyProps) => {
       {primaryChannel && (
         <Card className="border-4 border-primary shadow-xl">
           <CardHeader className="text-center bg-primary/5">
-            <CardTitle className="text-3xl mb-2">
-              🎯 Canal Recomendado: {primaryChannel.name}
-            </CardTitle>
+            <div className="flex items-center justify-center gap-2 mb-2 flex-wrap">
+              <CardTitle className="text-3xl">
+                🎯 Canal Recomendado: {primaryChannel.name}
+              </CardTitle>
+              {primaryChannel.isNativePlatform && (
+                <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 border-green-300 dark:border-green-700 text-sm">
+                  <Target className="w-4 h-4 mr-1" />
+                  Canal Nativo - Audiencia Caliente
+                </Badge>
+              )}
+            </div>
             <CardDescription className="text-base">
               Basado en tu buyer persona, presupuesto y gap de mercado
             </CardDescription>
@@ -203,6 +218,33 @@ export const ChannelStrategy = ({ data, isRunning }: ChannelStrategyProps) => {
                 </p>
               </div>
             )}
+
+            {/* Platform Details for Native Platforms */}
+            {primaryChannel.platformDetails && (
+              <div className="p-4 bg-green-50 dark:bg-green-950/30 rounded-lg border border-green-200 dark:border-green-800">
+                <p className="text-sm font-semibold text-green-900 dark:text-green-100 mb-3 flex items-center gap-2">
+                  📱 Opciones Disponibles en {primaryChannel.name}:
+                </p>
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-xs font-medium text-green-800 dark:text-green-200 mb-1.5">Tipos de Anuncios:</p>
+                    <ul className="text-xs text-green-700 dark:text-green-300 space-y-1 pl-4">
+                      {primaryChannel.platformDetails.adTypes.map((type, i) => (
+                        <li key={i} className="list-disc">{type}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium text-green-800 dark:text-green-200 mb-1.5">🌱 Posicionamiento Orgánico:</p>
+                    <p className="text-xs text-green-700 dark:text-green-300">{primaryChannel.platformDetails.organicBoost}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium text-green-800 dark:text-green-200 mb-1.5">💰 Distribución de Presupuesto Recomendada:</p>
+                    <p className="text-xs text-green-700 dark:text-green-300 font-mono bg-green-100/50 dark:bg-green-900/20 px-2 py-1 rounded">{primaryChannel.platformDetails.budgetSplit}</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
@@ -255,20 +297,27 @@ export const ChannelStrategy = ({ data, isRunning }: ChannelStrategyProps) => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
-          {data.channels.sort((a, b) => b.score - a.score).map((channel, idx) => {
-            const stars = Math.round((channel.score / 100) * 5);
-            return (
-              <div
-                key={channel.name}
-                className="flex items-center justify-between p-4 rounded-lg border dotted-border hover:bg-secondary/30 transition-colors"
-              >
+          {data.channels.sort((a, b) => b.score - a.score).map((channel, idx) => (
+            <div
+              key={channel.name}
+              className="p-4 rounded-lg border dotted-border hover:bg-secondary/30 transition-colors space-y-3"
+            >
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4 flex-1">
                   <span className="text-2xl font-bold text-muted-foreground w-8">
                     {idx + 1}.
                   </span>
                   <div className="flex-1">
-                    <p className="font-semibold">{channel.name}</p>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <p className="font-semibold">{channel.name}</p>
+                      {channel.isNativePlatform && (
+                        <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 border-green-300 dark:border-green-700 text-xs">
+                          <Target className="w-3 h-3 mr-1" />
+                          Canal Nativo
+                        </Badge>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
                       {channel.reasoning}
                     </p>
                   </div>
@@ -288,8 +337,35 @@ export const ChannelStrategy = ({ data, isRunning }: ChannelStrategyProps) => {
                   </div>
                 </div>
               </div>
-            );
-          })}
+
+              {/* Platform Details */}
+              {channel.platformDetails && (
+                <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-950/30 rounded border border-blue-200 dark:border-blue-800 ml-12">
+                  <p className="text-xs font-semibold text-blue-900 dark:text-blue-100 mb-2 flex items-center gap-1">
+                    📱 Opciones en {channel.name}
+                  </p>
+                  <div className="grid md:grid-cols-3 gap-3 text-xs text-blue-700 dark:text-blue-300">
+                    <div>
+                      <p className="font-medium mb-1">Tipos de Anuncios:</p>
+                      <ul className="space-y-0.5 pl-3">
+                        {channel.platformDetails.adTypes.slice(0, 2).map((type, i) => (
+                          <li key={i} className="list-disc">{type}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <p className="font-medium mb-1">🌱 Orgánico:</p>
+                      <p className="line-clamp-2">{channel.platformDetails.organicBoost}</p>
+                    </div>
+                    <div>
+                      <p className="font-medium mb-1">💰 Presupuesto:</p>
+                      <p className="font-mono text-[10px]">{channel.platformDetails.budgetSplit}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
         </CardContent>
       </Card>
     </section>

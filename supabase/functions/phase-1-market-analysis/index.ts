@@ -105,6 +105,209 @@ ${websiteContent}
 - Values: ${values || 'Extract from website content'}
 - Additional documentation: ${docs || 'None provided'}
 
+═══════════════════════════════════════════════
+🛒 STEP 1.5: MARKETPLACE & PLATFORM DETECTION
+═══════════════════════════════════════════════
+
+CRITICAL: Analyze if this product/service is sold through specific marketplaces or platforms.
+
+**Check for these indicators in URL and scraped content:**
+
+E-COMMERCE PLATFORMS:
+- Amazon (amazon.com, amazon.es, ASIN codes, "sold by", "fulfilled by Amazon", "/dp/", "/gp/product/")
+- TikTok Shop (tiktokshop, #TikTokMadeMeBuyIt, creator partnerships, "shop now" on TikTok)
+- Shopify (myshopify.com, Shopify checkout patterns, "shopify" in source code)
+- Etsy (etsy.com, handmade, vintage, creator shop, "/shop/")
+- eBay (ebay.com, auction listings, "/itm/")
+- Mercado Libre (mercadolibre, MLM/MLA codes, "mercadolibre" in URL)
+- Alibaba/AliExpress (alibaba.com, aliexpress.com, wholesale mentions)
+- Walmart Marketplace (walmart.com/ip/)
+- Rakuten, Zalando, Otto, etc.
+
+SERVICES & DIGITAL PLATFORMS:
+- WordPress + WooCommerce (wp-content, woocommerce patterns, /wp-admin/)
+- Stripe/PayPal checkout (payment gateway indicators in source)
+- App Store / Google Play (app.link, apps.apple.com, play.google.com)
+- Steam / Epic Games (steampowered.com, epicgames.com, game distribution)
+- Udemy / Teachable / Kajabi / Hotmart (course platforms, "curso online")
+- Booking.com / Airbnb (hospitality platforms, reservation systems)
+- Upwork / Fiverr (freelance marketplaces)
+
+SOCIAL COMMERCE:
+- Instagram Shopping (instagram.com/shop, product tags)
+- Facebook Marketplace (facebook.com/marketplace)
+- Pinterest Shopping (pinterest.com with buyable pins)
+- WhatsApp Business Catalog
+
+B2B PLATFORMS:
+- LinkedIn Services (linkedin.com/services)
+- Salesforce AppExchange
+- HubSpot Marketplace
+- Slack App Directory
+
+**For EACH detected marketplace, document:**
+
+1. **Platform name** (exact platform detected)
+2. **Confidence level**: high (strong evidence like ASIN, specific URLs), medium (multiple indicators), low (weak signals)
+3. **Evidence found**: Specific proof from scraped content (URLs, product codes, text mentions)
+4. **Native advertising options**: Specific ad products available on that platform
+5. **Organic positioning strategies**: Platform-specific SEO and content tactics
+6. **Estimated budget ranges**: Compare native ads cost vs external promotion cost
+7. **Pros**: Benefits of advertising on this native platform (audience intent, setup speed, etc.)
+8. **Cons**: Limitations (platform dependency, margins, competition, etc.)
+
+**CRITICAL OUTPUT STRUCTURE** to add to Phase 1 JSON:
+
+If NO marketplaces detected:
+"marketplacePresence": {
+  "detected": false,
+  "platforms": [],
+  "recommendations": ["Focus on external channels: Meta Ads, Google Search, LinkedIn, etc."]
+}
+
+If marketplaces ARE detected:
+"marketplacePresence": {
+  "detected": true,
+  "platforms": [
+    {
+      "name": "Amazon",
+      "confidence": "high",
+      "evidence": "Product ASIN B08XYZ123 found, 'Fulfilled by Amazon' text detected, amazon.es/dp/ URL pattern",
+      "url": "https://amazon.es/dp/B08XYZ123",
+      "nativeAdOptions": [
+        "Sponsored Products - CPC €0.40-€1.20 por clic",
+        "Sponsored Brands - Anuncios display en resultados de búsqueda",
+        "Sponsored Display - Retargeting dentro y fuera de Amazon",
+        "Amazon DSP - Display programático en red Amazon"
+      ],
+      "organicStrategies": [
+        "Optimización de título con keywords de alto volumen de búsqueda",
+        "A+ Content / Enhanced Brand Content para mejorar conversión",
+        "Backend keywords (250 caracteres) en Seller Central",
+        "Gestión activa de reviews (solicitar reseñas post-compra)",
+        "Amazon SEO - Optimización algoritmo A9 (CTR, conversión, ventas)",
+        "Lightning Deals y promociones para impulsar ranking orgánico",
+        "Participación en Amazon Brand Registry para protección de marca"
+      ],
+      "estimatedBudget": {
+        "nativeAds": "€500-€5,000/mes dependiendo de competencia en keywords y categoría",
+        "organicOptimization": "€200-€800/mes (herramientas Helium10/Jungle Scout + tiempo de gestión)",
+        "externalPromotion": "€1,500-€8,000/mes en Meta/Google para traer tráfico a Amazon (menos eficiente)"
+      },
+      "pros": [
+        "Audiencia con ALTA INTENCIÓN de compra - ya están buscando productos similares",
+        "Conversión 3-5x más rápida que tráfico frío de Meta/Google",
+        "Amazon maneja logística, pagos, devoluciones y confianza del usuario",
+        "CPL estimado €15-30 (50-70% menor que Meta Ads para misma conversión)",
+        "Setup y primeros resultados en 48-72h vs 2-3 semanas de canales externos",
+        "Datos de búsqueda internos de Amazon para optimización"
+      ],
+      "cons": [
+        "Márgenes reducidos por comisiones Amazon (15-20% según categoría)",
+        "Dependencia total de una plataforma (riesgo de suspensión de cuenta)",
+        "Difícil construir brand equity - usuarios compran en Amazon, no en tu marca",
+        "Competencia feroz en keywords populares (guerras de CPC)",
+        "Amazon favorece sus propias marcas (Amazon Basics, Amazon Essentials)"
+      ]
+    },
+    {
+      "name": "TikTok Shop",
+      "confidence": "medium",
+      "evidence": "Website footer mentions '#TikTokMadeMeBuyIt', creator collaboration section visible",
+      "url": "https://tiktok.com/@brandname",
+      "nativeAdOptions": [
+        "TikTok Shop Ads - Video ads integrados en For You Page",
+        "Product Showcase Ads - Catálogo de productos con enlace directo",
+        "LIVE Shopping Ads - Promoción de transmisiones en vivo",
+        "Creator Marketplace - Partnerships con influencers"
+      ],
+      "organicStrategies": [
+        "Contenido orgánico viral (participar en challenges y trends)",
+        "Colaboraciones con micro-influencers (5k-50k followers)",
+        "LIVE shopping sessions semanales con ofertas exclusivas",
+        "User-generated content (repostear reviews de clientes)",
+        "Storytelling creativo (behind-the-scenes, tutoriales, tips)",
+        "Hashtag strategy específica del nicho"
+      ],
+      "estimatedBudget": {
+        "nativeAds": "€300-€3,000/mes para testing inicial (CPM bajo pero volumen necesario)",
+        "organicOptimization": "€500-€2,000/mes (creación contenido + influencer partnerships)",
+        "externalPromotion": "€2,000-€6,000/mes en Meta/Google (menos efectivo para Gen Z)"
+      },
+      "pros": [
+        "Audiencia Gen Z y Millennials con alto engagement",
+        "Contenido viral puede generar ROI exponencial sin inversión publicitaria",
+        "CPM bajo (€2-€5) comparado con Meta (€8-€15)",
+        "Integración directa checkout - compra sin salir de TikTok",
+        "Formato de video nativo = mayor engagement que imagen estática"
+      ],
+      "cons": [
+        "Requiere MUCHO esfuerzo de creación de contenido creativo",
+        "Curva de aprendizaje alta - contenido debe ser entretenido, no solo comercial",
+        "Resultados impredecibles - algoritmo favorece entretenimiento sobre ventas",
+        "Audiencia joven puede tener menor poder adquisitivo que Facebook/LinkedIn",
+        "Plataforma más nueva = menos datos históricos y mejores prácticas"
+      ]
+    },
+    {
+      "name": "Shopify",
+      "confidence": "high",
+      "evidence": "URL pattern 'brandname.myshopify.com' detected, Shopify checkout scripts in source code",
+      "url": "https://brandname.myshopify.com",
+      "nativeAdOptions": [
+        "Shopify Email Marketing - Automations y campaigns integradas",
+        "Shopify Audiences - Segmentación avanzada para Meta/Google",
+        "Shop App - Discovery dentro del ecosistema Shopify",
+        "Shopify Collabs - Influencer marketplace"
+      ],
+      "organicStrategies": [
+        "SEO on-site (Meta titles, descriptions, structured data)",
+        "Content marketing / Blog integrado con productos",
+        "Email marketing automation (abandoned cart, post-purchase)",
+        "Programa de referidos / loyalty program",
+        "Integración con Google Shopping feed orgánico",
+        "Social proof (reviews, testimonials, UGC)"
+      ],
+      "estimatedBudget": {
+        "nativeAds": "€100-€500/mes (Shopify Email, Shop App discovery)",
+        "organicOptimization": "€300-€1,200/mes (SEO, content, email automation setup)",
+        "externalPromotion": "€1,000-€10,000/mes (Meta/Google Ads para traer tráfico a tienda)"
+      },
+      "pros": [
+        "Control total de la experiencia de marca (vs Amazon)",
+        "Márgenes completos sin comisiones de marketplace",
+        "Integración nativa con Meta/Google Ads (Shopify Audiences)",
+        "Email marketing directo a base de clientes propia",
+        "Escalabilidad infinita sin restricciones de plataforma"
+      ],
+      "cons": [
+        "Requiere traer TODO el tráfico desde cero (no hay audiencia built-in)",
+        "CPL más alto que marketplaces (€40-€80 vs €15-€30 en Amazon)",
+        "Necesitas construir confianza desde cero (vs trust de Amazon/eBay)",
+        "Logística, pagos y atención al cliente son responsabilidad propia",
+        "Inversión inicial en Meta/Google Ads es crítica para traccionar"
+      ]
+    }
+  ],
+  "recommendations": [
+    "Si vendes en Amazon con reviews >4.0 → PRIORIZA Amazon Sponsored Products (CPL 50% menor, audiencia caliente)",
+    "Si estás en TikTok Shop → Combina ads con estrategia orgánica viral (contenido > publicidad directa)",
+    "Si tienes Shopify → Necesitas presupuesto robusto para Meta/Google (€2k+/mes mínimo para escalar)",
+    "Estrategia ideal: Publicidad NATIVA en marketplace (validación rápida) + canales externos (diversificación)",
+    "Evita dependencia de una sola plataforma - usa marketplace para cash flow, tienda propia para brand equity"
+  ]
+}
+
+**EXAMPLES OF EVIDENCE TO LOOK FOR:**
+- Amazon: "ASIN:", "/dp/", "sold by", "Add to Cart", "fulfilled by Amazon", "amazon-adsystem"
+- TikTok: "#TikTokMadeMeBuyIt", "tiktok.com/@", "shop now on TikTok", "creator partnerships"
+- Shopify: "myshopify.com", "Shopify.shop", "cdn.shopify.com", "checkout.shopify"
+- Etsy: "etsy.com/shop/", "Add to cart" + handmade/vintage language
+- WordPress+WooCommerce: "wp-content", "woocommerce", "/wp-admin/", "WC_" in code
+
+If you find ZERO marketplace indicators, explicitly state:
+"marketplacePresence": { "detected": false, ... }
+
 IMPORTANT - ANALYSIS PRIORITY ORDER:
 1. START with the client's product description above - this is your north star
 2. Cross-reference and expand with the scraped website content

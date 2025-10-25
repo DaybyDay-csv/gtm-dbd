@@ -21,7 +21,71 @@ serve(async (req) => {
     console.log('Starting Phase 6 - Channel Strategy Analysis for project:', projectId);
     console.log('Budget:', budgetLevel, budgetAmount);
 
+    // Prepare marketplace context from Phase 1
+    const marketplaceContext = allPhaseData.phase1?.marketplacePresence?.detected 
+      ? `
+═══════════════════════════════════════════════
+🛒 INFORMACIÓN CRÍTICA - MARKETPLACES DETECTADOS
+═══════════════════════════════════════════════
+
+⚠️ ESTE PRODUCTO YA SE VENDE EN LAS SIGUIENTES PLATAFORMAS:
+
+${JSON.stringify(allPhaseData.phase1.marketplacePresence, null, 2)}
+
+🎯 IMPLICACIONES ESTRATÉGICAS CRÍTICAS:
+
+1. **AUDIENCIA CALIENTE vs AUDIENCIA FRÍA:**
+   - Marketplace nativo = Usuarios con ALTA INTENCIÓN (ya buscan productos similares)
+   - Canales externos (Meta/Google) = Usuarios en descubrimiento (requieren educación)
+   
+2. **ROI COMPARATIVO:**
+   - CPL nativo en marketplace: €15-€40 (conversión rápida)
+   - CPL externo Meta/Google: €40-€100 (conversión más lenta)
+   - Tiempo hasta resultados: 3-5 días (nativo) vs 14-30 días (externo)
+
+3. **ESTRATEGIA DE ANÁLISIS OBLIGATORIA:**
+   - Debes analizar PRIMERO las opciones de publicidad NATIVA listadas arriba
+   - Comparar score nativo vs canales externos tradicionales
+   - Considerar ventaja de capitalizar audiencia EXISTENTE en la plataforma
+   - Evaluar embudo: plataforma nativa = menor fricción de compra
+   - Bonus de +15 puntos en score para canales nativos de marketplace (audiencia caliente)
+
+4. **CONSIDERACIONES DE PRESUPUESTO:**
+   - Marketplace nativo suele requerir MENOR presupuesto inicial
+   - Pero tiene comisiones de plataforma (15-20% Amazon, 5-8% TikTok Shop)
+   - Canales externos requieren mayor inversión pero construyen brand equity propio
+
+5. **RECOMENDACIÓN DE ANÁLISIS:**
+   - Si producto está en Amazon → Amazon Sponsored Products DEBE estar en top 3
+   - Si está en TikTok Shop → TikTok Shop Ads + estrategia orgánica debe evaluarse
+   - Si tiene Shopify → Necesita presupuesto robusto para Meta/Google (validar si lo tiene)
+   - Estrategia ideal: Nativo para validación rápida + externo para diversificación
+`
+      : `
+═══════════════════════════════════════════════
+ℹ️ NO SE DETECTARON MARKETPLACES ESPECÍFICOS
+═══════════════════════════════════════════════
+
+El producto/servicio NO se vende en marketplaces tradicionales (Amazon, TikTok Shop, etc.).
+
+Debes analizar canales tradicionales:
+- Meta Ads (Facebook/Instagram)
+- Google Search Ads
+- Google Display Network
+- LinkedIn Ads (si B2B)
+- Email Marketing
+- SEO / Content Marketing
+- YouTube Ads
+- Twitter/X Ads
+- Programmatic Display
+- Influencer Marketing
+
+Enfoque: Atraer tráfico frío y construir audiencia desde cero.
+`;
+
     const prompt = `Eres un estratega de canales de marketing B2B/B2C. Tu misión es recomendar EL MEJOR CANAL para validar el producto.
+
+${marketplaceContext}
 
 CONTEXTO DEL NEGOCIO:
 - Tamaño empresa: ${allPhaseData.phase1?.businessSize || 'No especificado'}
@@ -32,22 +96,57 @@ CONTEXTO DEL NEGOCIO:
 - Presupuesto declarado: ${budgetLevel} (~€${budgetAmount})
 
 ANÁLISIS REQUERIDO:
-1. Estimar nivel de recursos real considerando:
+1. **SI SE DETECTARON MARKETPLACES (revisar sección arriba):**
+   a) PRIMERO analiza las opciones de publicidad NATIVA listadas (Amazon Ads, TikTok Shop Ads, etc.)
+   b) Compara CPL nativo vs CPL externo (Meta/Google) usando los datos proporcionados
+   c) Evalúa ventaja de audiencia con intención vs audiencia fría
+   d) Calcula tiempo de setup: nativo (2-5 días) vs externo (14-30 días)
+   e) Considera trade-off: dependencia plataforma vs diversificación
+   f) Aplica BONUS +15 puntos en score para canales nativos de marketplace
+   
+2. **SI NO HAY MARKETPLACES:**
+   Analiza canales externos tradicionales (Meta, Google, LinkedIn, etc.)
+
+3. Estimar nivel de recursos real considerando:
    - Madurez del negocio
    - Complejidad del producto
    - Canales donde consume el buyer
    - Barreras de entrada por canal
    - ROI esperado vs presupuesto
+   - **NUEVO:** Presencia existente en marketplaces (ventaja competitiva crítica)
 
-2. Calcular score por canal (0-100) basado en:
+4. Calcular score por canal (0-100) basado en:
    - Fit con buyer persona (40%)
    - Viabilidad con presupuesto (30%)
    - Cobertura del gap de mercado (20%)
    - Tiempo hasta primeros resultados (10%)
+   - **BONUS +15 puntos:** Si es canal nativo de marketplace detectado (audiencia caliente)
 
-3. Recomendar canal principal + 2 alternativas
+5. Recomendar canal principal + 2 alternativas
 
-4. Analizar al menos 6-8 canales diferentes: Meta Ads, Google Search, Google Display, Email Marketing, LinkedIn Ads, TikTok, YouTube, Marketplaces (Amazon, etc), SEO/Content, etc.
+6. **CANALES A ANALIZAR (mínimo 6-8):**
+   
+   **SI HAY MARKETPLACES DETECTADOS, PRIORIZA ESTOS:**
+   - Amazon Sponsored Products (si producto en Amazon)
+   - Amazon Sponsored Brands (si producto en Amazon)
+   - TikTok Shop Ads (si producto en TikTok Shop)
+   - Etsy Promoted Listings (si producto en Etsy)
+   - Shopify Email Marketing (si tienda Shopify)
+   - eBay Promoted Listings (si producto en eBay)
+   
+   **CANALES EXTERNOS TRADICIONALES (analizar siempre):**
+   - Meta Ads (Facebook/Instagram)
+   - Google Search Ads
+   - Google Display Network / GDN
+   - LinkedIn Ads (si B2B)
+   - Email Marketing tradicional
+   - SEO / Content Marketing
+   - YouTube Ads
+   - TikTok Ads (diferente de TikTok Shop - es para traer tráfico externo)
+   - Twitter/X Ads
+   - Programmatic Display (DSPs)
+   - Influencer Marketing
+   - Pinterest Ads (si producto visual/lifestyle)
 
 FORMATO DE RESPUESTA (JSON estricto, sin markdown):
 {
@@ -58,14 +157,31 @@ FORMATO DE RESPUESTA (JSON estricto, sin markdown):
   },
   "channels": [
     {
+      "name": "Amazon Sponsored Products",
+      "score": 92,
+      "reasoning": "Audiencia caliente ya buscando productos similares. Mayor ROI por menor CPL y conversión rápida",
+      "pros": ["Audiencia con alta intención de compra", "CPL competitivo €15-30 (50% menor que Meta)", "Resultados en 3-5 días", "Amazon maneja trust y fulfillment", "Setup rápido en 48h"],
+      "cons": ["Comisiones Amazon 15-20%", "Dependencia de plataforma", "Difícil construir brand equity"],
+      "estimatedCPL": "€15-30",
+      "timeToResults": "3-5 días",
+      "rank": 1,
+      "isNativePlatform": true,
+      "platformDetails": {
+        "adTypes": ["Sponsored Products (CPC)", "Sponsored Brands (Display)", "Sponsored Display (Retargeting)"],
+        "organicBoost": "Optimizar título keywords, A+ Content, backend search terms, gestión reviews",
+        "budgetSplit": "70% Sponsored Products / 20% Organic SEO / 10% Sponsored Brands"
+      }
+    },
+    {
       "name": "Meta Ads",
-      "score": 85,
-      "reasoning": "Mejor alcance para tu buyer persona con presupuesto óptimo",
-      "pros": ["Mayor alcance demográfico", "CPL competitivo €20-40", "Resultados rápidos en 14 días", "Audiencias lookalike disponibles"],
-      "cons": ["Requiere presupuesto mínimo €1,500/mes", "Curva de aprendizaje inicial"],
-      "estimatedCPL": "€20-40",
-      "timeToResults": "14 días",
-      "rank": 1
+      "score": 78,
+      "reasoning": "Opción para diversificar y construir audiencias propias fuera de marketplace",
+      "pros": ["Alcance masivo", "Retargeting potente", "Lookalike audiences", "Construcción de brand equity"],
+      "cons": ["CPL €40-80 (audiencia fría)", "Setup más lento 14-21 días", "Requiere landing page optimizada"],
+      "estimatedCPL": "€40-80",
+      "timeToResults": "14-21 días",
+      "rank": 2,
+      "isNativePlatform": false
     },
     {
       "name": "Google Search",
