@@ -188,26 +188,41 @@ const Index = () => {
             )}
           </div>
 
-          {/* LOCKED CONTENT - Phases 4-7 with progressive blur */}
+          {/* LOCKED CONTENT - Phases 4-7 with progressive blur and scroll effect */}
           {shouldShowGate && (
-            <div id="locked-content" className="relative">
-              <div className="container mx-auto px-4 py-12">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  <div className={`lg:col-span-3 ${displayState.isRunning && !displayState.phases.phase4 ? 'charging' : ''} ${displayState.phases.phase4 ? 'magic-reveal' : ''}`}>
-                    <DISCTranslator data={displayState.phases.phase4} />
+            <div id="locked-content" className="relative min-h-[200vh]">
+              {/* Blur overlay that fades as you scroll */}
+              <div 
+                className="sticky top-0 h-screen pointer-events-none z-10"
+                style={{
+                  background: 'linear-gradient(to bottom, rgba(var(--background), 0) 0%, rgba(var(--background), 0.95) 50%, rgba(var(--background), 1) 100%)'
+                }}
+              >
+                <div className="absolute inset-0 backdrop-blur-xl" />
+              </div>
+
+              {/* Content that scrolls underneath */}
+              <div className="relative -mt-[100vh] z-0">
+                <div className="container mx-auto px-4 py-12 space-y-12">
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 opacity-40">
+                    <div className={`lg:col-span-3 ${displayState.isRunning && !displayState.phases.phase4 ? 'charging' : ''} ${displayState.phases.phase4 ? 'magic-reveal' : ''}`}>
+                      <DISCTranslator data={displayState.phases.phase4} />
+                    </div>
+                  </div>
+
+                  <div className="opacity-40">
+                    {state.awaitingBudgetInput && (
+                      <BudgetInput onSubmit={handleBudgetSubmit} />
+                    )}
+
+                    {displayState.phases.phase6 && !state.awaitingBudgetInput && (
+                      <ChannelStrategy data={displayState.phases.phase6} isRunning={displayState.isRunning && displayState.currentPhase === 6} />
+                    )}
+                    
+                    <ValidationMap data={displayState.phases.phase7} isRunning={displayState.isRunning && displayState.currentPhase === 7} />
                   </div>
                 </div>
               </div>
-
-              {state.awaitingBudgetInput && (
-                <BudgetInput onSubmit={handleBudgetSubmit} />
-              )}
-
-              {displayState.phases.phase6 && !state.awaitingBudgetInput && (
-                <ChannelStrategy data={displayState.phases.phase6} isRunning={displayState.isRunning && displayState.currentPhase === 6} />
-              )}
-              
-              <ValidationMap data={displayState.phases.phase7} isRunning={displayState.isRunning && displayState.currentPhase === 7} />
             </div>
           )}
 
