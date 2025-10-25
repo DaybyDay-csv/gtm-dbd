@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { useAnalysisOrchestrator } from "@/hooks/useAnalysisOrchestrator";
 import { useProjectLoader } from "@/hooks/useProjectLoader";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { AppHeader } from "@/components/factory/AppHeader";
 import { Hero } from "@/components/factory/Hero";
@@ -31,6 +32,7 @@ const Index = () => {
   const { state, runAnalysis, continueToPhaseSix, loadMockData } = useAnalysisOrchestrator();
   const { projectData, loading: loadingProject } = useProjectLoader(projectIdFromUrl);
   const { user } = useAuth();
+  const { t } = useLanguage();
   
   const contentRef = useRef<HTMLDivElement>(null);
   const prevRunningState = useRef(state.isRunning);
@@ -95,21 +97,21 @@ const Index = () => {
       {isDevMode && displayState.currentPhase === 0 && (
         <div className="bg-amber-500/10 border-b border-amber-500/20 py-3">
           <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">🛠️</span>
-                <div>
-                  <p className="font-semibold text-sm text-amber-700 dark:text-amber-300">Modo Desarrollo</p>
-                  <p className="text-xs text-amber-600 dark:text-amber-400">Carga datos mock para ver el resultado completo sin gastar créditos</p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">🛠️</span>
+                  <div>
+                    <p className="font-semibold text-sm text-amber-700 dark:text-amber-300">{t('dev.title')}</p>
+                    <p className="text-xs text-amber-600 dark:text-amber-400">{t('dev.description')}</p>
+                  </div>
                 </div>
+                <button
+                  onClick={loadMockData}
+                  className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-sm font-medium transition-colors"
+                >
+                  {t('dev.loadButton')}
+                </button>
               </div>
-              <button
-                onClick={loadMockData}
-                className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-sm font-medium transition-colors"
-              >
-                Cargar Datos Mock
-              </button>
-            </div>
           </div>
         </div>
       )}
@@ -229,7 +231,7 @@ const Index = () => {
       
       <footer className="border-t dotted-border-t py-6 mt-12">
         <p className="text-center text-sm text-muted-foreground">
-          © 2025 AI GTM Factory. Built on evidence, not opinions.
+          {t('footer.text')}
         </p>
       </footer>
     </div>

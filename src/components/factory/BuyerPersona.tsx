@@ -1,6 +1,7 @@
 import { StatusBadge } from "./StatusBadge";
 import { SystemLiveIndicator } from "./SystemLiveIndicator";
 import { ContextualNotice } from "./ContextualNotice";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface BuyerPersonaProps {
   data?: {
@@ -22,6 +23,7 @@ interface BuyerPersonaProps {
 }
 
 export const BuyerPersona = ({ data }: BuyerPersonaProps) => {
+  const { t } = useLanguage();
   const avatar = data?.avatar || { name: "Lucía", age: 32, city: "Madrid", ses: "Clase media–alta" };
   const intro = data?.intro || "Hola, soy Lucía. Busco soluciones que me hagan la vida más fácil...";
   const thoughtClouds = data?.clouds || [
@@ -37,10 +39,10 @@ export const BuyerPersona = ({ data }: BuyerPersonaProps) => {
         <SystemLiveIndicator status="theoretical" />
         <StatusBadge status="theoretical" />
       </div>
-      <h3 className="text-xl font-semibold mb-2">Buyer Persona</h3>
+      <h3 className="text-xl font-semibold mb-2">{t('persona.title')}</h3>
       <div className="mt-2 mb-4 px-3 py-1.5 bg-primary/5 border border-primary/20 rounded-full text-xs text-muted-foreground inline-flex items-center gap-1 w-fit">
         <span className="text-primary font-semibold"></span>
-        Mercado + Producto + Posicionamiento
+        {t('persona.from')}
       </div>
       
       <div className="flex flex-col items-center mt-2">
@@ -75,7 +77,7 @@ export const BuyerPersona = ({ data }: BuyerPersonaProps) => {
           <div className="mt-6 w-full">
             <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <span className="text-destructive">⚠️</span>
-              Posibles Objeciones
+              {t('persona.objections')}
             </h4>
             <div className="space-y-2">
               {data.objections
@@ -93,12 +95,7 @@ export const BuyerPersona = ({ data }: BuyerPersonaProps) => {
                     <div className="flex-1 text-sm">
                       <p className="text-foreground">{obj.objection}</p>
                       <p className="text-xs text-muted-foreground mt-1">
-                        Fuente: {
-                          obj.source === 'competitor_advantage' ? 'Ventaja competidora' :
-                          obj.source === 'market_gap' ? 'Brecha de mercado' :
-                          obj.source === 'price_concern' ? 'Precio' :
-                          'Barrera de confianza'
-                        }
+                        {t(`persona.source.${obj.source}` as any) || obj.source}
                       </p>
                     </div>
                   </div>

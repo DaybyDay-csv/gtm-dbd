@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { Sparkles, ChevronDown, ChevronUp, Upload, FileText, X } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useState } from "react";
@@ -25,6 +26,7 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -95,18 +97,14 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
     <section className="container mx-auto px-4 py-16 text-center">
       <div className="max-w-5xl mx-auto space-y-8">
         <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
-          Wasting ad budget on speculations?
-          <br />
-          <span className="text-primary">Know exactly who buys and why.</span>
-          <br />
-          In minutes, not months.
+          {t('hero.title')}
         </h1>
 
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4">
           <div className="space-y-3">
             <Input
               type="url"
-              placeholder="https://yourwebsite.com"
+              placeholder={t('hero.inputPlaceholder')}
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               className="text-lg h-14"
@@ -114,7 +112,7 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
               required
             />
             <Textarea
-              placeholder="What do you sell or provide? (e.g., 'We help B2B SaaS companies...')"
+              placeholder="¿Qué vendes o proporcionas? (ej: 'Ayudamos a empresas B2B SaaS a...')"
               value={productDescription}
               onChange={(e) => setProductDescription(e.target.value)}
               className="text-base min-h-[70px]"
@@ -128,7 +126,7 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
               disabled={isRunning || !url.trim() || !productDescription.trim()}
             >
               <Sparkles className="mr-2 h-5 w-5" />
-              Run Analysis
+              {isRunning ? t('hero.buttonRunning') : t('hero.button')}
             </Button>
           </div>
 
