@@ -17,6 +17,11 @@ export const ProductNucleus = ({ data }: ProductNucleusProps) => {
     <div className="p-6 border-2 border-primary/30 rounded-lg bg-gradient-to-br from-primary/5 to-background text-center max-w-sm h-full flex flex-col">
       <h3 className="text-2xl font-bold mb-4 text-primary">Producto</h3>
       
+      <div className="mb-3 px-3 py-1.5 bg-background/80 border border-primary/20 rounded-full text-xs text-muted-foreground inline-flex items-center gap-1 mx-auto">
+        <span className="text-primary font-semibold">⚡</span>
+        Problemas + Soluciones + Valor Único
+      </div>
+      
       <div className="text-lg font-semibold mb-3 text-foreground">
         {product}
       </div>

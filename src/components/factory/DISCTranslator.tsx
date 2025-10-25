@@ -37,9 +37,13 @@ export const DISCTranslator = ({ data }: DISCTranslatorProps) => {
   return (
     <div className="p-6 border dotted-border rounded-lg bg-card h-full">
       <h3 className="text-xl font-semibold mb-2">Traductor DISC</h3>
-      <p className="text-sm text-muted-foreground mb-4">
+      <p className="text-sm text-muted-foreground mb-3">
         Adapta ofertas según personalidad del comprador (Tomas Erikson)
       </p>
+      <div className="mb-4 px-3 py-1.5 bg-primary/5 border border-primary/20 rounded-full text-xs text-muted-foreground inline-flex items-center gap-1 w-fit">
+        <span className="text-primary font-semibold">🎨</span>
+        Ofertas + Perfil del Buyer + 4 Estilos DISC
+      </div>
       
       <div className="mb-6 p-4 bg-muted/50 rounded-lg border border-dashed">
         <h4 className="font-semibold text-sm mb-2">¿Qué es DISC?</h4>

@@ -25,9 +25,13 @@ export const PositioningMap = ({ data }: PositioningMapProps) => {
   return (
     <div className="p-6 border dotted-border rounded-lg bg-card h-full">
       <h3 className="text-xl font-semibold mb-2">Mapa de mercado</h3>
-      <p className="text-sm text-muted-foreground mb-6">
+      <p className="text-sm text-muted-foreground mb-4">
         Posicionamiento frente a competidores
       </p>
+      <div className="mb-4 px-3 py-1.5 bg-primary/5 border border-primary/20 rounded-full text-xs text-muted-foreground inline-flex items-center gap-1 w-fit">
+        <span className="text-primary font-semibold">🔍</span>
+        Tu Producto + Competidores + Gaps del Mercado
+      </div>
 
       <svg viewBox="0 0 100 100" className="w-full h-64" preserveAspectRatio="xMidYMid meet">
         {/* Grid lines */}

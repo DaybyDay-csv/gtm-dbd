@@ -21,9 +21,13 @@ export const OfferFactory = ({ data }: OfferFactoryProps) => {
   return (
     <div className="p-6 border dotted-border rounded-lg bg-card h-full">
       <h3 className="text-xl font-semibold mb-2">Fábrica de ofertas</h3>
-      <p className="text-sm text-muted-foreground mb-6">
+      <p className="text-sm text-muted-foreground mb-4">
         Basado en la ecuación de valor de Hormozi
       </p>
+      <div className="mb-4 px-3 py-1.5 bg-primary/5 border border-primary/20 rounded-full text-xs text-muted-foreground inline-flex items-center gap-1 w-fit">
+        <span className="text-primary font-semibold">💎</span>
+        Buyer Persona + Gaps + Características del Producto
+      </div>
 
       <ul className="space-y-3 mb-8">
         {offers.map((offer, index) => (

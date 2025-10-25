@@ -25,8 +25,12 @@ export const BuyerPersona = ({ data }: BuyerPersonaProps) => {
   return (
     <div className="p-6 border dotted-border rounded-lg bg-card h-full">
       <h3 className="text-xl font-semibold mb-2">Buyer Persona</h3>
+      <div className="mt-2 mb-4 px-3 py-1.5 bg-primary/5 border border-primary/20 rounded-full text-xs text-muted-foreground inline-flex items-center gap-1 w-fit">
+        <span className="text-primary font-semibold">👤</span>
+        Mercado + Producto + Posicionamiento
+      </div>
       
-      <div className="flex flex-col items-center mt-6">
+      <div className="flex flex-col items-center mt-2">
         <div className="w-32 h-32 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center mb-4 border-2 border-primary/30">
           <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center text-4xl">
             👩
