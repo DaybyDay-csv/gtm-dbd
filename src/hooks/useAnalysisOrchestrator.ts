@@ -65,10 +65,16 @@ export const useAnalysisOrchestrator = () => {
         },
       });
 
-      // Create project (no user_id required for public access)
+      // Get current user session
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        throw new Error('You must be logged in to run analysis');
+      }
+
+      // Create project linked to authenticated user
       const { data: project, error: projectError } = await supabase
         .from("projects")
-        .insert({ name: projectName, url })
+        .insert({ name: projectName, url, user_id: session.user.id })
         .select()
         .single();
 

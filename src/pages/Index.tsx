@@ -1,3 +1,4 @@
+import { AppHeader } from "@/components/factory/AppHeader";
 import { Hero } from "@/components/factory/Hero";
 import { EvidenceDrawer } from "@/components/factory/EvidenceDrawer";
 import { PhaseRibbon } from "@/components/factory/PhaseRibbon";
@@ -31,6 +32,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <AppHeader />
       <Hero onRunAnalysis={runAnalysis} isRunning={state.isRunning} />
       
       {!state.isRunning && state.currentPhase === 0 && <EvidenceDrawer />}
