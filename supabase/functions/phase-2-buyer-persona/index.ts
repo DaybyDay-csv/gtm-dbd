@@ -9,7 +9,7 @@ const corsHeaders = {
 // Input validation schema
 const inputSchema = z.object({
   projectId: z.string().uuid(),
-  brandInfo: z.record(z.any()).optional(),
+  brandInfo: z.union([z.array(z.string()), z.record(z.any())]).optional(),
   marketData: z.record(z.any()).optional(),
   outputLanguage: z.enum(['es', 'en']).default('es')
 });
