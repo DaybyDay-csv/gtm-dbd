@@ -1,8 +1,10 @@
-import { Button } from "@/components/ui/button";
-import { LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
+import { FolderOpen, LogOut } from "lucide-react";
 
 export const AppHeader = () => {
+  const navigate = useNavigate();
   const { user, signOut } = useAuth();
 
   return (
@@ -12,9 +14,17 @@ export const AppHeader = () => {
         {user && (
           <div className="flex items-center gap-4">
             <span className="text-sm text-muted-foreground">{user.email}</span>
-            <Button variant="ghost" size="sm" onClick={signOut}>
-              <LogOut className="w-4 h-4 mr-2" />
-              Sign Out
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate("/projects")}
+            >
+              <FolderOpen className="mr-2 h-4 w-4" />
+              Mis Proyectos
+            </Button>
+            <Button variant="outline" size="sm" onClick={signOut}>
+              <LogOut className="mr-2 h-4 w-4" />
+              Cerrar sesión
             </Button>
           </div>
         )}

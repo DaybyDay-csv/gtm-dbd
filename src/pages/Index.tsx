@@ -1,3 +1,9 @@
+import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useAnalysisOrchestrator } from "@/hooks/useAnalysisOrchestrator";
+import { useProjectLoader } from "@/hooks/useProjectLoader";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import { AppHeader } from "@/components/factory/AppHeader";
 import { Hero } from "@/components/factory/Hero";
 import { EvidenceDrawer } from "@/components/factory/EvidenceDrawer";
@@ -8,23 +14,22 @@ import { MainGrid } from "@/components/factory/MainGrid";
 import { ValidationMap } from "@/components/factory/ValidationMap";
 import { ClientReadiness } from "@/components/factory/ClientReadiness";
 import { SignupGate } from "@/components/factory/SignupGate";
-import { useAnalysisOrchestrator } from "@/hooks/useAnalysisOrchestrator";
-import { useAuth } from "@/contexts/AuthContext";
-import { useEffect, useRef, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { mockAnalysisState } from "@/utils/mockData";
 
 const Index = () => {
+  const [searchParams] = useSearchParams();
+  const projectIdFromUrl = searchParams.get("project");
+  
   const { state, runAnalysis } = useAnalysisOrchestrator();
+  const { projectData, loading: loadingProject } = useProjectLoader(projectIdFromUrl);
   const { user } = useAuth();
+  
   const contentRef = useRef<HTMLDivElement>(null);
   const prevRunningState = useRef(state.isRunning);
   const [showSignupGate, setShowSignupGate] = useState(false);
   const [projectId, setProjectId] = useState<string | null>(null);
   
-  // Developer mode: Check for ?dev=true in URL
-  const isDevMode = new URLSearchParams(window.location.search).get('dev') === 'true';
-  const displayState = isDevMode ? mockAnalysisState : state;
+  // Use loaded project data if available, otherwise use current analysis state
+  const displayState = projectData || state;
 
   // Auto-scroll when analysis starts
   useEffect(() => {
@@ -59,6 +64,9 @@ const Index = () => {
     }
   };
 
+  // Determine if signup gate should be shown
+  const shouldShowGate = displayState.currentPhase >= 3 && !user && !projectIdFromUrl;
+
   // Extract metrics from analysis state
   const avatarReliability = displayState.phases.phase2?.profile?.reliability || 0;
   const topOffers = displayState.phases.phase3?.offers?.slice(0, 3).map((o: any) => ({
@@ -91,10 +99,10 @@ const Index = () => {
             }
           />
 
-          <MainGrid analysisState={displayState} showBlurOnPhase4Plus={isDevMode ? false : showSignupGate} />
+          <MainGrid analysisState={displayState} showBlurOnPhase4Plus={shouldShowGate} />
           
-          <div className={isDevMode ? "" : (showSignupGate ? "relative" : "")}>
-            {!isDevMode && showSignupGate && (
+          <div className={shouldShowGate ? "relative" : ""}>
+            {shouldShowGate && (
               <div className="absolute inset-0 backdrop-blur-md z-10 rounded-lg" />
             )}
             <ValidationMap data={displayState.phases.phase6} isRunning={displayState.isRunning} />
@@ -102,7 +110,7 @@ const Index = () => {
         </div>
       )}
 
-      {!isDevMode && showSignupGate && <SignupGate onComplete={handleSignupComplete} />}
+      {shouldShowGate && <SignupGate onComplete={handleSignupComplete} />}
       
       <footer className="border-t dotted-border-t py-6 mt-12">
         <p className="text-center text-sm text-muted-foreground">
