@@ -1,6 +1,7 @@
 import { StatusBadge } from "./StatusBadge";
 import { SystemLiveIndicator } from "./SystemLiveIndicator";
 import { ContextualNotice } from "./ContextualNotice";
+import { User, AlertTriangle } from "lucide-react";
 
 interface BuyerPersonaProps {
   data?: {
@@ -45,8 +46,8 @@ export const BuyerPersona = ({ data }: BuyerPersonaProps) => {
       
       <div className="flex flex-col items-center mt-2">
         <div className="w-32 h-32 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center mb-4 border-2 border-primary/30">
-          <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center text-4xl">
-            👩
+          <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center">
+            <User className="w-12 h-12 text-primary" />
           </div>
         </div>
         
@@ -74,7 +75,7 @@ export const BuyerPersona = ({ data }: BuyerPersonaProps) => {
         {data?.objections && data.objections.length > 0 && (
           <div className="mt-6 w-full">
             <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
-              <span className="text-destructive">⚠️</span>
+              <AlertTriangle className="w-4 h-4 text-destructive" />
               Posibles Objeciones
             </h4>
             <div className="space-y-2">
