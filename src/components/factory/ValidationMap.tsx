@@ -1,4 +1,4 @@
-import { Download } from "lucide-react";
+import { Download, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,6 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 interface ValidationMapProps {
   data?: {
@@ -28,6 +29,7 @@ interface ValidationMapProps {
 export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
   const experiments = data?.experiments || [];
   const hasData = experiments.length > 0;
+  const { toast } = useToast();
   
   const [experimentStates, setExperimentStates] = useState<Record<number, string>>(
     experiments.reduce((acc, exp, idx) => ({ ...acc, [idx]: exp.state }), {})
@@ -45,6 +47,28 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
   
   const handleStateChange = (index: number, newState: string) => {
     setExperimentStates(prev => ({ ...prev, [index]: newState }));
+  };
+
+  const platformOptions: Record<string, Array<{ name: string; type: string }>> = {
+    "LinkedIn Ads": [{ name: "LinkedIn Ads", type: "ads" }],
+    "LinkedIn": [{ name: "LinkedIn", type: "organic" }],
+    "Facebook Ads": [{ name: "Meta Ads", type: "ads" }],
+    "Facebook": [{ name: "Meta", type: "organic" }],
+    "Instagram Ads": [{ name: "Meta Ads", type: "ads" }],
+    "Instagram": [{ name: "Instagram", type: "organic" }],
+    "TikTok Ads": [{ name: "TikTok Ads", type: "ads" }],
+    "TikTok": [{ name: "TikTok", type: "organic" }],
+    "Google Ads": [{ name: "Google Ads", type: "ads" }],
+    "Email": [{ name: "Klaviyo", type: "email" }],
+    "Email nurture": [{ name: "Klaviyo", type: "email" }],
+    "Landing page": [{ name: "Google Ads", type: "ads" }, { name: "Meta Ads", type: "ads" }],
+  };
+
+  const handleConnect = (platform: string) => {
+    toast({
+      title: `Connect to ${platform}`,
+      description: "Integration coming soon. This will allow you to launch campaigns directly.",
+    });
   };
 
   return (
@@ -75,6 +99,7 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
               <th className="text-left p-3 font-semibold">TTV</th>
               <th className="text-left p-3 font-semibold">Estado</th>
               <th className="text-left p-3 font-semibold">Owner</th>
+              <th className="text-left p-3 font-semibold">Conectar</th>
             </tr>
           </thead>
           <tbody>
@@ -114,6 +139,43 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
                   </DropdownMenu>
                 </td>
                 <td className="p-3 text-muted-foreground">{exp.owner}</td>
+                <td className="p-3">
+                  {platformOptions[exp.channel] ? (
+                    platformOptions[exp.channel].length === 1 ? (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleConnect(platformOptions[exp.channel][0].name)}
+                        className="gap-2"
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                        {platformOptions[exp.channel][0].name}
+                      </Button>
+                    ) : (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button size="sm" variant="outline" className="gap-2">
+                            <ExternalLink className="w-3 h-3" />
+                            Connect
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="bg-background border z-50">
+                          {platformOptions[exp.channel].map((platform) => (
+                            <DropdownMenuItem
+                              key={platform.name}
+                              onClick={() => handleConnect(platform.name)}
+                              className="cursor-pointer"
+                            >
+                              {platform.name}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )
+                  ) : (
+                    <span className="text-xs text-muted-foreground">Manual</span>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
