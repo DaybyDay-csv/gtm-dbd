@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { ArrowRight, Settings, BarChart3, CheckCircle2 } from "lucide-react";
 
 interface SystemLiveIndicatorProps {
   status: 'theoretical' | 'partial' | 'validated';
@@ -44,8 +45,9 @@ export const SystemLiveIndicator = ({ status, connectedPlatforms = [], lastSync 
               <p className="text-muted-foreground mb-2">
                 Estos datos son hipótesis generadas por IA sin validar todavía con datos de mercado.
               </p>
-              <p className="text-muted-foreground text-[10px]">
-                🔜 Próximamente podrás conectar: Meta Ads, Google Ads, Amazon Ads y más
+              <p className="text-muted-foreground text-[10px] flex items-center gap-1">
+                <ArrowRight className="w-3 h-3 shrink-0" />
+                Próximamente podrás conectar: Meta Ads, Google Ads, Amazon Ads y más
               </p>
             </>
           ) : (
@@ -70,7 +72,8 @@ export const SystemLiveIndicator = ({ status, connectedPlatforms = [], lastSync 
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              ⚙️ ¿Qué es un Sistema Vivo?
+              <Settings className="w-5 h-5 text-primary" />
+              ¿Qué es un Sistema Vivo?
             </DialogTitle>
             <DialogDescription>
               Un sistema de análisis de mercado que se mantiene actualizado en tiempo real
@@ -84,7 +87,10 @@ export const SystemLiveIndicator = ({ status, connectedPlatforms = [], lastSync 
             </p>
 
             <div>
-              <p className="font-semibold mb-2">📊 CÓMO FUNCIONA:</p>
+              <p className="font-semibold mb-2 flex items-center gap-2">
+                <BarChart3 className="w-4 h-4 text-primary" />
+                CÓMO FUNCIONA:
+              </p>
               <ol className="space-y-2 ml-4">
                 <li>1. Hipótesis Inicial (IA)</li>
                 <li>2. Lanzas Experimentos</li>
@@ -95,7 +101,10 @@ export const SystemLiveIndicator = ({ status, connectedPlatforms = [], lastSync 
             </div>
 
             <div className="p-3 bg-green-50 dark:bg-green-950/30 rounded-lg border border-green-200 dark:border-green-800">
-              <p className="font-semibold mb-2 text-green-900 dark:text-green-100">✅ BENEFICIOS:</p>
+              <p className="font-semibold mb-2 text-green-900 dark:text-green-100 flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4" />
+                BENEFICIOS:
+              </p>
               <ul className="space-y-1 text-xs text-green-800 dark:text-green-200">
                 <li>• Insights basados en TU mercado real</li>
                 <li>• Decisiones guiadas por datos frescos</li>
@@ -105,7 +114,10 @@ export const SystemLiveIndicator = ({ status, connectedPlatforms = [], lastSync 
             </div>
 
             <div className="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
-              <p className="font-semibold mb-2 text-blue-900 dark:text-blue-100">🔜 PRÓXIMAMENTE:</p>
+              <p className="font-semibold mb-2 text-blue-900 dark:text-blue-100 flex items-center gap-2">
+                <ArrowRight className="w-4 h-4" />
+                PRÓXIMAMENTE:
+              </p>
               <p className="text-xs text-blue-800 dark:text-blue-200">
                 Podrás conectar Meta Ads, Google Ads, Amazon Ads, TikTok, Shopify, Email Marketing y más.
               </p>

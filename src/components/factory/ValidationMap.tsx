@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { 
   Target, TrendingUp, Clock, Euro, ChevronDown, Filter, 
-  ExternalLink, PlusCircle, Zap 
+  ExternalLink, PlusCircle, Zap, Palette, FileText, DollarSign, Lightbulb
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { StatusBadge } from "./StatusBadge";
@@ -64,11 +64,11 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
     variations.reduce((acc, v) => ({ ...acc, [v.id]: v.state }), {})
   );
 
-  const discColors: Record<string, { bg: string; text: string; border: string; icon: string }> = {
-    "Rojo": { bg: "bg-red-100", text: "text-red-800", border: "border-red-300", icon: "🔴" },
-    "Amarillo": { bg: "bg-yellow-100", text: "text-yellow-800", border: "border-yellow-300", icon: "🟡" },
-    "Verde": { bg: "bg-green-100", text: "text-green-800", border: "border-green-300", icon: "🟢" },
-    "Azul": { bg: "bg-blue-100", text: "text-blue-800", border: "border-blue-300", icon: "🔵" },
+  const discColors: Record<string, { bg: string; text: string; border: string; dot: JSX.Element }> = {
+    "Rojo": { bg: "bg-red-100", text: "text-red-800", border: "border-red-300", dot: <div className="w-2 h-2 rounded-full bg-red-500" /> },
+    "Amarillo": { bg: "bg-yellow-100", text: "text-yellow-800", border: "border-yellow-300", dot: <div className="w-2 h-2 rounded-full bg-yellow-500" /> },
+    "Verde": { bg: "bg-green-100", text: "text-green-800", border: "border-green-300", dot: <div className="w-2 h-2 rounded-full bg-green-500" /> },
+    "Azul": { bg: "bg-blue-100", text: "text-blue-800", border: "border-blue-300", dot: <div className="w-2 h-2 rounded-full bg-blue-500" /> },
   };
 
   const stateColors: Record<string, string> = {
@@ -118,8 +118,9 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
         <CardHeader>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <CardTitle className="text-3xl mb-2">
-                🎨 Variaciones Creativas
+              <CardTitle className="text-3xl mb-2 flex items-center gap-2">
+                <Palette className="w-8 h-8 text-primary" />
+                Variaciones Creativas
               </CardTitle>
               <CardDescription className="text-base">
                 {filteredVariations.length} variaciones listas para probar • Formato Efecto → Causa
@@ -139,8 +140,8 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
                     Todos los perfiles
                   </DropdownMenuItem>
                   {uniqueDisc.map(disc => (
-                    <DropdownMenuItem key={disc} onClick={() => setFilterDisc(disc)}>
-                      {discColors[disc]?.icon} {disc}
+                    <DropdownMenuItem key={disc} onClick={() => setFilterDisc(disc)} className="flex items-center gap-2">
+                      {discColors[disc]?.dot} {disc}
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuContent>
@@ -185,8 +186,8 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
                   <CardHeader className="pb-3">
                     {/* Header con badges */}
                     <div className="flex items-center justify-between gap-2 mb-2">
-                      <Badge className={`${discStyle.bg} ${discStyle.text} border ${discStyle.border}`}>
-                        {discStyle.icon} {variation.discProfile}
+                      <Badge className={`${discStyle.bg} ${discStyle.text} border ${discStyle.border} flex items-center gap-1.5`}>
+                        {discStyle.dot} {variation.discProfile}
                       </Badge>
                       <Badge className={`${stateColors[currentState]} border`}>
                         {currentState}
@@ -208,8 +209,14 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
                     
                     {/* Quick metrics preview */}
                     <div className="flex gap-2 text-xs text-muted-foreground">
-                      <span>💰 {variation.estimatedCost}</span>
-                      <span>⏱️ {variation.ttv}</span>
+                      <span className="flex items-center gap-1">
+                        <DollarSign className="w-3 h-3" />
+                        {variation.estimatedCost}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        {variation.ttv}
+                      </span>
                     </div>
                   </CardHeader>
                   
@@ -240,8 +247,8 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
                   <>
                     <DialogHeader>
                       <DialogTitle className="flex items-center gap-2">
-                        <Badge className={`${discStyle.bg} ${discStyle.text} border ${discStyle.border}`}>
-                          {discStyle.icon} {variation.discProfile}
+                        <Badge className={`${discStyle.bg} ${discStyle.text} border ${discStyle.border} flex items-center gap-1.5`}>
+                          {discStyle.dot} {variation.discProfile}
                         </Badge>
                         <Badge variant="outline" className="text-xs">
                           {variation.channel}
@@ -300,7 +307,10 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
 
                       {/* Copy */}
                       <div className="space-y-2">
-                        <p className="text-xs font-semibold text-muted-foreground">📝 Copy:</p>
+                        <p className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
+                          <FileText className="w-3 h-3" />
+                          Copy:
+                        </p>
                         <div className="space-y-1 pl-4 border-l-2 border-primary">
                           <p className="text-sm">
                             <span className="font-semibold">H1:</span> "{variation.headline}"
@@ -316,7 +326,10 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
 
                       {/* Visual Suggestion */}
                       <div className="p-3 bg-secondary/30 rounded-lg">
-                        <p className="text-xs font-semibold mb-1">🎨 Sugerencia Visual:</p>
+                        <p className="text-xs font-semibold mb-1 flex items-center gap-1">
+                          <Palette className="w-3 h-3" />
+                          Sugerencia Visual:
+                        </p>
                         <p className="text-sm text-muted-foreground">{variation.visualSuggestion}</p>
                       </div>
 
@@ -352,8 +365,9 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
                         </CollapsibleTrigger>
                         <CollapsibleContent className="pt-2">
                           <div className="p-3 bg-purple-50 dark:bg-purple-950/30 rounded-lg border border-purple-200 dark:border-purple-900">
-                            <p className="text-xs font-semibold text-purple-900 dark:text-purple-100 mb-2">
-                              💡 Razonamiento:
+                            <p className="text-xs font-semibold text-purple-900 dark:text-purple-100 mb-2 flex items-center gap-1">
+                              <Lightbulb className="w-3 h-3" />
+                              Razonamiento:
                             </p>
                             <p className="text-sm text-purple-800 dark:text-purple-200">
                               {variation.reasoning}

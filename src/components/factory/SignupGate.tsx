@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Lock } from "lucide-react";
+import { Lock, Lightbulb, Unlock } from "lucide-react";
 
 interface SignupGateProps {
   onComplete: () => void;
@@ -46,7 +46,10 @@ export const SignupGate = ({ onComplete }: SignupGateProps) => {
         <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4">
           <Lock className="w-6 h-6 text-primary" />
         </div>
-        <h2 className="text-2xl font-bold">🔓 Desbloquea Fases 4-7</h2>
+        <h2 className="text-2xl font-bold flex items-center gap-2 justify-center">
+          <Unlock className="w-6 h-6 text-primary" />
+          Desbloquea Fases 4-7
+        </h2>
         <p className="text-muted-foreground text-sm">
           {isSignUp
             ? "Regístrate gratis para ver el análisis completo y guardar tus insights"
@@ -98,8 +101,9 @@ export const SignupGate = ({ onComplete }: SignupGateProps) => {
           </button>
         </div>
 
-        <div className="text-center text-xs text-muted-foreground pt-4 border-t dotted-border-t">
-          💡 Tu análisis sigue generándose. Regístrate para verlo completo.
+        <div className="text-center text-xs text-muted-foreground pt-4 border-t dotted-border-t flex items-center justify-center gap-2">
+          <Lightbulb className="w-4 h-4" />
+          <span>Tu análisis sigue generándose. Regístrate para verlo completo.</span>
         </div>
       </Card>
   );

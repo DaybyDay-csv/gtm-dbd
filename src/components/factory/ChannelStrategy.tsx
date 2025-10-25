@@ -1,7 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Target } from "lucide-react";
-import { CheckCircle2, AlertCircle, TrendingUp, Clock, Euro } from "lucide-react";
+import { Target, CheckCircle2, AlertCircle, TrendingUp, Clock, Euro, Lightbulb, Smartphone, Sprout, Trophy, DollarSign, AlertTriangle } from "lucide-react";
 import { RadarChart, PolarGrid, PolarAngleAxis, Radar, ResponsiveContainer, Tooltip } from "recharts";
 import { StatusBadge } from "./StatusBadge";
 import { SystemLiveIndicator } from "./SystemLiveIndicator";
@@ -110,8 +109,9 @@ export const ChannelStrategy = ({ data, isRunning }: ChannelStrategyProps) => {
           </div>
           <CardHeader className="text-center bg-primary/5">
             <div className="flex items-center justify-center gap-2 mb-2 flex-wrap">
-              <CardTitle className="text-3xl">
-                🎯 Canal Recomendado: {primaryChannel.name}
+              <CardTitle className="text-3xl flex items-center gap-2">
+                <Target className="w-8 h-8 text-primary" />
+                Canal Recomendado: {primaryChannel.name}
               </CardTitle>
               {primaryChannel.isNativePlatform && (
                 <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 border-green-300 dark:border-green-700 text-sm">
@@ -184,7 +184,7 @@ export const ChannelStrategy = ({ data, isRunning }: ChannelStrategyProps) => {
                 <ul className="space-y-2">
                   {primaryChannel.cons.map((con, idx) => (
                     <li key={idx} className="text-sm flex items-start gap-2">
-                      <span className="text-orange-600 mt-1">⚠</span>
+                      <AlertTriangle className="w-4 h-4 text-orange-600 mt-0.5 shrink-0" />
                       <span>{con}</span>
                     </li>
                   ))}
@@ -217,8 +217,9 @@ export const ChannelStrategy = ({ data, isRunning }: ChannelStrategyProps) => {
             {/* Disclosure */}
             {data.recommendation?.disclosure && (
               <div className="p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-900">
-                <p className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-2">
-                  💡 POR QUÉ ESTE CANAL:
+                <p className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-2 flex items-center gap-2">
+                  <Lightbulb className="w-4 h-4" />
+                  POR QUÉ ESTE CANAL:
                 </p>
                 <p className="text-sm text-blue-800 dark:text-blue-200">
                   {data.recommendation.disclosure}
@@ -230,7 +231,8 @@ export const ChannelStrategy = ({ data, isRunning }: ChannelStrategyProps) => {
             {primaryChannel.platformDetails && (
               <div className="p-4 bg-green-50 dark:bg-green-950/30 rounded-lg border border-green-200 dark:border-green-800">
                 <p className="text-sm font-semibold text-green-900 dark:text-green-100 mb-3 flex items-center gap-2">
-                  📱 Opciones Disponibles en {primaryChannel.name}:
+                  <Smartphone className="w-4 h-4" />
+                  Opciones Disponibles en {primaryChannel.name}:
                 </p>
                 <div className="space-y-3">
                   <div>
@@ -242,11 +244,17 @@ export const ChannelStrategy = ({ data, isRunning }: ChannelStrategyProps) => {
                     </ul>
                   </div>
                   <div>
-                    <p className="text-xs font-medium text-green-800 dark:text-green-200 mb-1.5">🌱 Posicionamiento Orgánico:</p>
+                    <p className="text-xs font-medium text-green-800 dark:text-green-200 mb-1.5 flex items-center gap-1">
+                      <Sprout className="w-3 h-3" />
+                      Posicionamiento Orgánico:
+                    </p>
                     <p className="text-xs text-green-700 dark:text-green-300">{primaryChannel.platformDetails.organicBoost}</p>
                   </div>
                   <div>
-                    <p className="text-xs font-medium text-green-800 dark:text-green-200 mb-1.5">💰 Distribución de Presupuesto Recomendada:</p>
+                    <p className="text-xs font-medium text-green-800 dark:text-green-200 mb-1.5 flex items-center gap-1">
+                      <DollarSign className="w-3 h-3" />
+                      Distribución de Presupuesto Recomendada:
+                    </p>
                     <p className="text-xs text-green-700 dark:text-green-300 font-mono bg-green-100/50 dark:bg-green-900/20 px-2 py-1 rounded">{primaryChannel.platformDetails.budgetSplit}</p>
                   </div>
                 </div>
@@ -306,7 +314,10 @@ export const ChannelStrategy = ({ data, isRunning }: ChannelStrategyProps) => {
       {/* Ranking of Alternatives */}
       <Card className="border-2 dotted-border">
         <CardHeader>
-          <CardTitle>🥇 Ranking de Alternativas</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <Trophy className="w-6 h-6 text-primary" />
+            Ranking de Alternativas
+          </CardTitle>
           <CardDescription>
             Otras opciones viables ordenadas por puntuación
           </CardDescription>
@@ -357,7 +368,8 @@ export const ChannelStrategy = ({ data, isRunning }: ChannelStrategyProps) => {
               {channel.platformDetails && (
                 <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-950/30 rounded border border-blue-200 dark:border-blue-800 ml-12">
                   <p className="text-xs font-semibold text-blue-900 dark:text-blue-100 mb-2 flex items-center gap-1">
-                    📱 Opciones en {channel.name}
+                    <Smartphone className="w-3 h-3" />
+                    Opciones en {channel.name}
                   </p>
                   <div className="grid md:grid-cols-3 gap-3 text-xs text-blue-700 dark:text-blue-300">
                     <div>
@@ -369,11 +381,17 @@ export const ChannelStrategy = ({ data, isRunning }: ChannelStrategyProps) => {
                       </ul>
                     </div>
                     <div>
-                      <p className="font-medium mb-1">🌱 Orgánico:</p>
+                      <p className="font-medium mb-1 flex items-center gap-1">
+                        <Sprout className="w-3 h-3" />
+                        Orgánico:
+                      </p>
                       <p className="line-clamp-2">{channel.platformDetails.organicBoost}</p>
                     </div>
                     <div>
-                      <p className="font-medium mb-1">💰 Presupuesto:</p>
+                      <p className="font-medium mb-1 flex items-center gap-1">
+                        <DollarSign className="w-3 h-3" />
+                        Presupuesto:
+                      </p>
                       <p className="font-mono text-[10px]">{channel.platformDetails.budgetSplit}</p>
                     </div>
                   </div>

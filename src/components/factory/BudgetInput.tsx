@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Euro, TrendingUp, Target, Zap, Rocket, Crown } from "lucide-react";
+import { Euro, TrendingUp, Target, Zap, Rocket, Crown, DollarSign, Lightbulb } from "lucide-react";
 
 interface BudgetInputProps {
   onSubmit: (budgetLevel: string, budgetAmount: number) => void;
@@ -41,8 +41,9 @@ export const BudgetInput = ({ onSubmit }: BudgetInputProps) => {
     <section className="container mx-auto px-4 py-12">
       <Card className="max-w-3xl mx-auto border-2 dotted-border shadow-lg">
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl mb-2">
-            💰 Define tu presupuesto de campaña
+          <CardTitle className="text-3xl mb-2 flex items-center gap-2 justify-center">
+            <DollarSign className="w-8 h-8 text-primary" />
+            Define tu presupuesto de campaña
           </CardTitle>
           <CardDescription className="text-base">
             Esto nos ayudará a recomendar el canal más óptimo para tu estrategia
@@ -134,8 +135,9 @@ export const BudgetInput = ({ onSubmit }: BudgetInputProps) => {
           </Button>
 
           <div className="p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-900">
-            <p className="text-sm text-blue-900 dark:text-blue-100">
-              <strong>💡 ¿Por qué es importante?</strong> El presupuesto determina qué canales son viables para tu estrategia.
+            <p className="text-sm text-blue-900 dark:text-blue-100 flex items-start gap-2">
+              <Lightbulb className="w-4 h-4 mt-0.5 shrink-0" />
+              <span><strong>¿Por qué es importante?</strong> El presupuesto determina qué canales son viables para tu estrategia.</span>
               Un presupuesto bajo puede favorecer canales orgánicos, mientras que uno alto permite experimentar con múltiples canales de pago.
             </p>
           </div>

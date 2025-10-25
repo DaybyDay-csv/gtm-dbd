@@ -5,6 +5,7 @@ import { useProjectLoader } from "@/hooks/useProjectLoader";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { AppHeader } from "@/components/factory/AppHeader";
+import { Wrench } from "lucide-react";
 import { Hero } from "@/components/factory/Hero";
 import { EvidenceDrawer } from "@/components/factory/EvidenceDrawer";
 import { PhaseRibbon } from "@/components/factory/PhaseRibbon";
@@ -97,7 +98,7 @@ const Index = () => {
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <span className="text-2xl">🛠️</span>
+                <Wrench className="w-6 h-6 text-amber-600" />
                 <div>
                   <p className="font-semibold text-sm text-amber-700 dark:text-amber-300">Modo Desarrollo</p>
                   <p className="text-xs text-amber-600 dark:text-amber-400">Carga datos mock para ver el resultado completo sin gastar créditos</p>
