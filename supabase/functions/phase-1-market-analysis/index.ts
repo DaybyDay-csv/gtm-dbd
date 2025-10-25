@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { projectId, url, productDescription, context, competitors, vision, mission, values, docs } = await req.json();
+    const { projectId, url, productDescription, context, competitors, vision, mission, values, docs, outputLanguage = 'es' } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
@@ -395,7 +395,9 @@ IMPORTANT REMINDERS:
 - Position competitors realistically based on real product price and market feedback on theyr quality across all quadrants (not all in one area)
 - Base all insights on the actual URL and market research
 - Show you TRULY understand the product by being detailed and specific, no generic assumptions ad no specilations, real market feedback
-- Return ONLY valid JSON, no markdown formatting`;
+- Return ONLY valid JSON, no markdown formatting
+
+Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'}.`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',

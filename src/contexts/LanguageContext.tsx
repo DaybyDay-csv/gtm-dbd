@@ -1,13 +1,14 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 
 type Language = 'es' | 'en';
 
 interface LanguageContextType {
   language: Language;
-  setLanguage: (lang: Language) => void;
+  setLanguage: (lang: Language) => Promise<void>;
   t: (key: string) => string;
-  aiOutputLanguage: Language;
-  setAiOutputLanguage: (lang: Language) => void;
+  loading: boolean;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -26,6 +27,15 @@ const translations: Record<Language, Record<string, string>> = {
     // Navigation
     'nav.projects': 'Mis Proyectos',
     'nav.signout': 'Cerrar sesión',
+    'nav.settings': 'Configuración',
+    'settings.title': 'Configuración de Cuenta',
+    'settings.description': 'Administra tus preferencias y configuración',
+    'settings.email': 'Correo electrónico',
+    'settings.preferred_language': 'Idioma preferido',
+    'settings.language_description': 'Este idioma se aplicará a toda la interfaz y las respuestas del sistema de IA',
+    'settings.save_changes': 'Guardar cambios',
+    'settings.saved': 'Guardado',
+    'settings.language_updated': 'Tu idioma preferido ha sido actualizado',
     'nav.title': 'GTM Factory',
     
     // Hero Section
@@ -271,6 +281,15 @@ const translations: Record<Language, Record<string, string>> = {
     // Navigation
     'nav.projects': 'My Projects',
     'nav.signout': 'Sign Out',
+    'nav.settings': 'Settings',
+    'settings.title': 'Account Settings',
+    'settings.description': 'Manage your preferences and settings',
+    'settings.email': 'Email',
+    'settings.preferred_language': 'Preferred Language',
+    'settings.language_description': 'This language will be applied to the entire interface and AI system responses',
+    'settings.save_changes': 'Save Changes',
+    'settings.saved': 'Saved',
+    'settings.language_updated': 'Your preferred language has been updated',
     'nav.title': 'GTM Factory',
     
     // Hero Section
@@ -515,30 +534,58 @@ const translations: Record<Language, Record<string, string>> = {
 };
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  const [language, setLanguage] = useState<Language>(() => {
-    const stored = localStorage.getItem('uiLanguage');
-    return (stored === 'es' || stored === 'en') ? stored : 'es';
-  });
-  
-  const [aiOutputLanguage, setAiOutputLanguage] = useState<Language>('es');
-  
-  const t = (key: string): string => {
-    return translations[language][key] || key;
-  };
-  
+  const { user } = useAuth();
+  const [language, setLanguageState] = useState<Language>('es');
+  const [loading, setLoading] = useState(true);
+
+  // Load user's language preference from database or localStorage
   useEffect(() => {
-    localStorage.setItem('uiLanguage', language);
-  }, [language]);
-  
+    const loadUserLanguage = async () => {
+      if (!user) {
+        // No user: load from localStorage or default to Spanish
+        const savedLang = localStorage.getItem('uiLanguage') as Language;
+        setLanguageState(savedLang || 'es');
+        setLoading(false);
+        return;
+      }
+
+      // User authenticated: load from database
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('preferred_language')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      if (data && !error) {
+        setLanguageState(data.preferred_language as Language);
+      }
+      setLoading(false);
+    };
+
+    loadUserLanguage();
+  }, [user]);
+
+  // Update language in database and localStorage
+  const setLanguage = async (newLang: Language) => {
+    setLanguageState(newLang);
+    localStorage.setItem('uiLanguage', newLang);
+
+    if (user) {
+      // Update in database
+      await supabase
+        .from('profiles')
+        .update({ preferred_language: newLang })
+        .eq('id', user.id);
+    }
+  };
+
+  const t = (key: string): string => {
+    return translations[language]?.[key] || key;
+  };
+
   return (
-    <LanguageContext.Provider value={{ 
-      language, 
-      setLanguage, 
-      t, 
-      aiOutputLanguage, 
-      setAiOutputLanguage 
-    }}>
-      {children}
+    <LanguageContext.Provider value={{ language, setLanguage, t, loading }}>
+      {!loading && children}
     </LanguageContext.Provider>
   );
 };

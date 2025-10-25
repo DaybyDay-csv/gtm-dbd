@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
 
@@ -17,6 +18,7 @@ const authSchema = z.object({
 export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [signupLanguage, setSignupLanguage] = useState<'es' | 'en'>('es');
   const [isLoading, setIsLoading] = useState(false);
   const { signUp, signIn, user } = useAuth();
   const navigate = useNavigate();
@@ -34,7 +36,7 @@ export default function Auth() {
       setIsLoading(true);
 
       const { error } = mode === 'signup' 
-        ? await signUp(validated.email, validated.password)
+        ? await signUp(validated.email, validated.password, signupLanguage)
         : await signIn(validated.email, validated.password);
 
       if (error) {
@@ -141,6 +143,18 @@ export default function Auth() {
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isLoading}
                 />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="signup-language">Preferred Language</Label>
+                <Select value={signupLanguage} onValueChange={(val) => setSignupLanguage(val as 'es' | 'en')}>
+                  <SelectTrigger id="signup-language">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="es">🇪🇸 Español</SelectItem>
+                    <SelectItem value="en">🇺🇸 English</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <Button 
                 className="w-full" 

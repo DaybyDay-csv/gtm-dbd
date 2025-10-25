@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { saveUnclaimedProject } from "@/utils/claimProjects";
 
 export interface AnalysisState {
@@ -29,6 +30,7 @@ export interface AnalysisState {
 
 export const useAnalysisOrchestrator = () => {
   const { toast } = useToast();
+  const { language } = useLanguage();
   const [state, setState] = useState<AnalysisState>({
     projectId: null,
     currentPhase: 0,
@@ -103,7 +105,7 @@ export const useAnalysisOrchestrator = () => {
       setState(prev => ({ ...prev, currentPhase: 1 }));
       const phase1Response = await supabase.functions.invoke(
         "phase-1-market-analysis",
-        { body: { projectId: project.id, url, productDescription, competitors, docs, context, vision, mission, values } }
+        { body: { projectId: project.id, url, productDescription, competitors, docs, context, vision, mission, values, outputLanguage: language } }
       );
       
       if (phase1Response.error) {
@@ -143,7 +145,7 @@ export const useAnalysisOrchestrator = () => {
       setState(prev => ({ ...prev, currentPhase: 2 }));
       const { data: phase2Data, error: phase2Error } = await supabase.functions.invoke(
         "phase-2-buyer-persona",
-        { body: { projectId: project.id, brandInfo: phase1Data.summary, marketData: phase1Data } }
+        { body: { projectId: project.id, brandInfo: phase1Data.summary, marketData: phase1Data, outputLanguage: language } }
       );
       if (phase2Error) throw phase2Error;
 
@@ -162,7 +164,7 @@ export const useAnalysisOrchestrator = () => {
       setState(prev => ({ ...prev, currentPhase: 3 }));
       const { data: phase3Data, error: phase3Error } = await supabase.functions.invoke(
         "phase-3-value-equation",
-        { body: { projectId: project.id, persona: phase2Data, brandInfo: phase1Data } }
+        { body: { projectId: project.id, persona: phase2Data, brandInfo: phase1Data, outputLanguage: language } }
       );
       if (phase3Error) throw phase3Error;
 
@@ -181,7 +183,7 @@ export const useAnalysisOrchestrator = () => {
       setState(prev => ({ ...prev, currentPhase: 4 }));
       const { data: phase4Data, error: phase4Error } = await supabase.functions.invoke(
         "phase-4-disc-translator",
-        { body: { projectId: project.id, offers: phase3Data.offers, persona: phase2Data } }
+        { body: { projectId: project.id, offers: phase3Data.offers, persona: phase2Data, outputLanguage: language } }
       );
       if (phase4Error) throw phase4Error;
 
@@ -206,6 +208,7 @@ export const useAnalysisOrchestrator = () => {
             persona: phase2Data,
             discData: phase4Data,
             valueData: phase3Data,
+            outputLanguage: language,
           },
         }
       );
@@ -275,6 +278,7 @@ export const useAnalysisOrchestrator = () => {
             },
             budgetLevel,
             budgetAmount,
+            outputLanguage: language,
           },
         }
       );
@@ -314,6 +318,7 @@ export const useAnalysisOrchestrator = () => {
             },
             recommendedChannels,
             generateFor: "all",
+            outputLanguage: language,
           },
         }
       );

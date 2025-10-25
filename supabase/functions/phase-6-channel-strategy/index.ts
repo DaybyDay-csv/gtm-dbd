@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { projectId, allPhaseData, budgetLevel, budgetAmount } = await req.json();
+    const { projectId, allPhaseData, budgetLevel, budgetAmount, outputLanguage = 'es' } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
@@ -216,7 +216,9 @@ IMPORTANTE:
 - Devuelve SOLO JSON válido, sin bloques de código markdown
 - Analiza AL MENOS 6-8 canales diferentes
 - Sé específico con las cifras de CPL y tiempos
-- El disclosure debe ser un párrafo coherente de 3-4 líneas explicando la lógica estratégica`;
+- El disclosure debe ser un párrafo coherente de 3-4 líneas explicando la lógica estratégica
+
+Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'}.`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',

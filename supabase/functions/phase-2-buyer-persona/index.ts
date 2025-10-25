@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { projectId, brandInfo, marketData } = await req.json();
+    const { projectId, brandInfo, marketData, outputLanguage = 'es' } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
@@ -165,7 +165,7 @@ IMPORTANT REMINDERS:
 - All elements must be coherent with the product's positioning on the market, gap and price
 - Use realistic market scope names, cities, and cultural context
 - Return ONLY valid JSON, no markdown formatting
-- Write all content in english`;
+- Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'}`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',

@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { projectId, allPhaseData, recommendedChannels, generateFor } = await req.json();
+    const { projectId, allPhaseData, recommendedChannels, generateFor, outputLanguage = 'es' } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
@@ -106,7 +106,9 @@ IMPORTANTE:
 - Los "effect" deben ser específicos y medibles
 - Los "objective" deben explicar el por qué estratégico
 - Devuelve SOLO JSON válido, sin bloques markdown
-- Sé creativo pero mantén coherencia con el contexto del negocio`;
+- Sé creativo pero mantén coherencia con el contexto del negocio
+
+Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'}.`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',

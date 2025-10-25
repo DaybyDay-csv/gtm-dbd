@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { projectId, offers, persona } = await req.json();
+    const { projectId, offers, persona, outputLanguage = 'es' } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
@@ -101,7 +101,9 @@ CRITICAL: Return a JSON object with this EXACT structure:
   }
 }
 
-discMap shows estimated distribution in target audience (must sum to 1.0). Return ONLY valid JSON, no markdown.`;
+discMap shows estimated distribution in target audience (must sum to 1.0). Return ONLY valid JSON, no markdown.
+
+Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'}.`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',

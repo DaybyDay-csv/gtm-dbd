@@ -1,8 +1,8 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
-import { FolderOpen, LogOut, Globe } from "lucide-react";
+import { FolderOpen, LogOut, Globe, Settings } from "lucide-react";
 
 export const AppHeader = () => {
   const navigate = useNavigate();
@@ -33,6 +33,16 @@ export const AppHeader = () => {
               >
                 <FolderOpen className="mr-2 h-4 w-4" />
                 {t('nav.projects')}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                asChild
+              >
+                <Link to="/settings">
+                  <Settings className="mr-2 h-4 w-4" />
+                  {t('nav.settings')}
+                </Link>
               </Button>
               <Button variant="outline" size="sm" onClick={signOut}>
                 <LogOut className="mr-2 h-4 w-4" />

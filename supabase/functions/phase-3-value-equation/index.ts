@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { projectId, persona, brandInfo } = await req.json();
+    const { projectId, persona, brandInfo, outputLanguage = 'es' } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
@@ -63,7 +63,9 @@ CRITICAL: Return ONLY a JSON object with this EXACT structure (no markdown, no e
 
 Each offer must target a different buyer need (desires, pains, ambitions, objectives).
 Value scores should be 0-100.
-Return ONLY valid JSON.`;
+Return ONLY valid JSON.
+
+Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'}.`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
