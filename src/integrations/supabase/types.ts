@@ -158,6 +158,7 @@ export type Database = {
           key_insights: string | null
           name: string
           product_name: string | null
+          session_token: string | null
           updated_at: string | null
           url: string | null
           user_id: string | null
@@ -169,6 +170,7 @@ export type Database = {
           key_insights?: string | null
           name: string
           product_name?: string | null
+          session_token?: string | null
           updated_at?: string | null
           url?: string | null
           user_id?: string | null
@@ -180,6 +182,7 @@ export type Database = {
           key_insights?: string | null
           name?: string
           product_name?: string | null
+          session_token?: string | null
           updated_at?: string | null
           url?: string | null
           user_id?: string | null
@@ -191,6 +194,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_access_project: {
+        Args: { project_uuid: string; session_tok: string }
+        Returns: boolean
+      }
       owns_project: { Args: { project_uuid: string }; Returns: boolean }
     }
     Enums: {

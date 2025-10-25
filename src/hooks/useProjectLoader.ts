@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { AnalysisState } from "./useAnalysisOrchestrator";
+import { getOrCreateSessionToken } from "@/utils/claimProjects";
 
 export const useProjectLoader = (projectId: string | null) => {
   const { toast } = useToast();
@@ -17,11 +18,15 @@ export const useProjectLoader = (projectId: string | null) => {
   const loadProject = async (id: string) => {
     setLoading(true);
     try {
-      // Load project details
+      // Get session token for unauthenticated access
+      const sessionToken = getOrCreateSessionToken();
+      
+      // Load project details - verify access via session token or user_id
       const { data: project, error: projectError } = await supabase
         .from("projects")
         .select("*")
         .eq("id", id)
+        .or(`user_id.eq.${(await supabase.auth.getUser()).data.user?.id},and(user_id.is.null,session_token.eq.${sessionToken})`)
         .single();
 
       if (projectError) throw projectError;

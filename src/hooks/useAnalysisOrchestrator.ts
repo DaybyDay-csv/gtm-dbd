@@ -2,7 +2,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { saveUnclaimedProject } from "@/utils/claimProjects";
+import { saveUnclaimedProject, getOrCreateSessionToken } from "@/utils/claimProjects";
 
 export interface AnalysisState {
   projectId: string | null;
@@ -79,6 +79,9 @@ export const useAnalysisOrchestrator = () => {
       // Get current user session (can be null for unauthenticated users)
       const { data: { session } } = await supabase.auth.getSession();
 
+      // Get or create session token for unauthenticated access
+      const sessionToken = !session?.user?.id ? getOrCreateSessionToken() : null;
+
       // Always create a new project for each analysis
       const { data: newProject, error: projectError } = await supabase
         .from("projects")
@@ -86,6 +89,7 @@ export const useAnalysisOrchestrator = () => {
           name: projectName, 
           url, 
           user_id: session?.user?.id || null,
+          session_token: sessionToken,
           product_name: productDescription.split(' ').slice(0, 3).join(' ') // First 3 words as product name
         })
         .select()
