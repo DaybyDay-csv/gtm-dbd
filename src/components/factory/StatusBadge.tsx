@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Sparkles, CheckCircle2, X } from 'lucide-react';
+import { Sparkles, CheckCircle2, X, BarChart3 } from 'lucide-react';
 
 interface StatusBadgeProps {
   status: 'theoretical' | 'partial' | 'validated' | 'stale';
@@ -116,7 +116,7 @@ export const StatusBadge = ({ status }: StatusBadgeProps) => {
 
             <div className="space-y-3">
               <h4 className="font-semibold text-sm flex items-center gap-2">
-                <span className="text-lg">📊</span>
+                <BarChart3 className="w-4 h-4 text-primary" />
                 CÓMO FUNCIONA:
               </h4>
               <ol className="space-y-2 text-sm">
