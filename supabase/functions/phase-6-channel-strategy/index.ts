@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { projectId, allPhaseData, budgetLevel, budgetAmount, outputLanguage = 'es' } = await req.json();
+    const { projectId, allPhaseData, budgetLevel, budgetAmount } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
@@ -60,7 +60,7 @@ ${JSON.stringify(allPhaseData.phase1.marketplacePresence, null, 2)}
    - Si está en TikTok Shop → TikTok Shop Ads + estrategia orgánica debe evaluarse
    - Si tiene Shopify → Necesita presupuesto robusto para Meta/Google (validar si lo tiene)
    - Estrategia ideal: Nativo para validación rápida + externo para diversificación
-`
+   NO RECOMENDAR EL CANAL DE MARKETPLACE ANTIVO SOLO PORQUE ESTÉ DISPOBILE, ANALIZA CRÍTICAMENTE TRAS HABER HECHO EL ANALISIS COMPLETO DE TODOS LOS CANALES
       : `
 ═══════════════════════════════════════════════
 ℹ️ NO SE DETECTARON MARKETPLACES ESPECÍFICOS
@@ -98,9 +98,9 @@ CONTEXTO DEL NEGOCIO:
 ANÁLISIS REQUERIDO:
 1. **SI SE DETECTARON MARKETPLACES (revisar sección arriba):**
    a) PRIMERO analiza las opciones de publicidad NATIVA listadas (Amazon Ads, TikTok Shop Ads, etc.)
-   b) Compara CPL nativo vs CPL externo (Meta/Google) usando los datos proporcionados
+   b) Compara CPL nativo vs CPL externo (Meta/Google) usando los datos del mercado para ese nicho en ese producto
    c) Evalúa ventaja de audiencia con intención vs audiencia fría
-   d) Calcula tiempo de setup: nativo (2-5 días) vs externo (14-30 días)
+   d) Calcula tiempo de setup: nativo (2-5 días) vs externo (14-30 días) (Si es un perfil que tiene un nivel de mas de 3 en perfil, se asume queya tiene cuenta de meta ads y googole ads con lo que el tiempo de setup baja a 5-7 días, ten en cuneta esto)
    e) Considera trade-off: dependencia plataforma vs diversificación
    f) Aplica BONUS +15 puntos en score para canales nativos de marketplace
    
@@ -114,13 +114,16 @@ ANÁLISIS REQUERIDO:
    - Barreras de entrada por canal
    - ROI esperado vs presupuesto
    - **NUEVO:** Presencia existente en marketplaces (ventaja competitiva crítica)
+   NO RECOMENDAR EL CANAL DE MARKETPLACE NATIVO SOLO PORQUE ESTÉ DISPOBILE, ANALIZA CRÍTICAMENTE TRAS HABER HECHO EL ANALISIS COMPLETO DE TODOS LOS CANALES
+
 
 4. Calcular score por canal (0-100) basado en:
    - Fit con buyer persona (40%)
    - Viabilidad con presupuesto (30%)
    - Cobertura del gap de mercado (20%)
    - Tiempo hasta primeros resultados (10%)
-   - **BONUS +15 puntos:** Si es canal nativo de marketplace detectado (audiencia caliente)
+   - **BONUS +15 puntos:** Si es canal nativo de marketplace detectado (audiencia caliente) pero    NO RECOMENDAR EL CANAL DE MARKETPLACE ANTIVO SOLO PORQUE ESTÉ DISPOBILE, ANALIZA CRÍTICAMENTE TRAS HABER HECHO EL ANALISIS COMPLETO DE TODOS LOS CANALES
+
 
 5. Recomendar canal principal + 2 alternativas
 
@@ -139,7 +142,7 @@ ANÁLISIS REQUERIDO:
    - Google Search Ads
    - Google Display Network / GDN
    - LinkedIn Ads (si B2B)
-   - Email Marketing tradicional
+   - Email Marketing tradicional (Klaviyo etc)
    - SEO / Content Marketing
    - YouTube Ads
    - TikTok Ads (diferente de TikTok Shop - es para traer tráfico externo)
@@ -216,9 +219,7 @@ IMPORTANTE:
 - Devuelve SOLO JSON válido, sin bloques de código markdown
 - Analiza AL MENOS 6-8 canales diferentes
 - Sé específico con las cifras de CPL y tiempos
-- El disclosure debe ser un párrafo coherente de 3-4 líneas explicando la lógica estratégica
-
-Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'}.`;
+- El disclosure debe ser un párrafo coherente de 3-4 líneas explicando la lógica estratégica`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
