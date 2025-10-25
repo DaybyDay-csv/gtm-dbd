@@ -1,5 +1,12 @@
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useState } from "react";
 
 interface ValidationMapProps {
   data?: {
@@ -21,11 +28,23 @@ interface ValidationMapProps {
 export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
   const experiments = data?.experiments || [];
   const hasData = experiments.length > 0;
+  
+  const [experimentStates, setExperimentStates] = useState<Record<number, string>>(
+    experiments.reduce((acc, exp, idx) => ({ ...acc, [idx]: exp.state }), {})
+  );
 
   const stateColors: Record<string, string> = {
     "Discover": "bg-yellow-100 text-yellow-800 border-yellow-300",
     "Test": "bg-blue-100 text-blue-800 border-blue-300",
-    "Scale": "bg-green-100 text-green-800 border-green-300"
+    "Scale": "bg-green-100 text-green-800 border-green-300",
+    "Paused": "bg-gray-100 text-gray-800 border-gray-300",
+    "Completed": "bg-purple-100 text-purple-800 border-purple-300"
+  };
+  
+  const availableStates = ["Discover", "Test", "Scale", "Paused", "Completed"];
+  
+  const handleStateChange = (index: number, newState: string) => {
+    setExperimentStates(prev => ({ ...prev, [index]: newState }));
   };
 
   return (
@@ -73,9 +92,26 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
                 <td className="p-3 font-medium">{exp.cost}</td>
                 <td className="p-3 text-muted-foreground">{exp.ttv}</td>
                 <td className="p-3">
-                  <span className={`px-2 py-1 rounded text-xs font-medium border ${stateColors[exp.state]}`}>
-                    {exp.state}
-                  </span>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button className={`px-2 py-1 rounded text-xs font-medium border cursor-pointer hover:opacity-80 transition-opacity ${stateColors[experimentStates[index] || exp.state]}`}>
+                        {experimentStates[index] || exp.state}
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="bg-background border z-50">
+                      {availableStates.map((state) => (
+                        <DropdownMenuItem
+                          key={state}
+                          onClick={() => handleStateChange(index, state)}
+                          className="cursor-pointer"
+                        >
+                          <span className={`px-2 py-1 rounded text-xs font-medium border ${stateColors[state]}`}>
+                            {state}
+                          </span>
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </td>
                 <td className="p-3 text-muted-foreground">{exp.owner}</td>
               </tr>
