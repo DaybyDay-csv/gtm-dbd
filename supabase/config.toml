@@ -6,3 +6,9 @@ verify_jwt = false
 
 [functions.phase-2-buyer-persona]
 verify_jwt = false
+
+[functions.phase-6-channel-strategy]
+verify_jwt = false
+
+[functions.phase-7-creative-variations]
+verify_jwt = false

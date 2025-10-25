@@ -16,49 +16,73 @@ export type Database = {
     Tables: {
       experiments: {
         Row: {
+          buyer_field: string | null
           channel: string
           cost: string | null
           created_at: string | null
           cta: string
+          disc_profile: string | null
+          effect: string
+          emotional_trigger: string | null
           headline: string
-          hypothesis: string
           id: string
           kpi: string
+          objective: string | null
+          offer: string | null
           owner: string | null
           payload: Json | null
           project_id: string
+          reasoning: string | null
           state: string | null
+          subheadline: string | null
           ttv: string | null
+          visual_suggestion: string | null
         }
         Insert: {
+          buyer_field?: string | null
           channel: string
           cost?: string | null
           created_at?: string | null
           cta: string
+          disc_profile?: string | null
+          effect: string
+          emotional_trigger?: string | null
           headline: string
-          hypothesis: string
           id?: string
           kpi: string
+          objective?: string | null
+          offer?: string | null
           owner?: string | null
           payload?: Json | null
           project_id: string
+          reasoning?: string | null
           state?: string | null
+          subheadline?: string | null
           ttv?: string | null
+          visual_suggestion?: string | null
         }
         Update: {
+          buyer_field?: string | null
           channel?: string
           cost?: string | null
           created_at?: string | null
           cta?: string
+          disc_profile?: string | null
+          effect?: string
+          emotional_trigger?: string | null
           headline?: string
-          hypothesis?: string
           id?: string
           kpi?: string
+          objective?: string | null
+          offer?: string | null
           owner?: string | null
           payload?: Json | null
           project_id?: string
+          reasoning?: string | null
           state?: string | null
+          subheadline?: string | null
           ttv?: string | null
+          visual_suggestion?: string | null
         }
         Relationships: [
           {

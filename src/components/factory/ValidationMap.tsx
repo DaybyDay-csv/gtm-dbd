@@ -1,217 +1,341 @@
-import { Download, ExternalLink } from "lucide-react";
+import { useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { 
+  Target, TrendingUp, Clock, Euro, ChevronDown, Filter, 
+  ExternalLink, PlusCircle, Zap 
+} from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
+
+interface Variation {
+  id: string;
+  channel: string;
+  discProfile: string;
+  effect: string;
+  objective: string;
+  headline: string;
+  subheadline: string;
+  cta: string;
+  emotionalTrigger: string;
+  buyerField: string;
+  offer: string;
+  visualSuggestion: string;
+  kpi: string;
+  estimatedCost: string;
+  ttv: string;
+  state: string;
+  owner: string;
+  reasoning: string;
+}
 
 interface ValidationMapProps {
   data?: {
-    experiments?: Array<{
-      hypothesis: string;
-      channel: string;
-      headline: string;
-      cta: string;
-      kpi: string;
-      cost: string;
-      ttv: string;
-      state: string;
-      owner: string;
-    }>;
+    variations?: Variation[];
   };
   isRunning?: boolean;
 }
 
 export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
   const { toast } = useToast();
-  const experiments = data?.experiments || [];
-  const hasData = experiments.length > 0;
-  
-  const [experimentStates, setExperimentStates] = useState<Record<number, string>>(
-    experiments.reduce((acc, exp, idx) => ({ ...acc, [idx]: exp.state }), {})
+  const variations = data?.variations || [];
+  const hasData = variations.length > 0;
+
+  const [filterDisc, setFilterDisc] = useState<string | null>(null);
+  const [filterChannel, setFilterChannel] = useState<string | null>(null);
+  const [variationStates, setVariationStates] = useState<Record<string, string>>(
+    variations.reduce((acc, v) => ({ ...acc, [v.id]: v.state }), {})
   );
+
+  const discColors: Record<string, { bg: string; text: string; border: string; icon: string }> = {
+    "Rojo": { bg: "bg-red-100", text: "text-red-800", border: "border-red-300", icon: "🔴" },
+    "Amarillo": { bg: "bg-yellow-100", text: "text-yellow-800", border: "border-yellow-300", icon: "🟡" },
+    "Verde": { bg: "bg-green-100", text: "text-green-800", border: "border-green-300", icon: "🟢" },
+    "Azul": { bg: "bg-blue-100", text: "text-blue-800", border: "border-blue-300", icon: "🔵" },
+  };
 
   const stateColors: Record<string, string> = {
     "Discover": "bg-yellow-100 text-yellow-800 border-yellow-300",
     "Test": "bg-blue-100 text-blue-800 border-blue-300",
     "Scale": "bg-green-100 text-green-800 border-green-300",
     "Paused": "bg-gray-100 text-gray-800 border-gray-300",
-    "Completed": "bg-purple-100 text-purple-800 border-purple-300"
-  };
-  
-  const availableStates = ["Discover", "Test", "Scale", "Paused", "Completed"];
-  
-  const handleStateChange = (index: number, newState: string) => {
-    setExperimentStates(prev => ({ ...prev, [index]: newState }));
   };
 
-  // Platform mapping based on channel
-  const platformOptions: Record<string, Array<{ name: string; url: string }>> = {
-    "Meta Ads": [{ name: "Meta Business Suite", url: "https://business.facebook.com/" }],
-    "Facebook": [{ name: "Meta Business Suite", url: "https://business.facebook.com/" }],
-    "Instagram": [
-      { name: "Instagram Business", url: "https://business.instagram.com/" },
-      { name: "Meta Business Suite", url: "https://business.facebook.com/" }
-    ],
-    "Google Ads": [{ name: "Google Ads", url: "https://ads.google.com/" }],
-    "TikTok Ads": [{ name: "TikTok Ads Manager", url: "https://ads.tiktok.com/" }],
-    "TikTok": [
-      { name: "TikTok Ads Manager", url: "https://ads.tiktok.com/" },
-      { name: "TikTok Business", url: "https://www.tiktok.com/business/" }
-    ],
-    "Email": [{ name: "Klaviyo", url: "https://www.klaviyo.com/" }],
-    "LinkedIn": [{ name: "LinkedIn Campaign Manager", url: "https://business.linkedin.com/marketing-solutions/ads" }],
-    "YouTube": [{ name: "Google Ads", url: "https://ads.google.com/" }],
-    "Twitter": [{ name: "Twitter Ads", url: "https://ads.twitter.com/" }],
-    "Pinterest": [{ name: "Pinterest Ads", url: "https://ads.pinterest.com/" }]
+  const availableStates = ["Discover", "Test", "Scale", "Paused"];
+  const uniqueChannels = [...new Set(variations.map(v => v.channel))];
+  const uniqueDisc = [...new Set(variations.map(v => v.discProfile))];
+
+  const filteredVariations = variations.filter(v => {
+    if (filterDisc && v.discProfile !== filterDisc) return false;
+    if (filterChannel && v.channel !== filterChannel) return false;
+    return true;
+  });
+
+  const handleStateChange = (id: string, newState: string) => {
+    setVariationStates(prev => ({ ...prev, [id]: newState }));
   };
 
-  const handleConnect = (platform: string, channel: string) => {
+  const handleGenerateMore = (channel: string) => {
     toast({
-      title: "Próximamente disponible",
-      description: `La integración con ${platform} para ${channel} estará disponible próximamente. Podrás conectar tu cuenta directamente desde aquí.`,
+      title: "Función próximamente",
+      description: `Generar 10 variaciones adicionales para ${channel} estará disponible pronto.`,
     });
   };
 
+  const handleConnect = (channel: string) => {
+    toast({
+      title: "Próximamente disponible",
+      description: `La integración con ${channel} estará disponible próximamente.`,
+    });
+  };
+
+  if (!hasData && !isRunning) return null;
+
   return (
-    <section className={`container mx-auto px-4 py-12 border-t dotted-border-t ${isRunning && !hasData ? 'charging' : ''} ${hasData ? 'magic-reveal' : ''}`}>
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h2 className="text-2xl font-bold mb-2">Mapa de validación</h2>
-          <p className="text-sm text-muted-foreground">
-            Hipótesis de campaña listas para experimentar
-          </p>
-        </div>
-        <Button variant="outline" size="sm">
-          <Download className="w-4 h-4 mr-2" />
-          Exportar CSV
-        </Button>
-      </div>
+    <section className={`container mx-auto px-4 py-12 ${isRunning ? 'charging' : ''} ${hasData ? 'magic-reveal' : ''}`}>
+      <Card className="border-2 dotted-border">
+        <CardHeader>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <CardTitle className="text-3xl mb-2">
+                🎨 Variaciones Creativas
+              </CardTitle>
+              <CardDescription className="text-base">
+                {filteredVariations.length} variaciones listas para probar • Formato Efecto → Causa
+              </CardDescription>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {/* DISC Filter */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <Filter className="w-4 h-4 mr-2" />
+                    {filterDisc ? `DISC: ${filterDisc}` : "Todos DISC"}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem onClick={() => setFilterDisc(null)}>
+                    Todos los perfiles
+                  </DropdownMenuItem>
+                  {uniqueDisc.map(disc => (
+                    <DropdownMenuItem key={disc} onClick={() => setFilterDisc(disc)}>
+                      {discColors[disc]?.icon} {disc}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm border dotted-border rounded-lg">
-          <thead className="bg-secondary/30">
-            <tr>
-              <th className="text-left p-3 font-semibold">Hipótesis</th>
-              <th className="text-left p-3 font-semibold">Canal</th>
-              <th className="text-left p-3 font-semibold">Headline</th>
-              <th className="text-left p-3 font-semibold">CTA</th>
-              <th className="text-left p-3 font-semibold">KPI</th>
-              <th className="text-left p-3 font-semibold">Coste</th>
-              <th className="text-left p-3 font-semibold">TTV</th>
-              <th className="text-left p-3 font-semibold">Estado</th>
-              <th className="text-left p-3 font-semibold">Owner</th>
-              <th className="text-left p-3 font-semibold">Conectar</th>
-            </tr>
-          </thead>
-          <tbody>
-            {experiments.map((exp, index) => (
-              <tr key={index} className="border-t dotted-border-t hover:bg-secondary/20 transition-colors">
-                <td className="p-3 font-medium">{exp.hypothesis}</td>
-                <td className="p-3">
-                  <span className="px-2 py-1 bg-primary/10 text-primary rounded text-xs font-medium">
-                    {exp.channel}
-                  </span>
-                </td>
-                <td className="p-3">{exp.headline}</td>
-                <td className="p-3 text-muted-foreground">{exp.cta}</td>
-                <td className="p-3">{exp.kpi}</td>
-                <td className="p-3 font-medium">{exp.cost}</td>
-                <td className="p-3 text-muted-foreground">{exp.ttv}</td>
-                <td className="p-3">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <button className={`px-2 py-1 rounded text-xs font-medium border cursor-pointer hover:opacity-80 transition-opacity ${stateColors[experimentStates[index] || exp.state]}`}>
-                        {experimentStates[index] || exp.state}
-                      </button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="bg-background border z-50">
-                      {availableStates.map((state) => (
-                        <DropdownMenuItem
-                          key={state}
-                          onClick={() => handleStateChange(index, state)}
-                          className="cursor-pointer"
-                        >
-                          <span className={`px-2 py-1 rounded text-xs font-medium border ${stateColors[state]}`}>
-                            {state}
-                          </span>
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </td>
-                <td className="p-3 text-muted-foreground">{exp.owner}</td>
-                <td className="p-3">
-                  {(() => {
-                    const platforms = platformOptions[exp.channel] || platformOptions[exp.channel.split(' ')[0]] || [];
-                    
-                    if (platforms.length === 0) {
-                      return (
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          disabled
-                          className="opacity-50"
-                        >
-                          No disponible
-                        </Button>
-                      );
-                    }
-                    
-                    if (platforms.length === 1) {
-                      return (
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={() => handleConnect(platforms[0].name, exp.channel)}
-                        >
-                          <ExternalLink className="w-3 h-3 mr-1" />
-                          {platforms[0].name}
-                        </Button>
-                      );
-                    }
-                    
-                    return (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="outline" size="sm">
-                            <ExternalLink className="w-3 h-3 mr-1" />
-                            Conectar
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="bg-background border z-50">
-                          {platforms.map((platform) => (
-                            <DropdownMenuItem
-                              key={platform.name}
-                              onClick={() => handleConnect(platform.name, exp.channel)}
-                              className="cursor-pointer"
-                            >
-                              <ExternalLink className="w-3 h-3 mr-2" />
-                              {platform.name}
-                            </DropdownMenuItem>
-                          ))}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    );
-                  })()}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+              {/* Channel Filter */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <Filter className="w-4 h-4 mr-2" />
+                    {filterChannel || "Todos Canales"}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem onClick={() => setFilterChannel(null)}>
+                    Todos los canales
+                  </DropdownMenuItem>
+                  {uniqueChannels.map(channel => (
+                    <DropdownMenuItem key={channel} onClick={() => setFilterChannel(channel)}>
+                      {channel}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+        </CardHeader>
 
-      <div className="mt-6 p-4 bg-secondary/30 rounded-lg border dotted-border">
-        <p className="text-sm text-muted-foreground">
-          <strong>Nota:</strong> Esta tabla representa experimentos derivados de las fases anteriores.
-          Cada hipótesis combina un campo del buyer persona, una oferta y un color DISC para crear 
-          campañas personalizadas listas para probar en diferentes canales.
-        </p>
-      </div>
+        <CardContent className="space-y-4">
+          {filteredVariations.map((variation) => {
+            const discStyle = discColors[variation.discProfile] || discColors["Azul"];
+            const currentState = variationStates[variation.id] || variation.state;
+
+            return (
+              <Card key={variation.id} className="border dotted-border hover:border-primary/50 transition-colors">
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Badge className={`${discStyle.bg} ${discStyle.text} border ${discStyle.border}`}>
+                          {discStyle.icon} {variation.discProfile}
+                        </Badge>
+                        <Badge variant="outline" className="text-xs">
+                          {variation.channel}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground">{variation.id}</span>
+                      </div>
+                    </div>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button className={`px-3 py-1 rounded text-xs font-medium border cursor-pointer hover:opacity-80 transition-opacity ${stateColors[currentState]}`}>
+                          {currentState}
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        {availableStates.map((state) => (
+                          <DropdownMenuItem
+                            key={state}
+                            onClick={() => handleStateChange(variation.id, state)}
+                          >
+                            <span className={`px-2 py-1 rounded text-xs font-medium border ${stateColors[state]}`}>
+                              {state}
+                            </span>
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </CardHeader>
+
+                <CardContent className="space-y-4">
+                  {/* Effect and Objective */}
+                  <div className="space-y-3">
+                    <div className="p-3 bg-green-50 dark:bg-green-950/30 rounded-lg border border-green-200 dark:border-green-900">
+                      <p className="text-xs font-semibold text-green-900 dark:text-green-100 mb-1 flex items-center gap-1">
+                        <Target className="w-3 h-3" />
+                        EFECTO (Lo que validamos):
+                      </p>
+                      <p className="text-sm font-medium text-green-800 dark:text-green-200">
+                        "{variation.effect}"
+                      </p>
+                    </div>
+
+                    <div className="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-900">
+                      <p className="text-xs font-semibold text-blue-900 dark:text-blue-100 mb-1 flex items-center gap-1">
+                        <TrendingUp className="w-3 h-3" />
+                        CAUSA (Por qué lo hacemos):
+                      </p>
+                      <p className="text-sm text-blue-800 dark:text-blue-200">
+                        {variation.objective}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Copy */}
+                  <div className="space-y-2">
+                    <p className="text-xs font-semibold text-muted-foreground">📝 Copy:</p>
+                    <div className="space-y-1 pl-4 border-l-2 border-primary">
+                      <p className="text-sm">
+                        <span className="font-semibold">H1:</span> "{variation.headline}"
+                      </p>
+                      <p className="text-sm">
+                        <span className="font-semibold">H2:</span> "{variation.subheadline}"
+                      </p>
+                      <p className="text-sm">
+                        <span className="font-semibold">CTA:</span> <Button size="sm" variant="default" className="h-6 text-xs">{variation.cta}</Button>
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Visual Suggestion */}
+                  <div className="p-3 bg-secondary/30 rounded-lg">
+                    <p className="text-xs font-semibold mb-1">🎨 Sugerencia Visual:</p>
+                    <p className="text-sm text-muted-foreground">{variation.visualSuggestion}</p>
+                  </div>
+
+                  {/* Metrics */}
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="text-center p-2 bg-secondary/20 rounded">
+                      <p className="text-xs text-muted-foreground mb-1">KPI</p>
+                      <p className="text-sm font-semibold">{variation.kpi}</p>
+                    </div>
+                    <div className="text-center p-2 bg-secondary/20 rounded">
+                      <p className="text-xs text-muted-foreground mb-1 flex items-center justify-center gap-1">
+                        <Euro className="w-3 h-3" /> Coste
+                      </p>
+                      <p className="text-sm font-semibold">{variation.estimatedCost}</p>
+                    </div>
+                    <div className="text-center p-2 bg-secondary/20 rounded">
+                      <p className="text-xs text-muted-foreground mb-1 flex items-center justify-center gap-1">
+                        <Clock className="w-3 h-3" /> TTV
+                      </p>
+                      <p className="text-sm font-semibold">{variation.ttv}</p>
+                    </div>
+                  </div>
+
+                  {/* Expandable Reasoning */}
+                  <Collapsible>
+                    <CollapsibleTrigger asChild>
+                      <Button variant="ghost" size="sm" className="w-full justify-between">
+                        <span className="text-xs flex items-center gap-1">
+                          <Zap className="w-3 h-3" /> Ver razonamiento estratégico
+                        </span>
+                        <ChevronDown className="w-4 h-4" />
+                      </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="pt-2">
+                      <div className="p-3 bg-purple-50 dark:bg-purple-950/30 rounded-lg border border-purple-200 dark:border-purple-900">
+                        <p className="text-xs font-semibold text-purple-900 dark:text-purple-100 mb-2">
+                          💡 Razonamiento:
+                        </p>
+                        <p className="text-sm text-purple-800 dark:text-purple-200">
+                          {variation.reasoning}
+                        </p>
+                        <div className="mt-3 pt-3 border-t border-purple-200 dark:border-purple-800 space-y-1">
+                          <p className="text-xs"><span className="font-semibold">Trigger:</span> {variation.emotionalTrigger}</p>
+                          <p className="text-xs"><span className="font-semibold">Campo Buyer:</span> {variation.buyerField}</p>
+                          <p className="text-xs"><span className="font-semibold">Oferta:</span> {variation.offer}</p>
+                          <p className="text-xs"><span className="font-semibold">Owner:</span> {variation.owner}</p>
+                        </div>
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
+
+                  {/* Actions */}
+                  <div className="flex gap-2 pt-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => handleConnect(variation.channel)}
+                    >
+                      <ExternalLink className="w-3 h-3 mr-1" />
+                      Conectar {variation.channel}
+                    </Button>
+                    <Button variant="ghost" size="sm">
+                      Duplicar
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+
+          {/* Generate More Button */}
+          {uniqueChannels.length > 0 && (
+            <div className="pt-4">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="lg" className="w-full">
+                    <PlusCircle className="w-4 h-4 mr-2" />
+                    Generar 10 variaciones más
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                  {uniqueChannels.map(channel => (
+                    <DropdownMenuItem
+                      key={channel}
+                      onClick={() => handleGenerateMore(channel)}
+                    >
+                      {channel}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </section>
   );
 };

@@ -14,12 +14,14 @@ import { MainGrid } from "@/components/factory/MainGrid";
 import { ValidationMap } from "@/components/factory/ValidationMap";
 import { ClientReadiness } from "@/components/factory/ClientReadiness";
 import { SignupGate } from "@/components/factory/SignupGate";
+import { BudgetInput } from "@/components/factory/BudgetInput";
+import { ChannelStrategy } from "@/components/factory/ChannelStrategy";
 
 const Index = () => {
   const [searchParams] = useSearchParams();
   const projectIdFromUrl = searchParams.get("project");
   
-  const { state, runAnalysis } = useAnalysisOrchestrator();
+  const { state, runAnalysis, continueToPhaseSix } = useAnalysisOrchestrator();
   const { projectData, loading: loadingProject } = useProjectLoader(projectIdFromUrl);
   const { user } = useAuth();
   
@@ -74,6 +76,10 @@ const Index = () => {
     value: o.valueGauge?.value || 0,
   })) || [];
 
+  const handleBudgetSubmit = (budgetLevel: string, budgetAmount: number) => {
+    continueToPhaseSix(budgetLevel, budgetAmount);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
@@ -93,19 +99,30 @@ const Index = () => {
             topMessages={[]}
             topOffers={topOffers}
             nextAction={
-              displayState.phases.phase6?.experiments?.[0]
-                ? `Test: ${displayState.phases.phase6.experiments[0].hypothesis} on ${displayState.phases.phase6.experiments[0].channel}`
+              displayState.phases.phase7?.variations?.[0]
+                ? `Test: ${displayState.phases.phase7.variations[0].effect} on ${displayState.phases.phase7.variations[0].channel}`
                 : undefined
             }
           />
 
           <MainGrid analysisState={displayState} showBlurOnPhase4Plus={shouldShowGate} />
+
+          {/* Budget Input - shown after Phase 5 */}
+          {state.awaitingBudgetInput && (
+            <BudgetInput onSubmit={handleBudgetSubmit} />
+          )}
+
+          {/* Channel Strategy - shown after Phase 6 */}
+          {displayState.phases.phase6 && !state.awaitingBudgetInput && (
+            <ChannelStrategy data={displayState.phases.phase6} isRunning={displayState.isRunning && displayState.currentPhase === 6} />
+          )}
           
+          {/* Validation Map - shown after Phase 7 */}
           <div className={shouldShowGate ? "relative" : ""}>
             {shouldShowGate && (
               <div className="absolute inset-0 backdrop-blur-md z-10 rounded-lg" />
             )}
-            <ValidationMap data={displayState.phases.phase6} isRunning={displayState.isRunning} />
+            <ValidationMap data={displayState.phases.phase7} isRunning={displayState.isRunning && displayState.currentPhase === 7} />
           </div>
         </div>
       )}

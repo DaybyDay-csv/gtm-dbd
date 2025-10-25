@@ -7,6 +7,9 @@ export interface AnalysisState {
   projectId: string | null;
   currentPhase: number;
   isRunning: boolean;
+  awaitingBudgetInput?: boolean;
+  budgetLevel?: string;
+  budgetAmount?: number;
   clientReadiness?: {
     score: number;
     maturity: string;
@@ -20,6 +23,7 @@ export interface AnalysisState {
     phase4: any | null;
     phase5: any | null;
     phase6: any | null;
+    phase7: any | null;
   };
 }
 
@@ -29,6 +33,7 @@ export const useAnalysisOrchestrator = () => {
     projectId: null,
     currentPhase: 0,
     isRunning: false,
+    awaitingBudgetInput: false,
     phases: {
       phase1: null,
       phase2: null,
@@ -36,6 +41,7 @@ export const useAnalysisOrchestrator = () => {
       phase4: null,
       phase5: null,
       phase6: null,
+      phase7: null,
     },
   });
 
@@ -56,6 +62,7 @@ export const useAnalysisOrchestrator = () => {
         projectId: null,
         currentPhase: 0,
         isRunning: true,
+        awaitingBudgetInput: false,
         phases: {
           phase1: null,
           phase2: null,
@@ -63,6 +70,7 @@ export const useAnalysisOrchestrator = () => {
           phase4: null,
           phase5: null,
           phase6: null,
+          phase7: null,
         },
       });
 
@@ -214,45 +222,131 @@ export const useAnalysisOrchestrator = () => {
         phases: { ...prev.phases, phase5: phase5Data },
       }));
 
-      // Phase 6: Validation Map
+      // Pause for budget input - this will be handled by the UI
+      // The UI will call continueToPhaseSix when budget is submitted
+      setState(prev => ({ 
+        ...prev, 
+        currentPhase: 5,
+        isRunning: false,
+        awaitingBudgetInput: true 
+      }));
+
+      toast({
+        title: "Fase 5 completada",
+        description: "Define tu presupuesto para continuar con el análisis de canal",
+      });
+
+    } catch (error: any) {
+      console.error("Analysis error:", error);
+      toast({
+        title: "Error en el análisis",
+        description: error.message || "Ha ocurrido un error durante el análisis",
+        variant: "destructive",
+      });
+      setState(prev => ({ ...prev, isRunning: false, awaitingBudgetInput: false }));
+    }
+  };
+
+  const continueToPhaseSix = async (budgetLevel: string, budgetAmount: number) => {
+    try {
+      setState(prev => ({ 
+        ...prev, 
+        isRunning: true, 
+        awaitingBudgetInput: false,
+        budgetLevel,
+        budgetAmount 
+      }));
+
+      if (!state.projectId) throw new Error("No project ID found");
+
+      // Phase 6: Channel Strategy
       setState(prev => ({ ...prev, currentPhase: 6 }));
       const { data: phase6Data, error: phase6Error } = await supabase.functions.invoke(
-        "phase-6-validation-map",
+        "phase-6-channel-strategy",
         {
           body: {
-            projectId: project.id,
+            projectId: state.projectId,
             allPhaseData: {
-              phase1: phase1Data,
-              phase2: phase2Data,
-              phase3: phase3Data,
-              phase4: phase4Data,
-              phase5: phase5Data,
+              phase1: state.phases.phase1,
+              phase2: state.phases.phase2,
+              phase3: state.phases.phase3,
+              phase4: state.phases.phase4,
+              phase5: state.phases.phase5,
             },
+            budgetLevel,
+            budgetAmount,
           },
         }
       );
       if (phase6Error) throw phase6Error;
 
       await supabase.from("phase_outputs").insert({
-        project_id: project.id,
+        project_id: state.projectId,
         phase: 6,
         payload: phase6Data,
       });
 
-      // Store experiments in experiments table
-      if (phase6Data.experiments) {
-        const experiments = phase6Data.experiments.map((exp: any) => ({
-          project_id: project.id,
-          payload: exp,
-          hypothesis: exp.hypothesis,
-          channel: exp.channel,
-          headline: exp.headline,
-          cta: exp.cta,
-          kpi: exp.kpi,
-          cost: exp.cost,
-          ttv: exp.ttv,
-          state: exp.state,
-          owner: exp.owner,
+      setState(prev => ({
+        ...prev,
+        phases: { ...prev.phases, phase6: phase6Data },
+      }));
+
+      // Phase 7: Creative Variations
+      setState(prev => ({ ...prev, currentPhase: 7 }));
+      const recommendedChannels = [
+        phase6Data.recommendation?.primary,
+        phase6Data.recommendation?.secondary,
+        phase6Data.recommendation?.tertiary
+      ].filter(Boolean);
+
+      const { data: phase7Data, error: phase7Error } = await supabase.functions.invoke(
+        "phase-7-creative-variations",
+        {
+          body: {
+            projectId: state.projectId,
+            allPhaseData: {
+              phase1: state.phases.phase1,
+              phase2: state.phases.phase2,
+              phase3: state.phases.phase3,
+              phase4: state.phases.phase4,
+              phase5: state.phases.phase5,
+              phase6: phase6Data,
+            },
+            recommendedChannels,
+            generateFor: "all",
+          },
+        }
+      );
+      if (phase7Error) throw phase7Error;
+
+      await supabase.from("phase_outputs").insert({
+        project_id: state.projectId,
+        phase: 7,
+        payload: phase7Data,
+      });
+
+      // Store variations in experiments table with new fields
+      if (phase7Data.variations) {
+        const experiments = phase7Data.variations.map((variation: any) => ({
+          project_id: state.projectId,
+          payload: variation,
+          effect: variation.effect,
+          objective: variation.objective,
+          channel: variation.channel,
+          headline: variation.headline,
+          subheadline: variation.subheadline,
+          cta: variation.cta,
+          kpi: variation.kpi,
+          cost: variation.estimatedCost,
+          ttv: variation.ttv,
+          state: variation.state,
+          owner: variation.owner,
+          disc_profile: variation.discProfile,
+          emotional_trigger: variation.emotionalTrigger,
+          buyer_field: variation.buyerField,
+          offer: variation.offer,
+          visual_suggestion: variation.visualSuggestion,
+          reasoning: variation.reasoning,
         }));
 
         await supabase.from("experiments").insert(experiments);
@@ -260,9 +354,9 @@ export const useAnalysisOrchestrator = () => {
 
       // Generate key insights summary
       const keyInsights = [
-        phase2Data?.profile?.painPoints?.[0],
-        phase3Data?.offers?.[0]?.offer,
-        phase6Data?.experiments?.[0]?.hypothesis
+        state.phases.phase2?.profile?.painPoints?.[0],
+        state.phases.phase3?.offers?.[0]?.offer,
+        phase6Data?.recommendation?.primary
       ].filter(Boolean).join(' • ');
 
       // Update project with key insights
@@ -271,12 +365,12 @@ export const useAnalysisOrchestrator = () => {
         .update({ 
           key_insights: keyInsights
         })
-        .eq("id", project.id);
+        .eq("id", state.projectId);
 
       setState(prev => ({
         ...prev,
-        phases: { ...prev.phases, phase6: phase6Data },
-        currentPhase: 6,
+        phases: { ...prev.phases, phase7: phase7Data },
+        currentPhase: 7,
         isRunning: false,
       }));
 
@@ -285,7 +379,7 @@ export const useAnalysisOrchestrator = () => {
         description: "Todas las fases se han ejecutado con éxito",
       });
     } catch (error: any) {
-      console.error("Analysis error:", error);
+      console.error("Phase 6-7 error:", error);
       toast({
         title: "Error en el análisis",
         description: error.message || "Ha ocurrido un error durante el análisis",
@@ -295,5 +389,5 @@ export const useAnalysisOrchestrator = () => {
     }
   };
 
-  return { state, runAnalysis };
+  return { state, runAnalysis, continueToPhaseSix };
 };

@@ -1,0 +1,295 @@
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { CheckCircle2, AlertCircle, TrendingUp, Clock, Euro } from "lucide-react";
+import { RadarChart, PolarGrid, PolarAngleAxis, Radar, ResponsiveContainer, Tooltip } from "recharts";
+
+interface ChannelStrategyProps {
+  data?: {
+    budgetAnalysis?: {
+      estimatedMonthly: number;
+      confidence: string;
+      factors: string[];
+    };
+    channels?: Array<{
+      name: string;
+      score: number;
+      reasoning: string;
+      pros: string[];
+      cons: string[];
+      estimatedCPL: string;
+      timeToResults: string;
+      rank: number;
+    }>;
+    recommendation?: {
+      primary: string;
+      secondary: string;
+      tertiary: string;
+      disclosure: string;
+    };
+  };
+  isRunning?: boolean;
+}
+
+export const ChannelStrategy = ({ data, isRunning }: ChannelStrategyProps) => {
+  if (!data || !data.channels) return null;
+
+  const primaryChannel = data.channels.find(c => c.rank === 1);
+  const alternatives = data.channels.filter(c => c.rank !== 1).sort((a, b) => a.rank - b.rank);
+
+  // Prepare radar chart data (top 5 channels)
+  const radarData = data.channels.slice(0, 5).map(channel => ({
+    channel: channel.name,
+    score: channel.score,
+  }));
+
+  const getScoreColor = (score: number) => {
+    if (score >= 80) return "text-green-600";
+    if (score >= 60) return "text-blue-600";
+    if (score >= 40) return "text-yellow-600";
+    return "text-red-600";
+  };
+
+  const getConfidenceColor = (confidence: string) => {
+    if (confidence === "high") return "bg-green-100 text-green-800 border-green-300";
+    if (confidence === "medium") return "bg-yellow-100 text-yellow-800 border-yellow-300";
+    return "bg-red-100 text-red-800 border-red-300";
+  };
+
+  return (
+    <section className={`container mx-auto px-4 py-12 space-y-8 ${isRunning ? 'charging' : 'magic-reveal'}`}>
+      {/* Budget Analysis */}
+      {data.budgetAnalysis && (
+        <Card className="border-2 dotted-border">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Euro className="w-5 h-5" />
+              Análisis de Presupuesto
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Presupuesto Mensual Estimado</p>
+                <p className="text-3xl font-bold">€{data.budgetAnalysis.estimatedMonthly.toLocaleString()}</p>
+              </div>
+              <Badge className={`${getConfidenceColor(data.budgetAnalysis.confidence)} border`}>
+                Confianza: {data.budgetAnalysis.confidence}
+              </Badge>
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm font-semibold">Factores considerados:</p>
+              <ul className="text-sm text-muted-foreground space-y-1">
+                {data.budgetAnalysis.factors.map((factor, idx) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <span className="text-primary">•</span>
+                    <span>{factor}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Primary Recommendation */}
+      {primaryChannel && (
+        <Card className="border-4 border-primary shadow-xl">
+          <CardHeader className="text-center bg-primary/5">
+            <CardTitle className="text-3xl mb-2">
+              🎯 Canal Recomendado: {primaryChannel.name}
+            </CardTitle>
+            <CardDescription className="text-base">
+              Basado en tu buyer persona, presupuesto y gap de mercado
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6 pt-6">
+            {/* Score Circle */}
+            <div className="flex flex-col items-center justify-center p-8">
+              <div className="relative w-40 h-40">
+                <svg className="w-full h-full -rotate-90">
+                  <circle
+                    cx="80"
+                    cy="80"
+                    r="70"
+                    stroke="currentColor"
+                    strokeWidth="12"
+                    fill="none"
+                    className="text-secondary"
+                  />
+                  <circle
+                    cx="80"
+                    cy="80"
+                    r="70"
+                    stroke="currentColor"
+                    strokeWidth="12"
+                    fill="none"
+                    strokeDasharray={`${2 * Math.PI * 70}`}
+                    strokeDashoffset={`${2 * Math.PI * 70 * (1 - primaryChannel.score / 100)}`}
+                    className="text-primary transition-all duration-1000"
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className={`text-5xl font-bold ${getScoreColor(primaryChannel.score)}`}>
+                    {primaryChannel.score}
+                  </span>
+                  <span className="text-sm text-muted-foreground">/100</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Pros and Cons */}
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <h4 className="font-semibold flex items-center gap-2 text-green-700 dark:text-green-400">
+                  <CheckCircle2 className="w-5 h-5" />
+                  Ventajas
+                </h4>
+                <ul className="space-y-2">
+                  {primaryChannel.pros.map((pro, idx) => (
+                    <li key={idx} className="text-sm flex items-start gap-2">
+                      <span className="text-green-600 mt-1">✓</span>
+                      <span>{pro}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="space-y-2">
+                <h4 className="font-semibold flex items-center gap-2 text-orange-700 dark:text-orange-400">
+                  <AlertCircle className="w-5 h-5" />
+                  Consideraciones
+                </h4>
+                <ul className="space-y-2">
+                  {primaryChannel.cons.map((con, idx) => (
+                    <li key={idx} className="text-sm flex items-start gap-2">
+                      <span className="text-orange-600 mt-1">⚠</span>
+                      <span>{con}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* Metrics */}
+            <div className="grid grid-cols-3 gap-4 p-4 bg-secondary/30 rounded-lg border dotted-border">
+              <div className="text-center">
+                <p className="text-sm text-muted-foreground mb-1">CPL Estimado</p>
+                <p className="text-xl font-bold">{primaryChannel.estimatedCPL}</p>
+              </div>
+              <div className="text-center border-x dotted-border-x">
+                <p className="text-sm text-muted-foreground mb-1">Tiempo a Resultados</p>
+                <p className="text-xl font-bold flex items-center justify-center gap-1">
+                  <Clock className="w-4 h-4" />
+                  {primaryChannel.timeToResults}
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="text-sm text-muted-foreground mb-1">Presupuesto Recomendado</p>
+                <p className="text-xl font-bold">
+                  €{data.budgetAnalysis ? Math.round(data.budgetAnalysis.estimatedMonthly * 0.7).toLocaleString() : "N/A"} - 
+                  €{data.budgetAnalysis ? Math.round(data.budgetAnalysis.estimatedMonthly * 1.2).toLocaleString() : "N/A"}/mes
+                </p>
+              </div>
+            </div>
+
+            {/* Disclosure */}
+            {data.recommendation?.disclosure && (
+              <div className="p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-900">
+                <p className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-2">
+                  💡 POR QUÉ ESTE CANAL:
+                </p>
+                <p className="text-sm text-blue-800 dark:text-blue-200">
+                  {data.recommendation.disclosure}
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Comparative Radar Chart */}
+      <Card className="border-2 dotted-border">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <TrendingUp className="w-5 h-5" />
+            Comparativa de Canales
+          </CardTitle>
+          <CardDescription>
+            Puntuación de viabilidad por canal basada en múltiples factores
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ResponsiveContainer width="100%" height={400}>
+            <RadarChart data={radarData}>
+              <PolarGrid stroke="hsl(var(--border))" />
+              <PolarAngleAxis 
+                dataKey="channel" 
+                tick={{ fill: "hsl(var(--foreground))", fontSize: 12 }}
+              />
+              <Radar
+                name="Score"
+                dataKey="score"
+                stroke="hsl(var(--primary))"
+                fill="hsl(var(--primary))"
+                fillOpacity={0.3}
+                strokeWidth={2}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "hsl(var(--background))",
+                  border: "1px solid hsl(var(--border))",
+                  borderRadius: "8px",
+                }}
+              />
+            </RadarChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
+
+      {/* Ranking of Alternatives */}
+      <Card className="border-2 dotted-border">
+        <CardHeader>
+          <CardTitle>🥇 Ranking de Alternativas</CardTitle>
+          <CardDescription>
+            Otras opciones viables ordenadas por puntuación
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {data.channels.sort((a, b) => b.score - a.score).map((channel, idx) => {
+            const stars = Math.round((channel.score / 100) * 5);
+            return (
+              <div
+                key={channel.name}
+                className="flex items-center justify-between p-4 rounded-lg border dotted-border hover:bg-secondary/30 transition-colors"
+              >
+                <div className="flex items-center gap-4 flex-1">
+                  <span className="text-2xl font-bold text-muted-foreground w-8">
+                    {idx + 1}.
+                  </span>
+                  <div className="flex-1">
+                    <p className="font-semibold">{channel.name}</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {channel.reasoning}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="text-right">
+                    <p className="text-2xl font-bold">{channel.score}/100</p>
+                    <div className="flex gap-0.5 mt-1">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <span key={i} className={i < stars ? "text-yellow-500" : "text-gray-300"}>
+                          ⭐
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </CardContent>
+      </Card>
+    </section>
+  );
+};
