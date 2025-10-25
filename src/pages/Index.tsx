@@ -10,8 +10,13 @@ import { EvidenceDrawer } from "@/components/factory/EvidenceDrawer";
 import { PhaseRibbon } from "@/components/factory/PhaseRibbon";
 import { PhaseExplainer } from "@/components/factory/PhaseExplainer";
 import { ProductMetrics } from "@/components/factory/ProductMetrics";
-import { MainGrid } from "@/components/factory/MainGrid";
 import { ValidationMap } from "@/components/factory/ValidationMap";
+import { ProductUnderstanding } from "@/components/factory/ProductUnderstanding";
+import { PositioningMap } from "@/components/factory/PositioningMap";
+import { ProductNucleus } from "@/components/factory/ProductNucleus";
+import { BuyerPersona } from "@/components/factory/BuyerPersona";
+import { OfferFactory } from "@/components/factory/OfferFactory";
+import { DISCTranslator } from "@/components/factory/DISCTranslator";
 import { ClientReadiness } from "@/components/factory/ClientReadiness";
 import { SignupGate } from "@/components/factory/SignupGate";
 import { BudgetInput } from "@/components/factory/BudgetInput";
@@ -89,7 +94,7 @@ const Index = () => {
       
       {displayState.currentPhase > 0 && (
         <div ref={contentRef}>
-          {/* UNLOCKED CONTENT - Phases 1-3 without blur */}
+          {/* UNLOCKED CONTENT - Phases 1-3 */}
           <div id="unlocked-content">
             <PhaseRibbon currentPhase={displayState.currentPhase} isRunning={displayState.isRunning} />
             <PhaseExplainer currentPhase={displayState.currentPhase} isRunning={displayState.isRunning} />
@@ -107,32 +112,70 @@ const Index = () => {
               }
             />
 
-            <MainGrid analysisState={displayState} showBlurOnPhase4Plus={false} />
+            {/* Product Understanding + Main Grid with SignupGate */}
+            <section className="container mx-auto px-4 py-12 space-y-8">
+              {/* Product Understanding - Full Width */}
+              <div className={`w-full ${displayState.isRunning && !displayState.phases.phase1?.productUnderstanding ? 'charging' : ''} ${displayState.phases.phase1?.productUnderstanding ? 'magic-reveal' : ''}`}>
+                <ProductUnderstanding data={displayState.phases.phase1?.productUnderstanding} />
+              </div>
+
+              {/* Main Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Top row */}
+                <div className={`lg:col-span-1 ${displayState.isRunning && !displayState.phases.phase1 ? 'charging' : ''} ${displayState.phases.phase1 ? 'magic-reveal' : ''}`}>
+                  <PositioningMap data={displayState.phases.phase1} />
+                </div>
+                <div className={`lg:col-span-1 flex items-center justify-center ${displayState.isRunning && !displayState.phases.phase1?.productNucleus ? 'charging' : ''} ${displayState.phases.phase1?.productNucleus ? 'magic-reveal' : ''}`}>
+                  <ProductNucleus data={displayState.phases.phase1?.productNucleus} />
+                </div>
+                <div className={`lg:col-span-1 ${displayState.isRunning && !displayState.phases.phase2 ? 'charging' : ''} ${displayState.phases.phase2 ? 'magic-reveal' : ''}`}>
+                  <BuyerPersona data={displayState.phases.phase2} />
+                </div>
+
+                {/* Bottom row - OfferFactory + SignupGate / DISC */}
+                <div className={`lg:col-span-1 ${displayState.isRunning && !displayState.phases.phase3 ? 'charging' : ''} ${displayState.phases.phase3 ? 'magic-reveal' : ''}`}>
+                  <OfferFactory data={displayState.phases.phase3} />
+                </div>
+                
+                {shouldShowGate ? (
+                  <div className="lg:col-span-2 flex items-center justify-center min-h-[400px]">
+                    <SignupGate onComplete={handleSignupComplete} />
+                  </div>
+                ) : (
+                  <div className={`lg:col-span-2 ${displayState.isRunning && !displayState.phases.phase4 ? 'charging' : ''} ${displayState.phases.phase4 ? 'magic-reveal' : ''}`}>
+                    <DISCTranslator data={displayState.phases.phase4} />
+                  </div>
+                )}
+              </div>
+            </section>
           </div>
 
-          {/* SIGNUP GATE - Sticky between unlocked and locked content */}
-          {shouldShowGate && <SignupGate onComplete={handleSignupComplete} />}
-
           {/* LOCKED CONTENT - Phases 4-7 with progressive blur */}
-          {shouldShowGate ? (
+          {shouldShowGate && (
             <div id="locked-content" className="relative">
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background/80 backdrop-blur-[8px] z-40 pointer-events-none" />
-              
-              <div className="relative z-30 opacity-60">
-                {state.awaitingBudgetInput && (
-                  <BudgetInput onSubmit={handleBudgetSubmit} />
-                )}
-
-                {displayState.phases.phase6 && !state.awaitingBudgetInput && (
-                  <ChannelStrategy data={displayState.phases.phase6} isRunning={displayState.isRunning && displayState.currentPhase === 6} />
-                )}
-                
-                <ValidationMap data={displayState.phases.phase7} isRunning={displayState.isRunning && displayState.currentPhase === 7} />
+              <div className="container mx-auto px-4 py-12">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  <div className={`lg:col-span-3 ${displayState.isRunning && !displayState.phases.phase4 ? 'charging' : ''} ${displayState.phases.phase4 ? 'magic-reveal' : ''}`}>
+                    <DISCTranslator data={displayState.phases.phase4} />
+                  </div>
+                </div>
               </div>
+
+              {state.awaitingBudgetInput && (
+                <BudgetInput onSubmit={handleBudgetSubmit} />
+              )}
+
+              {displayState.phases.phase6 && !state.awaitingBudgetInput && (
+                <ChannelStrategy data={displayState.phases.phase6} isRunning={displayState.isRunning && displayState.currentPhase === 6} />
+              )}
+              
+              <ValidationMap data={displayState.phases.phase7} isRunning={displayState.isRunning && displayState.currentPhase === 7} />
             </div>
-          ) : (
+          )}
+
+          {/* UNLOCKED - Show phases 4-7 without blur when user is authenticated */}
+          {!shouldShowGate && (
             <>
-              {/* UNLOCKED - Show phases 4-7 without blur when user is authenticated */}
               {state.awaitingBudgetInput && (
                 <BudgetInput onSubmit={handleBudgetSubmit} />
               )}

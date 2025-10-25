@@ -203,9 +203,11 @@ All colors MUST be HSL.
     z-index: 35;
   }
 
-  #locked-content > div {
+  #locked-content > div,
+  #locked-content > section {
     filter: blur(6px);
+    opacity: 0.5;
     transform: scale(0.98);
-    transition: filter 0.3s ease, transform 0.3s ease;
+    transition: filter 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
   }
 }
