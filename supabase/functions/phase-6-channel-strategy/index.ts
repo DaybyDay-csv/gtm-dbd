@@ -1,9 +1,18 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Input validation schema
+const inputSchema = z.object({
+  projectId: z.string().uuid(),
+  allPhaseData: z.record(z.any()).optional(),
+  budgetLevel: z.string().max(100).optional(),
+  budgetAmount: z.number().min(0).max(10000000).optional()
+});
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -11,7 +20,8 @@ serve(async (req) => {
   }
 
   try {
-    const { projectId, allPhaseData, budgetLevel, budgetAmount } = await req.json();
+    const body = await req.json();
+    const { projectId, allPhaseData, budgetLevel, budgetAmount } = inputSchema.parse(body);
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
@@ -22,7 +32,7 @@ serve(async (req) => {
     console.log('Budget:', budgetLevel, budgetAmount);
 
     // Prepare marketplace context from Phase 1
-    const marketplaceContext = allPhaseData.phase1?.marketplacePresence?.detected 
+    const marketplaceContext = allPhaseData?.phase1?.marketplacePresence?.detected
       ? `
 ═══════════════════════════════════════════════
 🛒 INFORMACIÓN CRÍTICA - MARKETPLACES DETECTADOS
@@ -30,7 +40,7 @@ serve(async (req) => {
 
 ⚠️ ESTE PRODUCTO YA SE VENDE EN LAS SIGUIENTES PLATAFORMAS:
 
-${JSON.stringify(allPhaseData.phase1.marketplacePresence, null, 2)}
+${JSON.stringify(allPhaseData?.phase1?.marketplacePresence || {}, null, 2)}
 
 🎯 IMPLICACIONES ESTRATÉGICAS CRÍTICAS:
 
@@ -87,11 +97,11 @@ Enfoque: Atraer tráfico frío y construir audiencia desde cero.
 ${marketplaceContext}
 
 CONTEXTO DEL NEGOCIO:
-- Tamaño empresa: ${allPhaseData.phase1?.businessSize || 'No especificado'}
-- Sector: ${allPhaseData.phase1?.industry || 'No especificado'}
-- Gap de mercado: ${allPhaseData.phase1?.marketGap || 'No especificado'}
-- Buyer Persona: ${JSON.stringify(allPhaseData.phase2?.profile || {})}
-- Ofertas disponibles: ${JSON.stringify(allPhaseData.phase3?.offers || [])}
+- Tamaño empresa: ${allPhaseData?.phase1?.businessSize || 'No especificado'}
+- Sector: ${allPhaseData?.phase1?.industry || 'No especificado'}
+- Gap de mercado: ${allPhaseData?.phase1?.marketGap || 'No especificado'}
+- Buyer Persona: ${JSON.stringify(allPhaseData?.phase2?.profile || {})}
+- Ofertas disponibles: ${JSON.stringify(allPhaseData?.phase3?.offers || [])}
 - Presupuesto declarado: ${budgetLevel} (~€${budgetAmount})
 
 ANÁLISIS REQUERIDO:
@@ -253,6 +263,14 @@ IMPORTANTE:
     });
   } catch (error) {
     console.error('Error in phase-6-channel-strategy:', error);
+    
+    if (error instanceof z.ZodError) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid input data', details: error.errors }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
     return new Response(JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

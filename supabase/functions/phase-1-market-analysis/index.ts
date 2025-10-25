@@ -1,9 +1,58 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Input validation schema
+const inputSchema = z.object({
+  projectId: z.string().uuid(),
+  url: z.string().url().max(2048),
+  productDescription: z.string().trim().min(10).max(5000),
+  context: z.string().max(2000).optional(),
+  competitors: z.string().max(1000).optional(),
+  vision: z.string().max(1000).optional(),
+  mission: z.string().max(1000).optional(),
+  values: z.string().max(1000).optional(),
+  docs: z.string().max(5000).optional(),
+  outputLanguage: z.enum(['es', 'en']).default('es')
+});
+
+// SSRF protection: validate URL is not private/internal
+function isUrlSafe(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    
+    // Only allow http/https
+    if (!['http:', 'https:'].includes(parsed.protocol)) {
+      return false;
+    }
+    
+    // Block private IP ranges and localhost
+    const hostname = parsed.hostname;
+    const privatePatterns = [
+      /^10\./,
+      /^172\.(1[6-9]|2\d|3[01])\./,
+      /^192\.168\./,
+      /^127\./,
+      /^169\.254\./,
+      /^localhost$/i,
+      /^0\.0\.0\.0$/,
+      /^\[?::1\]?$/,
+      /^\[?fe80:/i
+    ];
+    
+    if (privatePatterns.some(pattern => pattern.test(hostname))) {
+      return false;
+    }
+    
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -11,7 +60,19 @@ serve(async (req) => {
   }
 
   try {
-    const { projectId, url, productDescription, context, competitors, vision, mission, values, docs, outputLanguage = 'es' } = await req.json();
+    // Validate input
+    const body = await req.json();
+    const validated = inputSchema.parse(body);
+    
+    // SSRF protection
+    if (!isUrlSafe(validated.url)) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid or unsafe URL provided' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
+    const { projectId, url, productDescription, context, competitors, vision, mission, values, docs, outputLanguage } = validated;
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
@@ -24,11 +85,18 @@ serve(async (req) => {
     console.log('Fetching website content from:', url);
     let websiteContent = '';
     try {
+      // Fetch with timeout and size limits
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      
       const websiteResponse = await fetch(url, {
         headers: {
           'User-Agent': 'Mozilla/5.0 (compatible; GTM-Factory-Bot/1.0)'
-        }
+        },
+        signal: controller.signal
       });
+      
+      clearTimeout(timeoutId);
       
       if (!websiteResponse.ok) {
         throw new Error(`Failed to fetch website: ${websiteResponse.status}`);
@@ -432,6 +500,15 @@ Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'
     });
   } catch (error) {
     console.error('Error in phase-1-market-analysis:', error);
+    
+    // Handle validation errors specifically
+    if (error instanceof z.ZodError) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid input data', details: error.errors }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
     return new Response(JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

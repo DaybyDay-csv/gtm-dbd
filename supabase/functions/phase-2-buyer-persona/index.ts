@@ -1,9 +1,18 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Input validation schema
+const inputSchema = z.object({
+  projectId: z.string().uuid(),
+  brandInfo: z.record(z.any()).optional(),
+  marketData: z.record(z.any()).optional(),
+  outputLanguage: z.enum(['es', 'en']).default('es')
+});
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -11,7 +20,8 @@ serve(async (req) => {
   }
 
   try {
-    const { projectId, brandInfo, marketData, outputLanguage = 'es' } = await req.json();
+    const body = await req.json();
+    const { projectId, brandInfo, marketData, outputLanguage } = inputSchema.parse(body);
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
@@ -200,6 +210,14 @@ IMPORTANT REMINDERS:
     });
   } catch (error) {
     console.error('Error in phase-2-buyer-persona:', error);
+    
+    if (error instanceof z.ZodError) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid input data', details: error.errors }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
     return new Response(JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
