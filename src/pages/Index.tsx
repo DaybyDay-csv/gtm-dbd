@@ -105,29 +105,27 @@ const Index = () => {
             }
           />
 
-          <MainGrid analysisState={displayState} showBlurOnPhase4Plus={shouldShowGate} />
+          <MainGrid analysisState={displayState} showBlurOnPhase4Plus={false} />
+
+          {/* Signup Gate - shown after Phase 3 to unlock phases 4-7 */}
+          {shouldShowGate && <SignupGate onComplete={handleSignupComplete} />}
 
           {/* Budget Input - shown after Phase 5 */}
-          {state.awaitingBudgetInput && (
+          {state.awaitingBudgetInput && !shouldShowGate && (
             <BudgetInput onSubmit={handleBudgetSubmit} />
           )}
 
           {/* Channel Strategy - shown after Phase 6 */}
-          {displayState.phases.phase6 && !state.awaitingBudgetInput && (
+          {displayState.phases.phase6 && !state.awaitingBudgetInput && !shouldShowGate && (
             <ChannelStrategy data={displayState.phases.phase6} isRunning={displayState.isRunning && displayState.currentPhase === 6} />
           )}
           
           {/* Validation Map - shown after Phase 7 */}
-          <div className={shouldShowGate ? "relative" : ""}>
-            {shouldShowGate && (
-              <div className="absolute inset-0 backdrop-blur-md z-10 rounded-lg" />
-            )}
+          {!shouldShowGate && (
             <ValidationMap data={displayState.phases.phase7} isRunning={displayState.isRunning && displayState.currentPhase === 7} />
-          </div>
+          )}
         </div>
       )}
-
-      {shouldShowGate && <SignupGate onComplete={handleSignupComplete} />}
       
       <footer className="border-t dotted-border-t py-6 mt-12">
         <p className="text-center text-sm text-muted-foreground">

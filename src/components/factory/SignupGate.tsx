@@ -41,8 +41,8 @@ export const SignupGate = ({ onComplete }: SignupGateProps) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
-      <Card className="w-full max-w-md p-8 space-y-6">
+    <div className="container mx-auto px-4 py-8 max-w-2xl">
+      <Card className="w-full p-8 space-y-6 border-2 border-primary/20 shadow-lg">
         <div className="text-center space-y-2">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4">
             <Lock className="w-6 h-6 text-primary" />
