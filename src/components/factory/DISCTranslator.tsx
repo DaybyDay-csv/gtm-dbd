@@ -1,3 +1,6 @@
+import { Palette } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
 interface DISCTranslatorProps {
   data?: {
     discTable?: Array<{
@@ -41,7 +44,7 @@ export const DISCTranslator = ({ data }: DISCTranslatorProps) => {
         Adapta ofertas según personalidad del comprador (Tomas Erikson)
       </p>
       <div className="mb-4 px-3 py-1.5 bg-primary/5 border border-primary/20 rounded-full text-xs text-muted-foreground inline-flex items-center gap-1 w-fit">
-        <span className="text-primary font-semibold">🎨</span>
+        <Palette className="w-3 h-3 text-primary" />
         Ofertas + Perfil del Buyer + 4 Estilos DISC
       </div>
       

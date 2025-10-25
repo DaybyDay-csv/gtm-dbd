@@ -1,3 +1,6 @@
+import { Zap } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 interface ProductNucleusProps {
   data?: {
     product?: string;
@@ -18,7 +21,7 @@ export const ProductNucleus = ({ data }: ProductNucleusProps) => {
       <h3 className="text-2xl font-bold mb-4 text-primary">Producto</h3>
       
       <div className="mb-3 px-3 py-1.5 bg-background/80 border border-primary/20 rounded-full text-xs text-muted-foreground inline-flex items-center gap-1 mx-auto">
-        <span className="text-primary font-semibold">⚡</span>
+        <Zap className="w-3 h-3 text-primary" />
         Problemas + Soluciones + Valor Único
       </div>
       

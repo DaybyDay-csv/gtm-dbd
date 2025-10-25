@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BarChart3 } from "lucide-react";
 import { Target, Lightbulb, TrendingUp, Package } from "lucide-react";
 
 interface ProductUnderstandingProps {
@@ -24,7 +25,7 @@ export const ProductUnderstanding = ({ data }: ProductUnderstandingProps) => {
           Deep Product Understanding
         </CardTitle>
         <div className="mt-2 px-3 py-1.5 bg-primary/5 border border-primary/20 rounded-full text-xs text-muted-foreground inline-flex items-center gap-1 w-fit">
-          <span className="text-primary font-semibold">📊</span>
+          <BarChart3 className="w-3 h-3 text-primary" />
           Web Content + Your Description + Market Context
         </div>
       </CardHeader>
