@@ -1,3 +1,7 @@
+import { StatusBadge } from "./StatusBadge";
+import { SystemLiveIndicator } from "./SystemLiveIndicator";
+import { ContextualNotice } from "./ContextualNotice";
+
 interface BuyerPersonaProps {
   data?: {
     avatar?: {
@@ -23,7 +27,11 @@ export const BuyerPersona = ({ data }: BuyerPersonaProps) => {
   ];
 
   return (
-    <div className="p-6 border dotted-border rounded-lg bg-card h-full">
+    <div className="p-6 border dotted-border rounded-lg bg-card h-full relative">
+      <div className="absolute top-4 right-4 flex items-center gap-2">
+        <SystemLiveIndicator status="theoretical" />
+        <StatusBadge status="theoretical" />
+      </div>
       <h3 className="text-xl font-semibold mb-2">Buyer Persona</h3>
       <div className="mt-2 mb-4 px-3 py-1.5 bg-primary/5 border border-primary/20 rounded-full text-xs text-muted-foreground inline-flex items-center gap-1 w-fit">
         <span className="text-primary font-semibold"></span>
@@ -56,6 +64,14 @@ export const BuyerPersona = ({ data }: BuyerPersonaProps) => {
 
         <div className="mt-6 p-4 bg-primary/5 rounded-lg border dotted-border w-full">
           <p className="text-sm italic text-muted-foreground">"{intro}"</p>
+        </div>
+
+        <div className="mt-6 w-full">
+          <ContextualNotice 
+            status="theoretical" 
+            componentType="persona"
+            confidenceScore={0}
+          />
         </div>
       </div>
     </div>

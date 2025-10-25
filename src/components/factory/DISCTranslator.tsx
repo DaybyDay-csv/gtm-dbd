@@ -1,6 +1,10 @@
 import { Palette } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
+import { StatusBadge } from "./StatusBadge";
+import { SystemLiveIndicator } from "./SystemLiveIndicator";
+import { ContextualNotice } from "./ContextualNotice";
+
 interface DISCTranslatorProps {
   data?: {
     discTable?: Array<{
@@ -38,7 +42,12 @@ export const DISCTranslator = ({ data }: DISCTranslatorProps) => {
   };
 
   return (
-    <div className="p-6 border dotted-border rounded-lg bg-card h-full">
+    <div className="p-6 border dotted-border rounded-lg bg-card h-full relative">
+      <div className="absolute top-4 right-4 flex items-center gap-2">
+        <SystemLiveIndicator status="theoretical" />
+        <StatusBadge status="theoretical" />
+      </div>
+      
       <h3 className="text-xl font-semibold mb-2">Traductor DISC</h3>
       <p className="text-sm text-muted-foreground mb-3">
         Adapta ofertas según personalidad del comprador (Tomas Erikson)
@@ -131,6 +140,14 @@ export const DISCTranslator = ({ data }: DISCTranslatorProps) => {
             {color}
           </div>
         ))}
+      </div>
+
+      <div className="mt-6">
+        <ContextualNotice 
+          status="theoretical" 
+          componentType="disc"
+          confidenceScore={0}
+        />
       </div>
     </div>
   );

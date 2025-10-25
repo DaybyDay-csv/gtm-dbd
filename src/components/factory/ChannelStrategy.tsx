@@ -3,6 +3,9 @@ import { Badge } from "@/components/ui/badge";
 import { Target } from "lucide-react";
 import { CheckCircle2, AlertCircle, TrendingUp, Clock, Euro } from "lucide-react";
 import { RadarChart, PolarGrid, PolarAngleAxis, Radar, ResponsiveContainer, Tooltip } from "recharts";
+import { StatusBadge } from "./StatusBadge";
+import { SystemLiveIndicator } from "./SystemLiveIndicator";
+import { ContextualNotice } from "./ContextualNotice";
 
 interface ChannelStrategyProps {
   data?: {
@@ -100,7 +103,11 @@ export const ChannelStrategy = ({ data, isRunning }: ChannelStrategyProps) => {
 
       {/* Primary Recommendation */}
       {primaryChannel && (
-        <Card className="border-4 border-primary shadow-xl">
+        <Card className="border-4 border-primary shadow-xl relative">
+          <div className="absolute top-4 right-4 flex items-center gap-2">
+            <SystemLiveIndicator status="theoretical" />
+            <StatusBadge status="theoretical" />
+          </div>
           <CardHeader className="text-center bg-primary/5">
             <div className="flex items-center justify-center gap-2 mb-2 flex-wrap">
               <CardTitle className="text-3xl">
@@ -245,6 +252,14 @@ export const ChannelStrategy = ({ data, isRunning }: ChannelStrategyProps) => {
                 </div>
               </div>
             )}
+
+            <div className="mt-6">
+              <ContextualNotice 
+                status="theoretical" 
+                componentType="channel"
+                confidenceScore={0}
+              />
+            </div>
           </CardContent>
         </Card>
       )}

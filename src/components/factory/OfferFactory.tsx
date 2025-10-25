@@ -1,3 +1,7 @@
+import { StatusBadge } from "./StatusBadge";
+import { SystemLiveIndicator } from "./SystemLiveIndicator";
+import { ContextualNotice } from "./ContextualNotice";
+
 interface OfferFactoryProps {
   data?: {
     offers?: Array<{
@@ -19,7 +23,12 @@ export const OfferFactory = ({ data }: OfferFactoryProps) => {
   const valueScore = data?.overallValue || 78;
 
   return (
-    <div className="p-6 border dotted-border rounded-lg bg-card h-full">
+    <div className="p-6 border dotted-border rounded-lg bg-card h-full relative">
+      <div className="absolute top-4 right-4 flex items-center gap-2">
+        <SystemLiveIndicator status="theoretical" />
+        <StatusBadge status="theoretical" />
+      </div>
+      
       <h3 className="text-xl font-semibold mb-2">Fábrica de ofertas</h3>
       <p className="text-sm text-muted-foreground mb-4">
         Basado en la ecuación de valor de Hormozi
@@ -64,6 +73,14 @@ export const OfferFactory = ({ data }: OfferFactoryProps) => {
             <div>Tiempo × Esfuerzo</div>
           </div>
         </div>
+      </div>
+
+      <div className="mt-6">
+        <ContextualNotice 
+          status="theoretical" 
+          componentType="offer"
+          confidenceScore={0}
+        />
       </div>
     </div>
   );

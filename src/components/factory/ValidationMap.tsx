@@ -8,6 +8,9 @@ import {
   ExternalLink, PlusCircle, Zap 
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { StatusBadge } from "./StatusBadge";
+import { SystemLiveIndicator } from "./SystemLiveIndicator";
+import { ContextualNotice } from "./ContextualNotice";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -107,7 +110,11 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
 
   return (
     <section className={`container mx-auto px-4 py-12 ${isRunning ? 'charging' : ''} ${hasData ? 'magic-reveal' : ''}`}>
-      <Card className="border-2 dotted-border">
+      <Card className="border-2 dotted-border relative">
+        <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
+          <SystemLiveIndicator status="theoretical" />
+          <StatusBadge status="theoretical" />
+        </div>
         <CardHeader>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
@@ -406,6 +413,14 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
               </DropdownMenu>
             </div>
           )}
+
+          <div className="mt-6">
+            <ContextualNotice 
+              status="theoretical" 
+              componentType="validation"
+              confidenceScore={0}
+            />
+          </div>
         </CardContent>
       </Card>
     </section>
