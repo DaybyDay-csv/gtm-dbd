@@ -389,5 +389,16 @@ export const useAnalysisOrchestrator = () => {
     }
   };
 
-  return { state, runAnalysis, continueToPhaseSix };
+  const loadMockData = () => {
+    // Import mock data dynamically to avoid circular deps
+    import("@/utils/mockData").then(({ mockAnalysisState }) => {
+      setState(mockAnalysisState as AnalysisState);
+      toast({
+        title: "Datos mock cargados",
+        description: "Vista de desarrollo lista con datos de ejemplo completos",
+      });
+    });
+  };
+
+  return { state, runAnalysis, continueToPhaseSix, loadMockData };
 };

@@ -26,8 +26,9 @@ import { ChannelStrategy } from "@/components/factory/ChannelStrategy";
 const Index = () => {
   const [searchParams] = useSearchParams();
   const projectIdFromUrl = searchParams.get("project");
+  const isDevMode = searchParams.get("dev") === "TRUE";
   
-  const { state, runAnalysis, continueToPhaseSix } = useAnalysisOrchestrator();
+  const { state, runAnalysis, continueToPhaseSix, loadMockData } = useAnalysisOrchestrator();
   const { projectData, loading: loadingProject } = useProjectLoader(projectIdFromUrl);
   const { user } = useAuth();
   
@@ -89,6 +90,30 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
+      
+      {/* Dev Mode Banner */}
+      {isDevMode && displayState.currentPhase === 0 && (
+        <div className="bg-amber-500/10 border-b border-amber-500/20 py-3">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">🛠️</span>
+                <div>
+                  <p className="font-semibold text-sm text-amber-700 dark:text-amber-300">Modo Desarrollo</p>
+                  <p className="text-xs text-amber-600 dark:text-amber-400">Carga datos mock para ver el resultado completo sin gastar créditos</p>
+                </div>
+              </div>
+              <button
+                onClick={loadMockData}
+                className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-sm font-medium transition-colors"
+              >
+                Cargar Datos Mock
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <Hero onRunAnalysis={runAnalysis} isRunning={state.isRunning} />
       
       {!displayState.isRunning && displayState.currentPhase === 0 && <EvidenceDrawer />}
