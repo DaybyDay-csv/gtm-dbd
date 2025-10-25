@@ -70,12 +70,11 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
     "Pinterest": [{ name: "Pinterest Ads", url: "https://ads.pinterest.com/" }]
   };
 
-  const handleConnect = (platform: string, url: string) => {
+  const handleConnect = (platform: string, channel: string) => {
     toast({
-      title: `Conectando con ${platform}`,
-      description: "Abriendo plataforma en nueva ventana...",
+      title: "Próximamente disponible",
+      description: `La integración con ${platform} para ${channel} estará disponible próximamente. Podrás conectar tu cuenta directamente desde aquí.`,
     });
-    window.open(url, '_blank');
   };
 
   return (
@@ -168,7 +167,7 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
                         <Button 
                           variant="outline" 
                           size="sm"
-                          onClick={() => handleConnect(platforms[0].name, platforms[0].url)}
+                          onClick={() => handleConnect(platforms[0].name, exp.channel)}
                         >
                           <ExternalLink className="w-3 h-3 mr-1" />
                           {platforms[0].name}
@@ -188,7 +187,7 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
                           {platforms.map((platform) => (
                             <DropdownMenuItem
                               key={platform.name}
-                              onClick={() => handleConnect(platform.name, platform.url)}
+                              onClick={() => handleConnect(platform.name, exp.channel)}
                               className="cursor-pointer"
                             >
                               <ExternalLink className="w-3 h-3 mr-2" />
