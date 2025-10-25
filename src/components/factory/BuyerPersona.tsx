@@ -13,6 +13,11 @@ interface BuyerPersonaProps {
     };
     intro?: string;
     clouds?: string[];
+    objections?: Array<{
+      objection: string;
+      likelihood: number;
+      source: string;
+    }>;
   };
 }
 
@@ -65,6 +70,42 @@ export const BuyerPersona = ({ data }: BuyerPersonaProps) => {
         <div className="mt-6 p-4 bg-primary/5 rounded-lg border dotted-border w-full">
           <p className="text-sm italic text-muted-foreground">"{intro}"</p>
         </div>
+
+        {data?.objections && data.objections.length > 0 && (
+          <div className="mt-6 w-full">
+            <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
+              <span className="text-destructive">⚠️</span>
+              Posibles Objeciones
+            </h4>
+            <div className="space-y-2">
+              {data.objections
+                .sort((a, b) => b.likelihood - a.likelihood)
+                .map((obj, index) => (
+                  <div
+                    key={index}
+                    className="flex items-start gap-3 p-3 bg-destructive/5 border border-destructive/20 rounded-lg hover:bg-destructive/10 transition-colors"
+                  >
+                    <div className="flex-shrink-0 w-12 text-center">
+                      <div className="text-lg font-bold text-destructive">
+                        {obj.likelihood}%
+                      </div>
+                    </div>
+                    <div className="flex-1 text-sm">
+                      <p className="text-foreground">{obj.objection}</p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Fuente: {
+                          obj.source === 'competitor_advantage' ? 'Ventaja competidora' :
+                          obj.source === 'market_gap' ? 'Brecha de mercado' :
+                          obj.source === 'price_concern' ? 'Precio' :
+                          'Barrera de confianza'
+                        }
+                      </p>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+        )}
 
         <div className="mt-6 w-full">
           <ContextualNotice 

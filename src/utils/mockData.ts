@@ -42,6 +42,42 @@ export const mockAnalysisState = {
       }
     },
     phase2: {
+      avatar: { 
+        name: "Lucía", 
+        age: 32, 
+        city: "Madrid", 
+        ses: "Clase media–alta",
+        description: "Marketing Director en empresa B2B SaaS que busca optimizar procesos"
+      },
+      intro: "Hola, soy Lucía. Dirijo el equipo de marketing en una empresa de software y cada día me enfrento al desafío de demostrar el ROI de nuestras campañas. Paso horas analizando datos manualmente y siento que estamos perdiendo oportunidades porque no tenemos la agilidad para identificar qué funciona y qué no en tiempo real.",
+      clouds: [
+        "Le preocupa el tiempo perdido en reportes manuales",
+        "Desea demostrar ROI claro de sus campañas",
+        "Quiere tomar decisiones basadas en datos reales",
+        "Le frustra la lentitud del análisis actual"
+      ],
+      objections: [
+        {
+          objection: "Ya estamos usando HubSpot - los costes de cambio y migración parecen muy altos",
+          likelihood: 82,
+          source: "competitor_advantage"
+        },
+        {
+          objection: "Me preocupa la complejidad de integrar todos nuestros datos históricos",
+          likelihood: 75,
+          source: "trust_barrier"
+        },
+        {
+          objection: "No estoy segura de que las recomendaciones de IA sean lo suficientemente precisas para mi sector",
+          likelihood: 68,
+          source: "market_gap"
+        },
+        {
+          objection: "El precio parece más alto que nuestra solución actual, ¿justifica el ROI?",
+          likelihood: 55,
+          source: "price_concern"
+        }
+      ],
       profile: {
         role: "Marketing Director",
         company: "Mid-market B2B SaaS",

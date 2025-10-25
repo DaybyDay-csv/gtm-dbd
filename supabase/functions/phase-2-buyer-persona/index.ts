@@ -75,6 +75,23 @@ Create a comprehensive profile:
 - What final result you expect from the product.
 ¡¡¡Use common sense, cultural consumer insights for the target country and sector-specific data.!!!
 
+🚫 STEP 3.5: IDENTIFY BUYER OBJECTIONS
+Based on market research, competitor analysis, and product positioning, identify:
+- What concerns or objections would this persona have about THIS product?
+- What competitive alternatives might they be considering?
+- What doubts arise from gaps in the product vs competitors?
+- What hesitations come from market positioning or pricing?
+
+For each objection:
+- Provide a clear, specific objection statement
+- Assign a likelihood percentage (0-100%) based on:
+  * Market research data
+  * Competitor strengths vs product weaknesses
+  * Common category objections
+  * Price point sensitivity
+
+Generate 3-5 objections, ordered by likelihood (highest first).
+
 ✅ STEP 4: VALIDATE ALIGNMENT (Make sure):
 - Does the persona PERFECTLY fit the product's solution? If not: Weakness & opportunity to help with recommendations and hipothesis founded, analyze and propose one.
 - Does the persona exist in the GAP/OPPORTUNITY identified? If not: Weakness & opportunity to help with recommendations and hipothesis founded, analyze and propose one.
@@ -127,7 +144,19 @@ CRITICAL: Return a JSON object with this EXACT structure:
     "makeLifeEasier": "Specific description of what would genuinely improve their daily life",
     "peaceOfMind": "What would make them feel secure and confident in their decision",
     "expectedResult": "The concrete transformation or outcome they expect after using this product"
-  }
+  },
+  "objections": [
+    {
+      "objection": "Specific concern or doubt the persona has about this product",
+      "likelihood": 85,
+      "source": "competitor_advantage|market_gap|price_concern|trust_barrier"
+    },
+    {
+      "objection": "Another specific objection based on market/competitor analysis",
+      "likelihood": 70,
+      "source": "competitor_advantage"
+    }
+  ]
 }
 
 IMPORTANT REMINDERS:
