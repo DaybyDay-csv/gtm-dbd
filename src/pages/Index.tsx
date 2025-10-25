@@ -29,9 +29,9 @@ const Index = () => {
     prevRunningState.current = state.isRunning;
   }, [state.isRunning, state.currentPhase]);
 
-  // Show signup gate after phase 2 if user is not authenticated
+  // Show signup gate after phase 3 if user is not authenticated
   useEffect(() => {
-    if (!user && state.currentPhase >= 2 && !state.isRunning) {
+    if (!user && state.currentPhase >= 4 && !state.isRunning) {
       setShowSignupGate(true);
       // Store project ID for later association
       if (state.projectId) {
@@ -86,11 +86,12 @@ const Index = () => {
             }
           />
 
+          <MainGrid analysisState={state} showBlurOnPhase4Plus={showSignupGate} />
+          
           <div className={showSignupGate ? "relative" : ""}>
             {showSignupGate && (
               <div className="absolute inset-0 backdrop-blur-md z-10 rounded-lg" />
             )}
-            <MainGrid analysisState={state} />
             <ValidationMap data={state.phases.phase6} isRunning={state.isRunning} />
           </div>
         </div>

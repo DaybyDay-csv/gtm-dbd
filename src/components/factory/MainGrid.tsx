@@ -8,9 +8,10 @@ import { AnalysisState } from "@/hooks/useAnalysisOrchestrator";
 
 interface MainGridProps {
   analysisState: AnalysisState;
+  showBlurOnPhase4Plus?: boolean;
 }
 
-export const MainGrid = ({ analysisState }: MainGridProps) => {
+export const MainGrid = ({ analysisState, showBlurOnPhase4Plus = false }: MainGridProps) => {
   const { phases, isRunning } = analysisState;
   const hasData = (data: any) => data && Object.keys(data).length > 0;
 
@@ -38,7 +39,10 @@ export const MainGrid = ({ analysisState }: MainGridProps) => {
         <div className={`lg:col-span-1 ${isRunning && !hasData(phases.phase3) ? 'charging' : ''} ${hasData(phases.phase3) ? 'magic-reveal' : ''}`}>
           <OfferFactory data={phases.phase3} />
         </div>
-        <div className={`lg:col-span-2 ${isRunning && !hasData(phases.phase4) ? 'charging' : ''} ${hasData(phases.phase4) ? 'magic-reveal' : ''}`}>
+        <div className={`lg:col-span-2 ${isRunning && !hasData(phases.phase4) ? 'charging' : ''} ${hasData(phases.phase4) ? 'magic-reveal' : ''} ${showBlurOnPhase4Plus ? 'relative' : ''}`}>
+          {showBlurOnPhase4Plus && (
+            <div className="absolute inset-0 backdrop-blur-md z-10 rounded-lg" />
+          )}
           <DISCTranslator data={phases.phase4} />
         </div>
       </div>
