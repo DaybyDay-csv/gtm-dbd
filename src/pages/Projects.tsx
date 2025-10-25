@@ -12,6 +12,9 @@ interface Project {
   id: string;
   name: string;
   url: string | null;
+  company_name: string | null;
+  product_name: string | null;
+  key_insights: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -106,25 +109,43 @@ export default function Projects() {
               <Card key={project.id} className="hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
-                    {project.name}
+                    <div className="flex-1">
+                      {project.company_name && project.product_name ? (
+                        <div>
+                          <div className="text-lg">{project.company_name}</div>
+                          <div className="text-sm text-muted-foreground font-normal">
+                            {project.product_name}
+                          </div>
+                        </div>
+                      ) : (
+                        project.name
+                      )}
+                    </div>
                     {project.url && (
                       <a
                         href={project.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-primary hover:text-primary/80"
+                        className="text-primary hover:text-primary/80 ml-2"
                       >
                         <ExternalLink className="h-4 w-4" />
                       </a>
                     )}
                   </CardTitle>
                   <CardDescription>
-                    Actualizado:{" "}
-                    {new Date(project.updated_at).toLocaleDateString("es-ES", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}
+                    {project.key_insights && (
+                      <div className="mb-2 text-sm line-clamp-2">
+                        {project.key_insights}
+                      </div>
+                    )}
+                    <div className="text-xs">
+                      Actualizado:{" "}
+                      {new Date(project.updated_at).toLocaleDateString("es-ES", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </div>
                   </CardDescription>
                 </CardHeader>
                 <CardContent>

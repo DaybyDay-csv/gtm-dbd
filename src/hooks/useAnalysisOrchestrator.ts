@@ -95,7 +95,8 @@ export const useAnalysisOrchestrator = () => {
           .insert({ 
             name: projectName, 
             url, 
-            user_id: session?.user?.id || null 
+            user_id: session?.user?.id || null,
+            product_name: productDescription.split(' ').slice(0, 3).join(' ') // First 3 words as product name
           })
           .select()
           .single();
@@ -122,6 +123,17 @@ export const useAnalysisOrchestrator = () => {
       }
       
       const phase1Data = phase1Response.data;
+
+      // Extract company name from phase 1 analysis
+      const companyName = phase1Data?.summary?.brandName || phase1Data?.brandInfo?.name || projectName;
+      
+      // Update project with extracted info
+      await supabase
+        .from("projects")
+        .update({ 
+          company_name: companyName
+        })
+        .eq("id", project.id);
 
       await supabase.from("phase_outputs").insert({
         project_id: project.id,
@@ -261,6 +273,21 @@ export const useAnalysisOrchestrator = () => {
 
         await supabase.from("experiments").insert(experiments);
       }
+
+      // Generate key insights summary
+      const keyInsights = [
+        phase2Data?.profile?.painPoints?.[0],
+        phase3Data?.offers?.[0]?.offer,
+        phase6Data?.experiments?.[0]?.hypothesis
+      ].filter(Boolean).join(' • ');
+
+      // Update project with key insights
+      await supabase
+        .from("projects")
+        .update({ 
+          key_insights: keyInsights
+        })
+        .eq("id", project.id);
 
       setState(prev => ({
         ...prev,

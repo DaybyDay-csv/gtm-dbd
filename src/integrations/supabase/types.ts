@@ -104,25 +104,34 @@ export type Database = {
       }
       projects: {
         Row: {
+          company_name: string | null
           created_at: string | null
           id: string
+          key_insights: string | null
           name: string
+          product_name: string | null
           updated_at: string | null
           url: string | null
           user_id: string | null
         }
         Insert: {
+          company_name?: string | null
           created_at?: string | null
           id?: string
+          key_insights?: string | null
           name: string
+          product_name?: string | null
           updated_at?: string | null
           url?: string | null
           user_id?: string | null
         }
         Update: {
+          company_name?: string | null
           created_at?: string | null
           id?: string
+          key_insights?: string | null
           name?: string
+          product_name?: string | null
           updated_at?: string | null
           url?: string | null
           user_id?: string | null
