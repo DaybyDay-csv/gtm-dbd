@@ -394,7 +394,7 @@ export const downloadAnalysisAsPDF = async (
               </div>
               <div class="grid">
                 <div class="metric-box">
-                  <div class="metric-value">${state.clientReadiness.score}/10</div>
+                  <div class="metric-value">${state.clientReadiness.score}/5</div>
                   <div class="metric-label">Readiness Score</div>
                 </div>
                 <div class="metric-box">
