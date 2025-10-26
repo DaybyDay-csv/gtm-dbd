@@ -23,6 +23,7 @@ import { ClientReadiness } from "@/components/factory/ClientReadiness";
 import { SignupGate } from "@/components/factory/SignupGate";
 import { BudgetInput } from "@/components/factory/BudgetInput";
 import { ChannelStrategy } from "@/components/factory/ChannelStrategy";
+import { DownloadAnalysisButton } from "@/components/factory/DownloadAnalysisButton";
 
 const Index = () => {
   const [searchParams] = useSearchParams();
@@ -187,6 +188,16 @@ const Index = () => {
               </div>
             )}
           </div>
+
+          {/* Download button - shows when analysis is complete */}
+          {displayState.phases.phase7 && !displayState.isRunning && (
+            <div className="container mx-auto px-4 py-8 flex justify-center">
+              <DownloadAnalysisButton 
+                state={displayState} 
+                projectName={displayState.phases.phase1?.productNucleus?.name || "Análisis Completo"} 
+              />
+            </div>
+          )}
 
           {/* LOCKED CONTENT - Phases 4-7 with progressive blur and scroll effect */}
           {shouldShowGate && (
