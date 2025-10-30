@@ -17,47 +17,69 @@ export const AppHeader = ({ analysisState, projectName }: AppHeaderProps) => {
   const { user, signOut } = useAuth();
   const { language, setLanguage, t } = useLanguage();
   
-  const showDownloadButton = analysisState && analysisState.currentPhase >= 1 && !analysisState.isRunning;
+  const hasContent = analysisState && analysisState.currentPhase >= 1;
+  const canDownload = hasContent && !analysisState.isRunning;
+  
+  const emptyState: AnalysisState = {
+    currentPhase: 0,
+    phases: {
+      phase1: null,
+      phase2: null,
+      phase3: null,
+      phase4: null,
+      phase5: null,
+      phase6: null,
+      phase7: null,
+    },
+    isRunning: false,
+    projectId: null,
+    clientReadiness: undefined,
+    budgetLevel: undefined,
+    budgetAmount: undefined,
+    awaitingBudgetInput: false,
+  };
 
   return (
     <header className="border-b no-pdf">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         <h1 className="text-xl font-bold">{t('nav.title')}</h1>
         <div className="flex items-center gap-4">
-          {showDownloadButton && (
-            user ? (
-              <DownloadAnalysisButton 
-                state={analysisState!} 
-                projectName={projectName || "Análisis Completo"} 
-              />
-            ) : (
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" disabled className="gap-2 opacity-50 cursor-not-allowed">
-                    <Download className="h-4 w-4" />
-                    Descargar Análisis
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-80">
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <h4 className="font-semibold">Loguéate para descargar tu análisis</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Obtén tu análisis completo en PDF y JSON
-                      </p>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <Button onClick={() => navigate("/auth")} className="w-full">
-                        Crear Cuenta
-                      </Button>
-                      <Button onClick={() => navigate("/auth")} variant="outline" className="w-full">
-                        Iniciar Sesión
-                      </Button>
-                    </div>
+          {user ? (
+            <DownloadAnalysisButton 
+              state={analysisState || emptyState} 
+              projectName={projectName || "Análisis Completo"} 
+            />
+          ) : (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  disabled={!canDownload} 
+                  className="gap-2"
+                >
+                  <Download className="h-4 w-4" />
+                  Descargar Análisis
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <h4 className="font-semibold">Loguéate para descargar tu análisis</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Obtén tu análisis completo en PDF y JSON
+                    </p>
                   </div>
-                </PopoverContent>
-              </Popover>
-            )
+                  <div className="flex flex-col gap-2">
+                    <Button onClick={() => navigate("/auth")} className="w-full">
+                      Crear Cuenta
+                    </Button>
+                    <Button onClick={() => navigate("/auth")} variant="outline" className="w-full">
+                      Iniciar Sesión
+                    </Button>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
           )}
           <Button
             variant="ghost"

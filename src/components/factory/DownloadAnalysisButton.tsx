@@ -22,8 +22,20 @@ export const DownloadAnalysisButton = ({
 }: DownloadAnalysisButtonProps) => {
   const { toast } = useToast();
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  
+  const hasContent = state.currentPhase >= 1;
+  const isDisabled = !hasContent || state.isRunning || isGeneratingPDF;
 
   const handleDownloadJSON = () => {
+    if (!hasContent) {
+      toast({
+        title: "Sin contenido",
+        description: "Completa al menos la fase 1 para descargar el análisis",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     try {
       downloadAnalysisAsJSON(state, projectName);
       toast({
@@ -40,6 +52,15 @@ export const DownloadAnalysisButton = ({
   };
 
   const handleDownloadPDF = async () => {
+    if (!hasContent) {
+      toast({
+        title: "Sin contenido",
+        description: "Completa al menos la fase 1 para descargar el análisis",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     try {
       setIsGeneratingPDF(true);
       toast({
@@ -71,7 +92,7 @@ export const DownloadAnalysisButton = ({
         <Button
           variant="outline"
           className="gap-2"
-          disabled={isGeneratingPDF}
+          disabled={isDisabled}
         >
           {isGeneratingPDF ? (
             <>
@@ -87,11 +108,11 @@ export const DownloadAnalysisButton = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={handleDownloadJSON} className="gap-2" disabled={isGeneratingPDF}>
+        <DropdownMenuItem onClick={handleDownloadJSON} className="gap-2" disabled={isDisabled}>
           <FileJson className="h-4 w-4" />
           Descargar como JSON
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleDownloadPDF} className="gap-2" disabled={isGeneratingPDF}>
+        <DropdownMenuItem onClick={handleDownloadPDF} className="gap-2" disabled={isDisabled}>
           <FileText className="h-4 w-4" />
           Descargar como PDF
         </DropdownMenuItem>
