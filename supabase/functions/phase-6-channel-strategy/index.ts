@@ -249,10 +249,29 @@ IMPORTANTE:
     if (!response.ok) {
       const errorText = await response.text();
       console.error('AI Gateway error:', response.status, errorText);
-      throw new Error(`AI Gateway error: ${response.status}`);
+      throw new Error(`AI Gateway error: ${response.status} - ${errorText}`);
     }
 
-    const data = await response.json();
+    // Get response text first to handle empty responses
+    const responseText = await response.text();
+    if (!responseText || responseText.trim() === '') {
+      console.error('Empty response from AI Gateway');
+      throw new Error('AI Gateway returned an empty response');
+    }
+
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error('Failed to parse AI Gateway response:', responseText.substring(0, 500));
+      throw new Error('Invalid JSON response from AI Gateway');
+    }
+
+    if (!data.choices || !data.choices[0] || !data.choices[0].message || !data.choices[0].message.content) {
+      console.error('Unexpected AI Gateway response structure:', JSON.stringify(data));
+      throw new Error('AI Gateway response missing expected fields');
+    }
+
     let content = data.choices[0].message.content;
     
     // Clean up the content - remove markdown code blocks if present
