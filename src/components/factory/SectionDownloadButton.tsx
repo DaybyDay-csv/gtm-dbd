@@ -6,7 +6,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 interface SectionDownloadButtonProps {
@@ -19,6 +22,8 @@ export const SectionDownloadButton = ({
   data,
 }: SectionDownloadButtonProps) => {
   const { toast } = useToast();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   const handleDownloadJSON = () => {
@@ -97,6 +102,40 @@ export const SectionDownloadButton = ({
       setIsGeneratingPDF(false);
     }
   };
+
+  if (!user) {
+    return (
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 hover-scale"
+          >
+            <Download className="h-4 w-4" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-80" align="end">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <h4 className="font-semibold">Loguéate para descargar</h4>
+              <p className="text-sm text-muted-foreground">
+                Descarga {sectionName} en formato JSON o PDF
+              </p>
+            </div>
+            <div className="flex flex-col gap-2">
+              <Button onClick={() => navigate("/auth")} className="w-full">
+                Crear Cuenta
+              </Button>
+              <Button onClick={() => navigate("/auth")} variant="outline" className="w-full">
+                Iniciar Sesión
+              </Button>
+            </div>
+          </div>
+        </PopoverContent>
+      </Popover>
+    );
+  }
 
   return (
     <DropdownMenu>
