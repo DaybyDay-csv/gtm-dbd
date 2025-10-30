@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { StatusBadge } from "./StatusBadge";
 import { SystemLiveIndicator } from "./SystemLiveIndicator";
 import { ContextualNotice } from "./ContextualNotice";
+import { SectionDownloadButton } from "./SectionDownloadButton";
 
 interface DISCTranslatorProps {
   data?: {
@@ -44,6 +45,7 @@ export const DISCTranslator = ({ data }: DISCTranslatorProps) => {
   return (
     <div className="p-6 border dotted-border rounded-lg bg-card h-full relative">
       <div className="absolute top-4 right-4 flex items-center gap-2">
+        <SectionDownloadButton sectionName="DISC Translator" data={data} />
         <SystemLiveIndicator status="theoretical" />
         <StatusBadge status="theoretical" />
       </div>

@@ -1,5 +1,6 @@
 import { Search } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { SectionDownloadButton } from "./SectionDownloadButton";
 
 interface PositioningMapProps {
   data?: {
@@ -26,7 +27,10 @@ export const PositioningMap = ({ data }: PositioningMapProps) => {
   const competitors = points.filter((p) => p.id !== "our_brand");
 
   return (
-    <div className="p-6 border dotted-border rounded-lg bg-card h-full">
+    <div className="p-6 border dotted-border rounded-lg bg-card h-full relative">
+      <div className="absolute top-4 right-4">
+        <SectionDownloadButton sectionName="Positioning Map" data={data} />
+      </div>
       <h3 className="text-xl font-semibold mb-2">Mapa de mercado</h3>
       <p className="text-sm text-muted-foreground mb-4">
         Posicionamiento frente a competidores

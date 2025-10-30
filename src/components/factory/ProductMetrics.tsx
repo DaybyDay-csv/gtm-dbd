@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, CheckCircle2, Target, Gauge, ArrowRight } from "lucide-react";
+import { SectionDownloadButton } from "./SectionDownloadButton";
 
 interface ProductMetricsProps {
   avatarReliability?: number;
@@ -25,7 +26,13 @@ export const ProductMetrics = ({
 
   return (
     <section className="container mx-auto px-4 py-8 no-pdf">
-      <Card className="p-6">
+      <Card className="p-6 relative">
+        <div className="absolute top-4 right-4">
+          <SectionDownloadButton 
+            sectionName="Product Metrics" 
+            data={{ avatarReliability, hypothesesValidated, topMessages, topOffers, nextAction }} 
+          />
+        </div>
         <h3 className="text-xl font-semibold mb-6">Product Metrics</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

@@ -1,3 +1,5 @@
+import { SectionDownloadButton } from "./SectionDownloadButton";
+
 interface ClientReadinessProps {
   data?: {
     score: number;
@@ -24,7 +26,10 @@ export const ClientReadiness = ({ data }: ClientReadinessProps) => {
   };
 
   return (
-    <div className="p-6 border dotted-border rounded-lg bg-card">
+    <div className="p-6 border dotted-border rounded-lg bg-card relative">
+      <div className="absolute top-4 right-4">
+        <SectionDownloadButton sectionName="Client Readiness" data={data} />
+      </div>
       <h3 className="text-xl font-semibold mb-4">Evaluación de Recursos del Cliente</h3>
       
       <div className="mb-6">

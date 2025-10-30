@@ -2,6 +2,7 @@ import { StatusBadge } from "./StatusBadge";
 import { SystemLiveIndicator } from "./SystemLiveIndicator";
 import { ContextualNotice } from "./ContextualNotice";
 import { User, AlertTriangle } from "lucide-react";
+import { SectionDownloadButton } from "./SectionDownloadButton";
 
 interface BuyerPersonaProps {
   data?: {
@@ -35,6 +36,7 @@ export const BuyerPersona = ({ data }: BuyerPersonaProps) => {
   return (
     <div className="p-6 border dotted-border rounded-lg bg-card h-full relative">
       <div className="absolute top-4 right-4 flex items-center gap-2">
+        <SectionDownloadButton sectionName="Buyer Persona" data={data} />
         <SystemLiveIndicator status="theoretical" />
         <StatusBadge status="theoretical" />
       </div>

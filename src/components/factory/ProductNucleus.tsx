@@ -1,5 +1,6 @@
 import { Zap } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SectionDownloadButton } from "./SectionDownloadButton";
 
 interface ProductNucleusProps {
   data?: {
@@ -17,7 +18,10 @@ export const ProductNucleus = ({ data }: ProductNucleusProps) => {
   const value = data?.value || "Propuesta de valor única";
 
   return (
-    <div className="p-6 border-2 border-primary/30 rounded-lg bg-gradient-to-br from-primary/5 to-background text-center max-w-sm h-full flex flex-col">
+    <div className="p-6 border-2 border-primary/30 rounded-lg bg-gradient-to-br from-primary/5 to-background text-center max-w-sm h-full flex flex-col relative">
+      <div className="absolute top-2 right-2">
+        <SectionDownloadButton sectionName="Product Nucleus" data={data} />
+      </div>
       <h3 className="text-2xl font-bold mb-4 text-primary">Producto</h3>
       
       <div className="mb-3 px-3 py-1.5 bg-background/80 border border-primary/20 rounded-full text-xs text-muted-foreground inline-flex items-center gap-1 mx-auto">

@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { StatusBadge } from "./StatusBadge";
 import { SystemLiveIndicator } from "./SystemLiveIndicator";
 import { ContextualNotice } from "./ContextualNotice";
+import { SectionDownloadButton } from "./SectionDownloadButton";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -112,6 +113,7 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
     <section className={`container mx-auto px-4 py-12 ${isRunning ? 'charging' : ''} ${hasData ? 'magic-reveal' : ''}`}>
       <Card className="border-2 dotted-border relative">
         <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
+          <SectionDownloadButton sectionName="Creative Variations" data={data} />
           <SystemLiveIndicator status="theoretical" />
           <StatusBadge status="theoretical" />
         </div>

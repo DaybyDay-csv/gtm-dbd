@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart3 } from "lucide-react";
 import { Target, Lightbulb, TrendingUp, Package } from "lucide-react";
+import { SectionDownloadButton } from "./SectionDownloadButton";
 
 interface ProductUnderstandingProps {
   data?: {
@@ -20,9 +21,12 @@ export const ProductUnderstanding = ({ data }: ProductUnderstandingProps) => {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Package className="w-5 h-5 text-primary" />
-          Deep Product Understanding
+        <CardTitle className="flex items-center gap-2 justify-between">
+          <div className="flex items-center gap-2">
+            <Package className="w-5 h-5 text-primary" />
+            Deep Product Understanding
+          </div>
+          <SectionDownloadButton sectionName="Product Understanding" data={data} />
         </CardTitle>
         <div className="mt-2 px-3 py-1.5 bg-primary/5 border border-primary/20 rounded-full text-xs text-muted-foreground inline-flex items-center gap-1 w-fit">
           <BarChart3 className="w-3 h-3 text-primary" />

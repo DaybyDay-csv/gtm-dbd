@@ -1,6 +1,7 @@
 import { StatusBadge } from "./StatusBadge";
 import { SystemLiveIndicator } from "./SystemLiveIndicator";
 import { ContextualNotice } from "./ContextualNotice";
+import { SectionDownloadButton } from "./SectionDownloadButton";
 
 interface OfferFactoryProps {
   data?: {
@@ -25,6 +26,7 @@ export const OfferFactory = ({ data }: OfferFactoryProps) => {
   return (
     <div className="p-6 border dotted-border rounded-lg bg-card h-full relative">
       <div className="absolute top-4 right-4 flex items-center gap-2">
+        <SectionDownloadButton sectionName="Offer Factory" data={data} />
         <SystemLiveIndicator status="theoretical" />
         <StatusBadge status="theoretical" />
       </div>

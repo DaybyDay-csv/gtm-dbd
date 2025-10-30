@@ -5,6 +5,7 @@ import { RadarChart, PolarGrid, PolarAngleAxis, Radar, ResponsiveContainer, Tool
 import { StatusBadge } from "./StatusBadge";
 import { SystemLiveIndicator } from "./SystemLiveIndicator";
 import { ContextualNotice } from "./ContextualNotice";
+import { SectionDownloadButton } from "./SectionDownloadButton";
 
 interface ChannelStrategyProps {
   data?: {
@@ -68,7 +69,10 @@ export const ChannelStrategy = ({ data, isRunning }: ChannelStrategyProps) => {
     <section className={`container mx-auto px-4 py-12 space-y-8 ${isRunning ? 'charging' : 'magic-reveal'}`}>
       {/* Budget Analysis */}
       {data.budgetAnalysis && (
-        <Card className="border-2 dotted-border">
+        <Card className="border-2 dotted-border relative">
+          <div className="absolute top-4 right-4">
+            <SectionDownloadButton sectionName="Budget Analysis" data={data.budgetAnalysis} />
+          </div>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Euro className="w-5 h-5" />
@@ -104,6 +108,7 @@ export const ChannelStrategy = ({ data, isRunning }: ChannelStrategyProps) => {
       {primaryChannel && (
         <Card className="border-4 border-primary shadow-xl relative">
           <div className="absolute top-4 right-4 flex items-center gap-2">
+            <SectionDownloadButton sectionName="Primary Channel" data={primaryChannel} />
             <SystemLiveIndicator status="theoretical" />
             <StatusBadge status="theoretical" />
           </div>
