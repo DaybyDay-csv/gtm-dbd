@@ -267,12 +267,21 @@ IMPORTANTE:
       throw new Error('Invalid JSON response from AI Gateway');
     }
 
-    if (!data.choices || !data.choices[0] || !data.choices[0].message || !data.choices[0].message.content) {
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
       console.error('Unexpected AI Gateway response structure:', JSON.stringify(data));
       throw new Error('AI Gateway response missing expected fields');
     }
 
-    let content = data.choices[0].message.content;
+    const message = data.choices[0].message;
+    
+    // Handle both content and reasoning fields (some models use reasoning instead of content)
+    let content = message.content || message.reasoning || '';
+    
+    if (!content || content.trim() === '') {
+      console.error('Both content and reasoning fields are empty in AI response');
+      console.error('Full message object:', JSON.stringify(message));
+      throw new Error('AI Gateway returned empty content');
+    }
     
     // Clean up the content - remove markdown code blocks if present
     content = content.trim();
