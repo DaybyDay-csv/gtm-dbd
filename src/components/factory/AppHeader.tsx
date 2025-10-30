@@ -6,19 +6,28 @@ import { FolderOpen, LogOut, Globe, Settings, Download } from "lucide-react";
 import { DownloadAnalysisButton } from "./DownloadAnalysisButton";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { AnalysisState } from "@/hooks/useAnalysisOrchestrator";
+import { useState, useEffect } from "react";
 
 interface AppHeaderProps {
   analysisState?: AnalysisState;
   projectName?: string;
+  showDownloadButton?: boolean;
 }
 
-export const AppHeader = ({ analysisState, projectName }: AppHeaderProps) => {
+export const AppHeader = ({ analysisState, projectName, showDownloadButton = false }: AppHeaderProps) => {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const { language, setLanguage, t } = useLanguage();
+  const [animateButton, setAnimateButton] = useState(false);
   
   const hasContent = analysisState && analysisState.currentPhase >= 1;
   const canDownload = hasContent && !analysisState.isRunning;
+  
+  useEffect(() => {
+    if (showDownloadButton && !user) {
+      setAnimateButton(true);
+    }
+  }, [showDownloadButton, user]);
   
   const emptyState: AnalysisState = {
     currentPhase: 0,
@@ -55,7 +64,7 @@ export const AppHeader = ({ analysisState, projectName }: AppHeaderProps) => {
                 <Button 
                   variant="outline" 
                   disabled={!canDownload} 
-                  className="gap-2"
+                  className={`gap-2 transition-all ${animateButton ? 'animate-fade-in' : ''} ${canDownload ? 'hover-scale' : ''}`}
                 >
                   <Download className="h-4 w-4" />
                   Descargar Análisis

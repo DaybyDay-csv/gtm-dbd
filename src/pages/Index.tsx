@@ -80,6 +80,7 @@ const Index = () => {
       <AppHeader 
         analysisState={displayState}
         projectName={displayState.phases.phase1?.productNucleus?.name}
+        showDownloadButton={state.isRunning || displayState.currentPhase > 0}
       />
       
       {isDevMode && displayState.currentPhase === 0 && (
