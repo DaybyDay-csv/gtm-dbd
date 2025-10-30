@@ -65,8 +65,9 @@ const translations: Record<Language, Record<string, string>> = {
     "hero.docs.help": "Sube documentos que proporcionen contexto sobre tu negocio, producto o mercado objetivo",
     "hero.optional": "Opcional: Conecta datos más tarde para validación y aprendizaje",
     "hero.coming_soon": "Próximamente",
-    "hero.how": "¿Cómo lo sabemos?",
-    "hero.method": "Sin conjeturas. <strong>Leemos + Referencias Cruzadas + Verificamos</strong>",
+    "hero.how": "¿Cómo lo hacemos?",
+    "hero.method":
+      "Sin conjeturas. <strong>Leemos lo que ya existe + Cruzamos Referencias y Verificamos con el mercado</strong>",
     "hero.includes.title": "Conoce tu:",
     "hero.includes.persona": "Perfil de buyer persona",
     "hero.includes.offers": "Ofertas optimizadas por valor",
