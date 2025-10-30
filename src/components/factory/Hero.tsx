@@ -288,7 +288,7 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
 
           <div className="flex items-center justify-center gap-2 text-sm">
             <span className="text-muted-foreground">Optional: Connect data later for validation & learning</span>
-            <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-primary/10 text-primary border border-primary/20 animate-fade-in">
+            <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-muted text-muted-foreground border border-border animate-fade-in">
               Coming Soon
             </span>
           </div>
