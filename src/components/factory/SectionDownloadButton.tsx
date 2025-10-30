@@ -1,21 +1,46 @@
-import { Download, FileJson, FileText, Loader2 } from "lucide-react";
+import { Download, FileText, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 
 interface SectionDownloadButtonProps {
   sectionName: string;
   data: any;
 }
+
+const formatDataToText = (data: any, level: number = 1): string => {
+  let text = '';
+  const prefix = '#'.repeat(level);
+  
+  if (typeof data === 'string') {
+    return data + '\n\n';
+  }
+  
+  if (Array.isArray(data)) {
+    data.forEach((item, index) => {
+      text += formatDataToText(item, level);
+    });
+    return text;
+  }
+  
+  if (typeof data === 'object' && data !== null) {
+    Object.entries(data).forEach(([key, value]) => {
+      // Format key as header
+      const formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+      
+      if (typeof value === 'object' && value !== null) {
+        text += `${prefix} ${formattedKey}\n\n`;
+        text += formatDataToText(value, Math.min(level + 1, 3));
+      } else {
+        text += `${prefix} ${formattedKey}\n\n${value}\n\n`;
+      }
+    });
+  }
+  
+  return text;
+};
 
 export const SectionDownloadButton = ({
   sectionName,
@@ -24,16 +49,18 @@ export const SectionDownloadButton = ({
   const { toast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
-  const handleDownloadJSON = () => {
+  const handleDownloadTXT = () => {
     try {
-      const jsonContent = JSON.stringify(data, null, 2);
-      const blob = new Blob([jsonContent], { type: "application/json" });
+      const header = `# ${sectionName}\n\n`;
+      const content = formatDataToText(data, 2);
+      const fullContent = header + content;
+      
+      const blob = new Blob([fullContent], { type: "text/plain;charset=utf-8" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `${sectionName.toLowerCase().replace(/\s+/g, "-")}.json`;
+      link.download = `${sectionName.toLowerCase().replace(/\s+/g, "-")}.txt`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -41,7 +68,7 @@ export const SectionDownloadButton = ({
 
       toast({
         title: "Descarga completada",
-        description: `${sectionName} descargado en formato JSON`,
+        description: `${sectionName} descargado en formato TXT`,
       });
     } catch (error) {
       toast({
@@ -49,57 +76,6 @@ export const SectionDownloadButton = ({
         description: "No se pudo descargar la sección",
         variant: "destructive",
       });
-    }
-  };
-
-  const handleDownloadPDF = async () => {
-    try {
-      setIsGeneratingPDF(true);
-      toast({
-        title: "Generando PDF...",
-        description: "Esto puede tomar unos segundos",
-      });
-
-      // Dynamically import html2pdf.js
-      const html2pdf = (await import("html2pdf.js")).default;
-
-      // Create a temporary container with the section content
-      const tempDiv = document.createElement("div");
-      tempDiv.style.padding = "40px";
-      tempDiv.style.fontFamily = "Arial, sans-serif";
-      tempDiv.innerHTML = `
-        <div style="margin-bottom: 30px;">
-          <h1 style="color: #333; font-size: 28px; margin-bottom: 10px;">${sectionName}</h1>
-          <hr style="border: 1px solid #ddd; margin: 20px 0;">
-        </div>
-        <pre style="white-space: pre-wrap; font-family: Arial; font-size: 12px; line-height: 1.6;">
-          ${JSON.stringify(data, null, 2)}
-        </pre>
-      `;
-
-      const options = {
-        margin: 20,
-        filename: `${sectionName.toLowerCase().replace(/\s+/g, "-")}.pdf`,
-        image: { type: "jpeg" as const, quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: "mm" as const, format: "a4" as const, orientation: "portrait" as const },
-      };
-
-      await html2pdf().from(tempDiv).set(options).save();
-
-      toast({
-        title: "PDF descargado",
-        description: `${sectionName} guardado en Descargas`,
-      });
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-      toast({
-        title: "Error al generar PDF",
-        description: "No se pudo generar el PDF. Intenta de nuevo.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsGeneratingPDF(false);
     }
   };
 
@@ -120,7 +96,7 @@ export const SectionDownloadButton = ({
             <div className="space-y-2">
               <h4 className="font-semibold">Loguéate para descargar</h4>
               <p className="text-sm text-muted-foreground">
-                Descarga {sectionName} en formato JSON o PDF
+                Descarga {sectionName} en formato TXT organizado
               </p>
             </div>
             <div className="flex flex-col gap-2">
@@ -138,31 +114,13 @@ export const SectionDownloadButton = ({
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8"
-          disabled={isGeneratingPDF}
-        >
-          {isGeneratingPDF ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Download className="h-4 w-4" />
-          )}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={handleDownloadJSON} className="gap-2">
-          <FileJson className="h-4 w-4" />
-          Descargar JSON
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleDownloadPDF} className="gap-2">
-          <FileText className="h-4 w-4" />
-          Descargar PDF
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Button
+      variant="ghost"
+      size="icon"
+      className="h-8 w-8 hover-scale"
+      onClick={handleDownloadTXT}
+    >
+      <FileText className="h-4 w-4" />
+    </Button>
   );
 };
