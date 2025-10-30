@@ -103,6 +103,10 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
           <br />
           <span className="text-2xl md:text-3xl font-normal">{t('hero.headline.line3')}</span>
         </h1>
+        
+        <p className="text-sm text-muted-foreground italic">
+          {t('hero.evidence')}
+        </p>
 
         <div className="mb-8 p-4 bg-muted/30 rounded-lg border border-border max-w-2xl mx-auto">
           <p className="text-sm font-medium mb-3 text-muted-foreground text-center">
