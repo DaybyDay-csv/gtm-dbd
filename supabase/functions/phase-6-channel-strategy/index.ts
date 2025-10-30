@@ -264,6 +264,14 @@ IMPORTANTE:
     }
     content = content.trim();
     
+    // Remove control characters that can break JSON parsing
+    content = content.replace(/[\u0000-\u001F\u007F-\u009F]/g, (char: string) => {
+      if (char === '\n' || char === '\r' || char === '\t') {
+        return ' ';
+      }
+      return '';
+    });
+    
     // Try to parse JSON with better error handling
     let result;
     try {
