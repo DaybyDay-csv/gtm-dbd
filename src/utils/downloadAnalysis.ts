@@ -10,7 +10,7 @@ const phaseNames: Record<string, string> = {
   phase7: "Mapa de Validación",
 };
 
-const createCoverPageHTML = (projectName: string, date: string): string => {
+const createCoverPageHTML = (projectName: string, companyName: string, date: string): string => {
   return `
     <div class="pdf-cover-page" style="
       min-height: 100vh;
@@ -24,56 +24,86 @@ const createCoverPageHTML = (projectName: string, date: string): string => {
       page-break-after: always;
     ">
       <div style="max-width: 800px; width: 100%;">
-        <div style="
-          font-size: 1.5rem;
-          font-weight: 600;
-          color: white;
-          opacity: 0.9;
-          margin-bottom: 2rem;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-        ">
-          AI GTM Factory
+        <div style="margin-bottom: 3rem;">
+          <div style="
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+          ">
+            AI GTM Factory
+          </div>
+          <div style="
+            font-size: 0.875rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 0.1em;
+          ">
+            by DaybyDay
+          </div>
         </div>
         
         <h1 style="
           font-size: 3.5rem;
           font-weight: 700;
           color: white;
-          margin-bottom: 1rem;
+          margin-bottom: 2rem;
           line-height: 1.2;
         ">
-          Análisis Go-to-Market Completo
+          Análisis Go-to-Market<br/>Completo
         </h1>
         
+        <div style="margin: 2rem 0;">
+          <div style="
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-style: italic;
+            margin-bottom: 0.5rem;
+          ">
+            for
+          </div>
+          <div style="
+            font-size: 2rem;
+            font-weight: 600;
+            color: white;
+            letter-spacing: 0.05em;
+          ">
+            ${companyName}
+          </div>
+        </div>
+        
         <div style="
-          font-size: 2.5rem;
-          font-weight: 600;
+          font-size: 1.5rem;
           color: white;
           opacity: 0.95;
-          margin-bottom: 3rem;
-          padding: 1rem 2rem;
+          padding: 1.5rem 2rem;
           border-top: 2px solid rgba(255, 255, 255, 0.3);
           border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+          margin: 2rem auto;
+          max-width: 80%;
         ">
           ${projectName}
         </div>
         
-        <div style="
-          font-size: 1.25rem;
-          color: white;
-          opacity: 0.85;
-          margin-bottom: 1rem;
-        ">
-          Documento Ejecutivo
-        </div>
-        
-        <div style="
-          font-size: 1rem;
-          color: white;
-          opacity: 0.75;
-        ">
-          Generado el ${date}
+        <div style="margin-top: 3rem;">
+          <div style="
+            font-size: 1.125rem;
+            color: white;
+            opacity: 0.85;
+            margin-bottom: 0.5rem;
+          ">
+            Documento Ejecutivo
+          </div>
+          
+          <div style="
+            font-size: 0.875rem;
+            color: white;
+            opacity: 0.7;
+          ">
+            Generado el ${date}
+          </div>
         </div>
       </div>
     </div>
@@ -84,34 +114,58 @@ const createSectionDividerHTML = (phaseNumber: number, phaseName: string): strin
   return `
     <div class="pdf-section-divider" style="
       page-break-before: always;
-      padding: 3rem 2rem;
+      page-break-after: avoid;
+      padding: 4rem 2rem 2rem;
       margin-bottom: 2rem;
-      background: linear-gradient(135deg, hsl(0 70% 50% / 0.1) 0%, hsl(0 70% 60% / 0.05) 100%);
-      border-left: 4px solid hsl(0 70% 50%);
+      background: linear-gradient(135deg, hsl(0 70% 50% / 0.08) 0%, hsl(0 70% 60% / 0.03) 100%);
+      border-left: 6px solid hsl(0 70% 50%);
     ">
-      <div style="
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: hsl(0 70% 50%);
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        margin-bottom: 0.5rem;
-      ">
-        Fase ${phaseNumber}
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <div style="
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          margin-bottom: 1rem;
+        ">
+          <span style="
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: hsl(0 70% 50%);
+            font-weight: 600;
+          ">
+            Fase
+          </span>
+          <span style="
+            font-size: 3rem;
+            font-weight: 700;
+            color: hsl(0 70% 50%);
+            line-height: 1;
+          ">
+            ${phaseNumber}
+          </span>
+        </div>
+        
+        <div style="
+          height: 2px;
+          background: linear-gradient(to right, hsl(0 70% 50%), hsl(0 70% 50% / 0.3), transparent);
+          margin: 1rem 0;
+        "></div>
+        
+        <h2 style="
+          font-size: 2.5rem;
+          font-weight: 700;
+          color: hsl(0 0% 10%);
+          margin: 0;
+        ">
+          ${phaseName}
+        </h2>
       </div>
-      <h2 style="
-        font-size: 2rem;
-        font-weight: 700;
-        color: hsl(0 0% 15%);
-        margin: 0;
-      ">
-        ${phaseName}
-      </h2>
     </div>
   `;
 };
 
-const prepareContentForPDF = (element: HTMLElement, projectName: string): HTMLElement => {
+const prepareContentForPDF = (element: HTMLElement, projectName: string, companyName: string): HTMLElement => {
   // Clone the element
   const clonedElement = element.cloneNode(true) as HTMLElement;
   
@@ -122,7 +176,7 @@ const prepareContentForPDF = (element: HTMLElement, projectName: string): HTMLEl
     day: 'numeric'
   });
   
-  const coverPageHTML = createCoverPageHTML(projectName, date);
+  const coverPageHTML = createCoverPageHTML(projectName, companyName, date);
   const coverDiv = document.createElement('div');
   coverDiv.innerHTML = coverPageHTML;
   
@@ -206,6 +260,33 @@ export const downloadAnalysisAsJSON = (state: AnalysisState, projectName: string
   URL.revokeObjectURL(url);
 };
 
+// Función para extraer el nombre de la empresa del análisis
+const extractCompanyName = (state: AnalysisState, projectName: string): string => {
+  // Intentar extraer desde el análisis de Client Readiness (reasoning)
+  if (state.clientReadiness?.reasoning) {
+    const reasoning = state.clientReadiness.reasoning;
+    // Buscar patrones como "La Universidad X", "X es una institución", etc.
+    const universityMatch = reasoning.match(/Universidad\s+([A-Z][^\s,\.]+(?:\s+(?:de|Francisco|Complutense|Politécnica|Nacional|Autónoma)\s+[A-Z][^\s,\.]+)*)/i);
+    if (universityMatch) return universityMatch[0];
+    
+    const companyMatch = reasoning.match(/(?:Empresa|Compañía|Corporación)\s+([A-Z][^\s,\.]+(?:\s+[A-Z][^\s,\.]+)*)/i);
+    if (companyMatch) return companyMatch[0];
+  }
+  
+  // Intentar desde productUnderstanding
+  if (state.phases.phase1?.productUnderstanding) {
+    const content = JSON.stringify(state.phases.phase1.productUnderstanding);
+    const universityMatch = content.match(/Universidad\s+([A-Z][^\s,\.\"]+(?:\s+(?:de|Francisco|Complutense|Politécnica|Nacional|Autónoma)\s+[A-Z][^\s,\.\"]+)*)/i);
+    if (universityMatch) return universityMatch[0].replace(/"/g, '');
+    
+    const companyMatch = content.match(/(?:Empresa|Compañía)\s+([A-Z][^\s,\.\"]+(?:\s+[A-Z][^\s,\.\"]+)*)/);
+    if (companyMatch) return companyMatch[0].replace(/"/g, '');
+  }
+  
+  // Default: usar el nombre del proyecto
+  return projectName;
+};
+
 export const downloadAnalysisAsPDF = async (
   state: AnalysisState,
   projectName: string
@@ -218,17 +299,21 @@ export const downloadAnalysisAsPDF = async (
     throw new Error('Elemento de análisis no encontrado');
   }
 
+  // Extract company name from analysis
+  const companyName = extractCompanyName(state, projectName);
+  const sanitizedCompany = companyName.replace(/[^a-zA-Z0-9]/g, '_');
+
   // Prepare content with cover page, dividers, and PDF optimizations
-  const preparedElement = prepareContentForPDF(element, projectName);
+  const preparedElement = prepareContentForPDF(element, projectName, companyName);
   
   // Wait for React renders to complete
   await new Promise(resolve => setTimeout(resolve, 500));
 
   // Configure html2pdf options for high-quality executive document
-  const date = new Date().toISOString().split('T')[0];
+  const dateForFilename = new Date().toISOString().split('T')[0];
   const options = {
     margin: [20, 15, 20, 15] as [number, number, number, number],
-    filename: `${projectName || 'Análisis'}_Completo_GTM_${date}.pdf`,
+    filename: `${sanitizedCompany}_Analisis_GTM_Completo_${dateForFilename}.pdf`,
     image: { type: 'jpeg' as const, quality: 0.98 },
     html2canvas: { 
       scale: 3,
@@ -260,11 +345,11 @@ export const downloadAnalysisAsPDF = async (
   // Add PDF metadata
   const pdf = await worker.toPdf().get('pdf');
   pdf.setProperties({
-    title: `Análisis GTM Completo - ${projectName}`,
+    title: `Análisis GTM Completo - ${companyName} - ${projectName}`,
     subject: 'Documento Ejecutivo Go-to-Market',
-    author: 'AI GTM Factory',
-    keywords: 'GTM, Marketing, Estrategia, Análisis de Mercado, Buyer Persona, DISC, Canales',
-    creator: 'AI GTM Factory',
+    author: 'AI GTM Factory by DaybyDay',
+    keywords: `GTM, Marketing, Estrategia, Go-to-Market, Análisis de Mercado, Buyer Persona, DISC, Canales, ${companyName}`,
+    creator: 'AI GTM Factory by DaybyDay',
     producer: 'AI GTM Factory v1.0'
   });
   

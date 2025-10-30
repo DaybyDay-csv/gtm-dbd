@@ -213,52 +213,181 @@ All colors MUST be HSL.
     transition: filter 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
   }
 
-  /* PDF-specific styles */
-  .pdf-only {
-    display: none;
-  }
+/* ============================================
+   PDF-SPECIFIC STYLES & PRINT OPTIMIZATION
+   ============================================ */
 
-  .pdf-cover-page {
-    page-break-after: always !important;
-    min-height: 100vh;
-  }
+/* ============= PORTADA PROFESIONAL ============= */
+.pdf-cover-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, hsl(0 70% 50%) 0%, hsl(0 70% 60%) 100%);
+  padding: 4rem 2rem;
+  page-break-after: always !important;
+}
 
-  .pdf-section-divider {
-    page-break-before: always !important;
-    page-break-after: auto !important;
-    padding: 3rem 2rem;
-    margin-bottom: 2rem;
-  }
+.cover-content {
+  text-align: center;
+  max-width: 800px;
+}
 
-  .pdf-simple-layout > * {
-    margin-bottom: 1rem;
-  }
+.cover-brand {
+  margin-bottom: 3rem;
+}
 
-  /* Prevent page breaks inside critical components */
-  .buyer-persona,
-  .product-nucleus,
-  .disc-translator,
-  .product-understanding,
-  .positioning-map,
-  .offer-factory,
-  .channel-strategy,
-  .validation-map,
-  table,
-  .card,
-  section {
-    page-break-inside: avoid !important;
-  }
+.brand-main {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.5rem;
+}
 
-  /* Headers should not be orphaned at bottom of page */
-  h1, h2, h3, h4 {
-    page-break-after: avoid !important;
-  }
+.brand-subtitle {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.1em;
+}
 
-  /* Control widows and orphans */
-  p, ul, ol {
-    orphans: 3;
-    widows: 3;
-  }
+.cover-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: white;
+  line-height: 1.2;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.cover-company {
+  margin: 2rem 0;
+}
+
+.company-label {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.company-name {
+  font-size: 2rem;
+  font-weight: 600;
+  color: white;
+  letter-spacing: 0.05em;
+}
+
+.cover-project {
+  font-size: 1.5rem;
+  color: white;
+  opacity: 0.95;
+  padding: 1.5rem 2rem;
+  border-top: 2px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  margin: 2rem 0;
+  max-width: 80%;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cover-footer {
+  margin-top: 3rem;
+}
+
+.doc-type {
+  font-size: 1.125rem;
+  color: white;
+  opacity: 0.85;
+  margin-bottom: 0.5rem;
+}
+
+.doc-date {
+  font-size: 0.875rem;
+  color: white;
+  opacity: 0.7;
+}
+
+/* ============= DIVISORES DE SECCIÓN ============= */
+.pdf-section-divider {
+  page-break-before: always !important;
+  page-break-after: avoid !important;
+  padding: 4rem 2rem 2rem;
+  background: linear-gradient(135deg, 
+    hsl(0 70% 50% / 0.08) 0%, 
+    hsl(0 70% 60% / 0.03) 100%);
+  border-left: 6px solid hsl(0 70% 50%);
+  margin-bottom: 2rem;
+}
+
+.divider-content {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.divider-number {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.phase-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: hsl(0 70% 50%);
+  font-weight: 600;
+}
+
+.phase-num {
+  font-size: 3rem;
+  font-weight: 700;
+  color: hsl(0 70% 50%);
+  line-height: 1;
+}
+
+.divider-line {
+  height: 2px;
+  background: linear-gradient(to right, 
+    hsl(0 70% 50%), 
+    hsl(0 70% 50% / 0.3), 
+    transparent);
+  margin: 1rem 0;
+}
+
+.divider-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: hsl(0 0% 10%);
+  margin: 0;
+}
+
+/* ============= EVITAR CORTES DE PÁGINA ============= */
+.buyer-persona,
+.product-nucleus,
+.disc-translator,
+.product-understanding,
+.positioning-map,
+.offer-factory,
+.channel-strategy,
+.validation-map,
+.client-readiness,
+section,
+.card,
+table {
+  page-break-inside: avoid !important;
+}
+
+/* Headers nunca solos al final */
+h1, h2, h3, h4 {
+  page-break-after: avoid !important;
+  page-break-inside: avoid !important;
+}
 
   @media print {
     .pdf-only {
