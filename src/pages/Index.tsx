@@ -23,7 +23,6 @@ import { ClientReadiness } from "@/components/factory/ClientReadiness";
 import { SignupGate } from "@/components/factory/SignupGate";
 import { BudgetInput } from "@/components/factory/BudgetInput";
 import { ChannelStrategy } from "@/components/factory/ChannelStrategy";
-import { DownloadAnalysisButton } from "@/components/factory/DownloadAnalysisButton";
 
 const Index = () => {
   const [searchParams] = useSearchParams();
@@ -78,7 +77,10 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <AppHeader />
+      <AppHeader 
+        analysisState={displayState}
+        projectName={displayState.phases.phase1?.productNucleus?.name}
+      />
       
       {isDevMode && displayState.currentPhase === 0 && (
         <div className="bg-amber-500/10 border-b border-amber-500/20 py-3">
@@ -158,11 +160,6 @@ const Index = () => {
             </div>
           )}
 
-          {(displayState.phases.phase6 || displayState.currentPhase >= 6) && !displayState.isRunning && (
-            <div className="container mx-auto px-4 py-8 flex justify-center">
-              <DownloadAnalysisButton state={displayState} projectName={displayState.phases.phase1?.productNucleus?.name || "Análisis Completo"} />
-            </div>
-          )}
 
           {shouldShowGate && (
             <div id="locked-content" className="relative min-h-[200vh]">
