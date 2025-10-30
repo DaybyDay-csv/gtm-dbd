@@ -352,6 +352,22 @@ export const downloadAnalysisAsPDF = async (
   // Wait for React renders to complete
   await new Promise(resolve => setTimeout(resolve, 500));
 
+  // Add element to DOM temporarily so html2canvas can capture it
+  const tempContainer = document.createElement('div');
+  tempContainer.id = 'pdf-temp-container';
+  tempContainer.style.position = 'absolute';
+  tempContainer.style.left = '-9999px';
+  tempContainer.style.top = '0';
+  tempContainer.style.width = '210mm'; // A4 width
+  tempContainer.style.backgroundColor = 'white';
+  tempContainer.appendChild(preparedElement);
+  document.body.appendChild(tempContainer);
+
+  console.log('📄 Temporary DOM container created for PDF generation');
+
+  // Wait for the DOM to fully render the new content
+  await new Promise(resolve => setTimeout(resolve, 300));
+
   // Configure html2pdf options for high-quality executive document
   const dateForFilename = new Date().toISOString().split('T')[0];
   const options = {
@@ -359,13 +375,13 @@ export const downloadAnalysisAsPDF = async (
     filename: `${sanitizedCompany}_Analisis_GTM_Completo_${dateForFilename}.pdf`,
     image: { type: 'jpeg' as const, quality: 0.98 },
     html2canvas: { 
-      scale: 2, // Reduced for better compatibility with html2pdf
+      scale: 2,
       useCORS: true,
       letterRendering: true,
-      logging: true, // Enable for debugging
-      windowWidth: 1400, // Wider for better capture
-      backgroundColor: null, // Allow HTML backgrounds to render
-      removeContainer: true
+      logging: true,
+      windowWidth: 1400,
+      backgroundColor: null,
+      removeContainer: false // Don't remove container automatically
     },
     jsPDF: { 
       unit: 'mm' as const, 
@@ -399,4 +415,8 @@ export const downloadAnalysisAsPDF = async (
   });
   
   await worker.save();
+
+  // Clean up temporary DOM container
+  console.log('🧹 Cleaning up temporary DOM container');
+  document.body.removeChild(tempContainer);
 };
