@@ -110,7 +110,7 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
   if (!hasData && !isRunning) return null;
 
   return (
-    <section className={`container mx-auto px-4 py-12 ${isRunning ? 'charging' : ''} ${hasData ? 'magic-reveal' : ''}`}>
+    <section className={`w-full px-8 py-12 ${isRunning ? 'charging' : ''} ${hasData ? 'magic-reveal' : ''}`}>
       <Card className="border-2 dotted-border relative">
         <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
           <SectionDownloadButton sectionName="Creative Variations" data={data} />

@@ -66,7 +66,7 @@ export const ChannelStrategy = ({ data, isRunning }: ChannelStrategyProps) => {
   };
 
   return (
-    <section className={`container mx-auto px-4 py-12 space-y-8 ${isRunning ? 'charging' : 'magic-reveal'}`}>
+    <section className={`w-full px-8 py-12 space-y-8 ${isRunning ? 'charging' : 'magic-reveal'}`}>
       {/* Budget Analysis */}
       {data.budgetAnalysis && (
         <Card className="border-2 dotted-border relative">
