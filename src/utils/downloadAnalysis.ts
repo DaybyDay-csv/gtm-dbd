@@ -57,45 +57,23 @@ const createCoverPageHTML = (
   return `
     <div class="pdf-cover-page" style="
       page-break-after: always;
-      height: 297mm;
+      min-height: 297mm;
       width: 210mm;
       padding: 80px 60px;
       background-color: #1a1a1a;
       color: white;
       border-top: 8px solid #ef4444;
       border-bottom: 8px solid #b91c1c;
+      border-left: 6px solid #ef4444;
+      border-right: 6px solid #ef4444;
       box-sizing: border-box;
-      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
     ">
-      <!-- Left red bar -->
-      <div style="
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 6px;
-        background-color: #ef4444;
-      "></div>
-      
-      <!-- Right red bar -->
-      <div style="
-        position: absolute;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        width: 6px;
-        background-color: #ef4444;
-      "></div>
-      
-      <!-- Content centered -->
-      <div style="
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 80%;
-        text-align: center;
-      ">
+      <div style="max-width: 80%; width: 100%;">
         <div style="
           font-size: 14px;
           letter-spacing: 3px;
@@ -123,7 +101,7 @@ const createCoverPageHTML = (
           border-radius: 8px;
           padding: 30px;
           margin: 50px auto;
-          width: 70%;
+          max-width: 70%;
         ">
           <div style="
             font-size: 12px;
@@ -158,18 +136,15 @@ const createCoverPageHTML = (
             <strong style="color: white;">Fecha:</strong> ${date}
           </div>
         </div>
-      </div>
-      
-      <div style="
-        position: absolute;
-        bottom: 40px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 12px;
-        color: #737373;
-        font-style: italic;
-      ">
-        Análisis Go-to-Market Completo
+        
+        <div style="
+          margin-top: 40px;
+          font-size: 12px;
+          color: #737373;
+          font-style: italic;
+        ">
+          Análisis Go-to-Market Completo
+        </div>
       </div>
     </div>
   `;
@@ -181,32 +156,18 @@ const createSectionDividerHTML = (phaseNumber: number, phaseName: string): strin
     <div class="pdf-section-divider" style="
       page-break-before: always;
       page-break-after: avoid;
-      height: 297mm;
-      width: 210mm;
+      min-height: 200px;
+      width: 100%;
       padding: 80px 60px;
       background-color: #1a1a1a;
-      margin: 0;
-      position: relative;
+      border-left: 6px solid #ef4444;
+      color: white;
       box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     ">
-      <!-- Left red bar -->
-      <div style="
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 6px;
-        background-color: #ef4444;
-      "></div>
-      
-      <!-- Content centered vertically -->
-      <div style="
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        left: 60px;
-        right: 60px;
-      ">
+      <div style="max-width: 1000px; margin: 0 auto; width: 100%;">
         <div style="
           font-size: 12px;
           text-transform: uppercase;
@@ -232,22 +193,7 @@ const createSectionDividerHTML = (phaseNumber: number, phaseName: string): strin
           height: 4px;
           width: 120px;
           background-color: #ef4444;
-          margin-top: 30px;
         "></div>
-      </div>
-      
-      <!-- Large phase number on the right -->
-      <div style="
-        position: absolute;
-        right: 40px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 140px;
-        font-weight: 900;
-        color: rgba(239, 68, 68, 0.15);
-        line-height: 1;
-      ">
-        ${phaseNumber}
       </div>
     </div>
   `;
@@ -268,8 +214,13 @@ const prepareContentForPDF = (element: HTMLElement, projectName: string, company
   const coverDiv = document.createElement('div');
   coverDiv.innerHTML = coverPageHTML;
   
+  console.log('✅ Cover page created');
+  
   // Insert at beginning
-  clonedElement.insertBefore(coverDiv.firstChild!, clonedElement.firstChild);
+  if (clonedElement.firstChild) {
+    clonedElement.insertBefore(coverDiv.firstChild!, clonedElement.firstChild);
+    console.log('✅ Cover page inserted at beginning');
+  }
   
   // Remove interactive elements
   const buttons = clonedElement.querySelectorAll('button');
@@ -283,11 +234,11 @@ const prepareContentForPDF = (element: HTMLElement, projectName: string, company
   
   // Add section dividers before phase sections
   const phaseSections = clonedElement.querySelectorAll('[data-phase]');
-  console.log('Phase sections found:', phaseSections.length);
+  console.log(`📑 Phase sections found: ${phaseSections.length}`);
   
   phaseSections.forEach((section, idx) => {
     const phaseKey = section.getAttribute('data-phase');
-    console.log(`Section ${idx}: ${phaseKey}`);
+    console.log(`  Section ${idx}: ${phaseKey}`);
     
     if (phaseKey && phaseNames[phaseKey]) {
       const phaseNumber = parseInt(phaseKey.replace('phase', ''));
@@ -296,6 +247,7 @@ const prepareContentForPDF = (element: HTMLElement, projectName: string, company
       dividerDiv.innerHTML = dividerHTML;
       
       section.parentNode?.insertBefore(dividerDiv.firstChild!, section);
+      console.log(`  ✅ Divider inserted for ${phaseKey}`);
     }
   });
   
@@ -403,16 +355,17 @@ export const downloadAnalysisAsPDF = async (
   // Configure html2pdf options for high-quality executive document
   const dateForFilename = new Date().toISOString().split('T')[0];
   const options = {
-    margin: [15, 12, 15, 12] as [number, number, number, number],
+    margin: [10, 10, 10, 10] as [number, number, number, number],
     filename: `${sanitizedCompany}_Analisis_GTM_Completo_${dateForFilename}.pdf`,
-    image: { type: 'jpeg' as const, quality: 0.95 },
+    image: { type: 'jpeg' as const, quality: 0.98 },
     html2canvas: { 
-      scale: 3, // Higher quality
+      scale: 2, // Reduced for better compatibility with html2pdf
       useCORS: true,
       letterRendering: true,
-      logging: false,
-      windowWidth: 1200, // Wider for better capture
-      backgroundColor: '#ffffff'
+      logging: true, // Enable for debugging
+      windowWidth: 1400, // Wider for better capture
+      backgroundColor: null, // Allow HTML backgrounds to render
+      removeContainer: true
     },
     jsPDF: { 
       unit: 'mm' as const, 
@@ -422,15 +375,10 @@ export const downloadAnalysisAsPDF = async (
       precision: 16
     },
     pagebreak: { 
-      mode: ['avoid-all', 'css', 'legacy'],
-      before: ['.pdf-section-divider', '.page-break-before'],
-      after: ['.pdf-cover-page', '.page-break-after'],
-      avoid: [
-        '.buyer-persona', '.product-nucleus', '.disc-translator', 
-        '.positioning-map', '.validation-map', '.channel-strategy',
-        'section', '.card', 'table', '.recharts-wrapper',
-        'h1', 'h2', 'h3', 'h4'
-      ]
+      mode: ['css', 'legacy'],
+      before: ['.pdf-section-divider'],
+      after: ['.pdf-cover-page'],
+      avoid: ['h1', 'h2', 'h3', '.card', 'table']
     }
   };
 
