@@ -39,10 +39,8 @@ const Index = () => {
   const [showSignupGate, setShowSignupGate] = useState(false);
   const [projectId, setProjectId] = useState<string | null>(null);
   
-  // Use loaded project data if available, otherwise use current analysis state
   const displayState = projectData || state;
 
-  // Auto-scroll when analysis starts
   useEffect(() => {
     if (state.isRunning && !prevRunningState.current && state.currentPhase > 0) {
       contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -50,35 +48,24 @@ const Index = () => {
     prevRunningState.current = state.isRunning;
   }, [state.isRunning, state.currentPhase]);
 
-  // Show signup gate after phase 3 if user is not authenticated
   useEffect(() => {
     if (!user && state.currentPhase >= 4) {
       setShowSignupGate(true);
-      // Store project ID for later association
       if (state.projectId) {
         setProjectId(state.projectId);
       }
     }
   }, [user, state.currentPhase, state.projectId]);
 
-  // Associate project with user after signup
   const handleSignupComplete = async () => {
     setShowSignupGate(false);
-    
     const { data: { user: currentUser } } = await supabase.auth.getUser();
-    
     if (projectId && currentUser) {
-      await supabase
-        .from("projects")
-        .update({ user_id: currentUser.id })
-        .eq("id", projectId);
+      await supabase.from("projects").update({ user_id: currentUser.id }).eq("id", projectId);
     }
   };
 
-  // Determine if signup gate should be shown
   const shouldShowGate = displayState.currentPhase >= 3 && !user && !projectIdFromUrl;
-
-  // Extract metrics from analysis state
   const avatarReliability = displayState.phases.phase2?.profile?.reliability || 0;
   const topOffers = displayState.phases.phase3?.offers?.slice(0, 3).map((o: any) => ({
     offer: o.offer,
@@ -93,7 +80,6 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <AppHeader />
       
-      {/* Dev Mode Banner */}
       {isDevMode && displayState.currentPhase === 0 && (
         <div className="bg-amber-500/10 border-b border-amber-500/20 py-3">
           <div className="container mx-auto px-4">
@@ -105,10 +91,7 @@ const Index = () => {
                   <p className="text-xs text-amber-600 dark:text-amber-400">Carga datos mock para ver el resultado completo sin gastar créditos</p>
                 </div>
               </div>
-              <button
-                onClick={loadMockData}
-                className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-sm font-medium transition-colors"
-              >
+              <button onClick={loadMockData} className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-sm font-medium transition-colors">
                 Cargar Datos Mock
               </button>
             </div>
@@ -117,139 +100,103 @@ const Index = () => {
       )}
       
       <Hero onRunAnalysis={runAnalysis} isRunning={state.isRunning} />
-      
       {!displayState.isRunning && displayState.currentPhase === 0 && <EvidenceDrawer />}
       
       {displayState.currentPhase > 0 && (
-        <div ref={contentRef}>
-          <div id="analysis-content">
-            <PhaseRibbon currentPhase={displayState.currentPhase} isRunning={displayState.isRunning} />
-            <PhaseExplainer currentPhase={displayState.currentPhase} isRunning={displayState.isRunning} />
-            {displayState.clientReadiness && <ClientReadiness data={displayState.clientReadiness} />}
-            
-            <ProductMetrics
-              avatarReliability={avatarReliability}
-              hypothesesValidated={0}
-              topMessages={[]}
-              topOffers={topOffers}
-              nextAction={
-                displayState.phases.phase7?.variations?.[0]
-                  ? `Test: ${displayState.phases.phase7.variations[0].effect} on ${displayState.phases.phase7.variations[0].channel}`
-                  : undefined
-              }
-            />
+        <div ref={contentRef} id="analysis-content">
+          <PhaseRibbon currentPhase={displayState.currentPhase} isRunning={displayState.isRunning} />
+          <PhaseExplainer currentPhase={displayState.currentPhase} isRunning={displayState.isRunning} />
+          {displayState.clientReadiness && <ClientReadiness data={displayState.clientReadiness} />}
+          
+          <ProductMetrics
+            avatarReliability={avatarReliability}
+            hypothesesValidated={0}
+            topMessages={[]}
+            topOffers={topOffers}
+            nextAction={displayState.phases.phase7?.variations?.[0] ? `Test: ${displayState.phases.phase7.variations[0].effect} on ${displayState.phases.phase7.variations[0].channel}` : undefined}
+          />
 
-            {/* Product Understanding + Main Grid with SignupGate */}
-            <section className="container mx-auto px-4 py-12 space-y-8">
-              {/* Product Understanding - Full Width */}
-              <div className={`w-full ${displayState.isRunning && !displayState.phases.phase1?.productUnderstanding ? 'charging' : ''} ${displayState.phases.phase1?.productUnderstanding ? 'magic-reveal' : ''}`}>
-                <ProductUnderstanding data={displayState.phases.phase1?.productUnderstanding} />
+          <section className="container mx-auto px-4 py-12 space-y-8">
+            <div className={`w-full ${displayState.isRunning && !displayState.phases.phase1?.productUnderstanding ? 'charging' : ''} ${displayState.phases.phase1?.productUnderstanding ? 'magic-reveal' : ''}`}>
+              <ProductUnderstanding data={displayState.phases.phase1?.productUnderstanding} />
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className={`lg:col-span-1 ${displayState.isRunning && !displayState.phases.phase1 ? 'charging' : ''} ${displayState.phases.phase1 ? 'magic-reveal' : ''}`}>
+                <PositioningMap data={displayState.phases.phase1} />
+              </div>
+              <div className={`lg:col-span-1 flex items-center justify-center ${displayState.isRunning && !displayState.phases.phase1?.productNucleus ? 'charging' : ''} ${displayState.phases.phase1?.productNucleus ? 'magic-reveal' : ''}`}>
+                <ProductNucleus data={displayState.phases.phase1?.productNucleus} />
+              </div>
+              <div className={`lg:col-span-1 ${displayState.isRunning && !displayState.phases.phase2 ? 'charging' : ''} ${displayState.phases.phase2 ? 'magic-reveal' : ''}`}>
+                <BuyerPersona data={displayState.phases.phase2} />
               </div>
 
-              {/* Main Grid */}
+              <div className={`lg:col-span-1 ${displayState.isRunning && !displayState.phases.phase3 ? 'charging' : ''} ${displayState.phases.phase3 ? 'magic-reveal' : ''}`}>
+                <OfferFactory data={displayState.phases.phase3} />
+              </div>
+              
+              {shouldShowGate ? (
+                <div className="lg:col-span-2 flex items-center justify-center min-h-[400px]">
+                  <SignupGate onComplete={handleSignupComplete} />
+                </div>
+              ) : (
+                <div className={`lg:col-span-2 ${displayState.isRunning && !displayState.phases.phase4 ? 'charging' : ''} ${displayState.phases.phase4 ? 'magic-reveal' : ''}`}>
+                  <DISCTranslator data={displayState.phases.phase4} />
+                </div>
+              )}
+            </div>
+          </section>
+
+          {shouldShowGate && displayState.phases.phase4 && (
+            <div className="container mx-auto px-4 pb-0 pt-6">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Top row */}
-                <div className={`lg:col-span-1 ${displayState.isRunning && !displayState.phases.phase1 ? 'charging' : ''} ${displayState.phases.phase1 ? 'magic-reveal' : ''}`}>
-                  <PositioningMap data={displayState.phases.phase1} />
-                </div>
-                <div className={`lg:col-span-1 flex items-center justify-center ${displayState.isRunning && !displayState.phases.phase1?.productNucleus ? 'charging' : ''} ${displayState.phases.phase1?.productNucleus ? 'magic-reveal' : ''}`}>
-                  <ProductNucleus data={displayState.phases.phase1?.productNucleus} />
-                </div>
-                <div className={`lg:col-span-1 ${displayState.isRunning && !displayState.phases.phase2 ? 'charging' : ''} ${displayState.phases.phase2 ? 'magic-reveal' : ''}`}>
-                  <BuyerPersona data={displayState.phases.phase2} />
-                </div>
-
-                {/* Bottom row - OfferFactory + SignupGate / DISC */}
-                <div className={`lg:col-span-1 ${displayState.isRunning && !displayState.phases.phase3 ? 'charging' : ''} ${displayState.phases.phase3 ? 'magic-reveal' : ''}`}>
-                  <OfferFactory data={displayState.phases.phase3} />
-                </div>
-                
-                {shouldShowGate ? (
-                  <div className="lg:col-span-2 flex items-center justify-center min-h-[400px]">
-                    <SignupGate onComplete={handleSignupComplete} />
-                  </div>
-                ) : (
-                  <div className={`lg:col-span-2 ${displayState.isRunning && !displayState.phases.phase4 ? 'charging' : ''} ${displayState.phases.phase4 ? 'magic-reveal' : ''}`}>
-                    <DISCTranslator data={displayState.phases.phase4} />
-                  </div>
-                )}
-              </div>
-            </section>
-
-            {/* Preview de DISC sin blur cuando hay SignupGate */}
-            {shouldShowGate && displayState.phases.phase4 && (
-              <div className="container mx-auto px-4 pb-0 pt-6">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  <div className="lg:col-span-3">
-                    <DISCTranslatorPreview />
-                  </div>
+                <div className="lg:col-span-3">
+                  <DISCTranslatorPreview />
                 </div>
               </div>
-            )}
+            </div>
+          )}
 
-            {/* LOCKED CONTENT - Phases 4-7 with progressive blur and scroll effect */}
-            {shouldShowGate && (
-              <div id="locked-content" className="relative min-h-[200vh]">
-                {/* Blur overlay that fades as you scroll */}
-                <div 
-                  className="sticky top-0 h-screen pointer-events-none z-10"
-                  style={{
-                    background: 'linear-gradient(to bottom, rgba(var(--background), 0) 0%, rgba(var(--background), 0.95) 50%, rgba(var(--background), 1) 100%)'
-                  }}
-                >
-                  <div className="absolute inset-0 backdrop-blur-xl" />
-                </div>
+          {displayState.phases.phase7 && !displayState.isRunning && (
+            <div className="container mx-auto px-4 py-8 flex justify-center">
+              <DownloadAnalysisButton state={displayState} projectName={displayState.phases.phase1?.productNucleus?.name || "Análisis Completo"} />
+            </div>
+          )}
 
-                {/* Content that scrolls underneath */}
-                <div className="relative -mt-[100vh] z-0">
-                  <div className="container mx-auto px-4 py-12 space-y-12">
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 opacity-40">
-                      <div className={`lg:col-span-3 ${displayState.isRunning && !displayState.phases.phase4 ? 'charging' : ''} ${displayState.phases.phase4 ? 'magic-reveal' : ''}`}>
-                        <DISCTranslator data={displayState.phases.phase4} />
-                      </div>
-                    </div>
-
-                    <div className="opacity-40">
-                      {state.awaitingBudgetInput && (
-                        <BudgetInput onSubmit={handleBudgetSubmit} />
-                      )}
-
-                      {displayState.phases.phase6 && !state.awaitingBudgetInput && (
-                        <ChannelStrategy data={displayState.phases.phase6} isRunning={displayState.isRunning && displayState.currentPhase === 6} />
-                      )}
-                      
-                      <ValidationMap data={displayState.phases.phase7} isRunning={displayState.isRunning && displayState.currentPhase === 7} />
+          {shouldShowGate && (
+            <div id="locked-content" className="relative min-h-[200vh]">
+              <div className="sticky top-0 h-screen pointer-events-none z-10" style={{ background: 'linear-gradient(to bottom, rgba(var(--background), 0) 0%, rgba(var(--background), 0.95) 50%, rgba(var(--background), 1) 100%)' }}>
+                <div className="absolute inset-0 backdrop-blur-xl" />
+              </div>
+              <div className="relative -mt-[100vh] z-0">
+                <div className="container mx-auto px-4 py-12 space-y-12">
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 opacity-40">
+                    <div className={`lg:col-span-3 ${displayState.isRunning && !displayState.phases.phase4 ? 'charging' : ''} ${displayState.phases.phase4 ? 'magic-reveal' : ''}`}>
+                      <DISCTranslator data={displayState.phases.phase4} />
                     </div>
                   </div>
+                  <div className="opacity-40">
+                    {state.awaitingBudgetInput && <BudgetInput onSubmit={handleBudgetSubmit} />}
+                    {displayState.phases.phase6 && !state.awaitingBudgetInput && (
+                      <ChannelStrategy data={displayState.phases.phase6} isRunning={displayState.isRunning && displayState.currentPhase === 6} />
+                    )}
+                    <ValidationMap data={displayState.phases.phase7} isRunning={displayState.isRunning && displayState.currentPhase === 7} />
+                  </div>
                 </div>
               </div>
-            )}
+            </div>
+          )}
 
-            {/* UNLOCKED - Show phases 4-7 without blur when user is authenticated */}
-            {!shouldShowGate && (
-              <>
-                {state.awaitingBudgetInput && (
-                  <BudgetInput onSubmit={handleBudgetSubmit} />
-                )}
-
-                {displayState.phases.phase6 && !state.awaitingBudgetInput && (
-                  <ChannelStrategy data={displayState.phases.phase6} isRunning={displayState.isRunning && displayState.currentPhase === 6} />
-                )}
-                
-                <ValidationMap data={displayState.phases.phase7} isRunning={displayState.isRunning && displayState.currentPhase === 7} />
-              </>
-            )}
-
-            {/* Download button - shows when analysis is complete */}
-            {displayState.phases.phase7 && !displayState.isRunning && (
-              <div className="container mx-auto px-4 py-8 flex justify-center">
-                <DownloadAnalysisButton 
-                  state={displayState} 
-                  projectName={displayState.phases.phase1?.productNucleus?.name || "Análisis Completo"} 
-                />
-              </div>
-            )}
-          </div>
+          {!shouldShowGate && (
+            <>
+              {state.awaitingBudgetInput && <BudgetInput onSubmit={handleBudgetSubmit} />}
+              {displayState.phases.phase6 && !state.awaitingBudgetInput && (
+                <ChannelStrategy data={displayState.phases.phase6} isRunning={displayState.isRunning && displayState.currentPhase === 6} />
+              )}
+              <ValidationMap data={displayState.phases.phase7} isRunning={displayState.isRunning && displayState.currentPhase === 7} />
+            </>
+          )}
         </div>
       )}
       
