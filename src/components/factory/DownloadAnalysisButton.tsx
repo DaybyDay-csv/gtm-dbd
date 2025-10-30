@@ -41,8 +41,8 @@ export const DownloadAnalysisButton = ({
     try {
       await downloadAnalysisAsPDF(state, projectName);
       toast({
-        title: "Impresión lista",
-        description: "Usa 'Guardar como PDF' en el diálogo de impresión",
+        title: "PDF generado",
+        description: "Usa 'Guardar como PDF' en el diálogo de impresión para descargar tu análisis completo",
       });
     } catch (error) {
       toast({
@@ -71,7 +71,7 @@ export const DownloadAnalysisButton = ({
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleDownloadPDF} className="gap-2">
           <FileText className="h-4 w-4" />
-          Imprimir / Guardar PDF
+          Descargar como PDF
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
