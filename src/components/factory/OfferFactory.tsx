@@ -39,7 +39,7 @@ export const OfferFactory = ({ data }: OfferFactoryProps) => {
       </div>
       
       <div className="mb-6 p-4 bg-muted/50 rounded-lg border border-dashed">
-        <h4 className="font-semibold text-sm mb-2">¿Cómo aumentamos el valor?</h4>
+        <h4 className="font-semibold text-sm mb-2">¿Cómo comunicamos el valor de tu producto?</h4>
         <p className="text-xs text-muted-foreground mb-3">
           El valor de una oferta se maximiza cuando aumentamos el resultado deseado y su probabilidad, mientras reducimos el tiempo y esfuerzo necesarios.
         </p>
