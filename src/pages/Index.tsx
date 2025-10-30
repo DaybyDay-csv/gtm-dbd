@@ -139,7 +139,7 @@ const Index = () => {
                 <div className={`w-full ${displayState.isRunning && !displayState.phases.phase1 ? 'charging' : ''} ${displayState.phases.phase1 ? 'magic-reveal' : ''}`}>
                   <PositioningMap data={displayState.phases.phase1} />
                 </div>
-                <div className={`w-full flex items-center justify-center ${displayState.isRunning && !displayState.phases.phase1?.productNucleus ? 'charging' : ''} ${displayState.phases.phase1?.productNucleus ? 'magic-reveal' : ''}`}>
+                <div className={`w-full ${displayState.isRunning && !displayState.phases.phase1?.productNucleus ? 'charging' : ''} ${displayState.phases.phase1?.productNucleus ? 'magic-reveal' : ''}`}>
                   <ProductNucleus data={displayState.phases.phase1?.productNucleus} />
                 </div>
               </div>

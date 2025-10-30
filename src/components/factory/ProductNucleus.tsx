@@ -18,7 +18,7 @@ export const ProductNucleus = ({ data }: ProductNucleusProps) => {
   const value = data?.value || "Propuesta de valor única";
 
   return (
-    <div className="p-6 border-2 border-primary/30 rounded-lg bg-gradient-to-br from-primary/5 to-background text-center max-w-sm h-full flex flex-col relative">
+    <div className="p-6 border-2 border-primary/30 rounded-lg bg-gradient-to-br from-primary/5 to-background text-center w-full h-full flex flex-col relative">
       <div className="absolute top-2 right-2">
         <SectionDownloadButton sectionName="Product Nucleus" data={data} />
       </div>
