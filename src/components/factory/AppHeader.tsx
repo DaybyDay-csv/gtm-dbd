@@ -17,7 +17,7 @@ export const AppHeader = ({ analysisState, projectName }: AppHeaderProps) => {
   const { user, signOut } = useAuth();
   const { language, setLanguage, t } = useLanguage();
   
-  const showDownloadButton = analysisState && (analysisState.phases.phase6 || analysisState.currentPhase >= 6) && !analysisState.isRunning;
+  const showDownloadButton = analysisState && analysisState.currentPhase >= 1 && !analysisState.isRunning;
 
   return (
     <header className="border-b no-pdf">
