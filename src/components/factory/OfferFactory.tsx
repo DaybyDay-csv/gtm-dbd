@@ -39,9 +39,12 @@ export const OfferFactory = ({ data }: OfferFactoryProps) => {
       </div>
       
       <div className="mb-6 p-4 bg-muted/50 rounded-lg border border-dashed">
-        <h4 className="font-semibold text-sm mb-2">¿Cómo comunicamos el valor de tu producto?</h4>
+        <h4 className="font-semibold text-sm mb-2">¿Cómo identificamos el valor de tu marca?</h4>
         <p className="text-xs text-muted-foreground mb-3">
-          El valor de una oferta se maximiza cuando aumentamos el resultado deseado y su probabilidad, mientras reducimos el tiempo y esfuerzo necesarios.
+          El valor de una oferta se maximiza cuando aumentamos la probabilidad de éxito del resultado deseado, mientras reducimos el tiempo y esfuerzo necesarios.
+         </p>
+        <div className="grid grid-cols-2 gap-3 text-xs">
+          Analizamos de que forma posicionas, vendes y consigues los resultados con tu marca y lo comunicamos de una manera que el buyer entienda el valor que tu prodcuto/servicio tiene.
         </p>
         <div className="grid grid-cols-2 gap-3 text-xs">
           <div className="p-3 rounded-lg bg-primary/5 border border-primary/20">
