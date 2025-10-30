@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -79,7 +79,10 @@ export default function Auth() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">GTM Factory</CardTitle>
+          <Link to="/" className="flex flex-col items-center hover:opacity-80 transition-opacity">
+            <CardTitle className="text-2xl font-bold text-center">GTM Factory</CardTitle>
+            <p className="text-xs text-muted-foreground">by DaybyDay</p>
+          </Link>
           <CardDescription className="text-center">
             Sign in to access your marketing analysis
           </CardDescription>
