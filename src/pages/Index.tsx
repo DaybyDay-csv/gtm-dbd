@@ -121,17 +121,22 @@ const Index = () => {
           />
 
           <section className="container mx-auto px-4 py-12 space-y-8">
-            <div data-phase="phase1" className={`w-full pdf-section ${displayState.isRunning && !displayState.phases.phase1?.productUnderstanding ? 'charging' : ''} ${displayState.phases.phase1?.productUnderstanding ? 'magic-reveal' : ''}`}>
-              <ProductUnderstanding data={displayState.phases.phase1?.productUnderstanding} />
+            <div data-phase="phase1" className="pdf-section">
+              <div className={`w-full ${displayState.isRunning && !displayState.phases.phase1?.productUnderstanding ? 'charging' : ''} ${displayState.phases.phase1?.productUnderstanding ? 'magic-reveal' : ''}`}>
+                <ProductUnderstanding data={displayState.phases.phase1?.productUnderstanding} />
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+                <div className={`lg:col-span-1 ${displayState.isRunning && !displayState.phases.phase1 ? 'charging' : ''} ${displayState.phases.phase1 ? 'magic-reveal' : ''}`}>
+                  <PositioningMap data={displayState.phases.phase1} />
+                </div>
+                <div className={`lg:col-span-1 flex items-center justify-center ${displayState.isRunning && !displayState.phases.phase1?.productNucleus ? 'charging' : ''} ${displayState.phases.phase1?.productNucleus ? 'magic-reveal' : ''}`}>
+                  <ProductNucleus data={displayState.phases.phase1?.productNucleus} />
+                </div>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className={`lg:col-span-1 pdf-section ${displayState.isRunning && !displayState.phases.phase1 ? 'charging' : ''} ${displayState.phases.phase1 ? 'magic-reveal' : ''}`}>
-                <PositioningMap data={displayState.phases.phase1} />
-              </div>
-              <div className={`lg:col-span-1 flex items-center justify-center pdf-section ${displayState.isRunning && !displayState.phases.phase1?.productNucleus ? 'charging' : ''} ${displayState.phases.phase1?.productNucleus ? 'magic-reveal' : ''}`}>
-                <ProductNucleus data={displayState.phases.phase1?.productNucleus} />
-              </div>
               <div data-phase="phase2" className={`lg:col-span-1 pdf-section ${displayState.isRunning && !displayState.phases.phase2 ? 'charging' : ''} ${displayState.phases.phase2 ? 'magic-reveal' : ''}`}>
                 <BuyerPersona data={displayState.phases.phase2} />
               </div>

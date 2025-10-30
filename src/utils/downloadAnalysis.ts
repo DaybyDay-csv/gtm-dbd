@@ -141,8 +141,12 @@ const prepareContentForPDF = (element: HTMLElement, projectName: string): HTMLEl
   
   // Add section dividers before phase sections
   const phaseSections = clonedElement.querySelectorAll('[data-phase]');
-  phaseSections.forEach((section) => {
+  console.log('Phase sections found:', phaseSections.length);
+  
+  phaseSections.forEach((section, idx) => {
     const phaseKey = section.getAttribute('data-phase');
+    console.log(`Section ${idx}: ${phaseKey}`);
+    
     if (phaseKey && phaseNames[phaseKey]) {
       const phaseNumber = parseInt(phaseKey.replace('phase', ''));
       const dividerHTML = createSectionDividerHTML(phaseNumber, phaseNames[phaseKey]);
@@ -151,6 +155,15 @@ const prepareContentForPDF = (element: HTMLElement, projectName: string): HTMLEl
       
       section.parentNode?.insertBefore(dividerDiv.firstChild!, section);
     }
+  });
+  
+  // Simplify responsive grids for PDF
+  const grids = clonedElement.querySelectorAll('.grid');
+  grids.forEach(grid => {
+    // Remove responsive grid classes
+    grid.classList.remove('grid', 'grid-cols-1', 'lg:grid-cols-2', 'lg:grid-cols-3', 'gap-6', 'gap-8');
+    // Add simple layout class
+    grid.classList.add('pdf-simple-layout');
   });
   
   // Apply PDF-specific classes
@@ -214,7 +227,7 @@ export const downloadAnalysisAsPDF = async (
   // Configure html2pdf options for high-quality executive document
   const date = new Date().toISOString().split('T')[0];
   const options = {
-    margin: [15, 15, 15, 15] as [number, number, number, number],
+    margin: [20, 15, 20, 15] as [number, number, number, number],
     filename: `${projectName || 'Análisis'}_Completo_GTM_${date}.pdf`,
     image: { type: 'jpeg' as const, quality: 0.98 },
     html2canvas: { 
@@ -233,9 +246,9 @@ export const downloadAnalysisAsPDF = async (
     },
     pagebreak: { 
       mode: ['avoid-all', 'css', 'legacy'],
-      before: '.pdf-page-break',
-      after: '.pdf-section-divider',
-      avoid: '.pdf-section'
+      before: '.pdf-section-divider',
+      after: ['.pdf-cover-page', '.pdf-section-divider'],
+      avoid: ['.pdf-section', 'table', '.buyer-persona', '.product-nucleus', '.disc-translator', '.card', 'section', '.product-understanding', '.positioning-map', '.offer-factory', '.channel-strategy', '.validation-map']
     }
   };
 
@@ -250,8 +263,9 @@ export const downloadAnalysisAsPDF = async (
     title: `Análisis GTM Completo - ${projectName}`,
     subject: 'Documento Ejecutivo Go-to-Market',
     author: 'AI GTM Factory',
-    keywords: 'GTM, Marketing, Estrategia, Análisis',
-    creator: 'AI GTM Factory'
+    keywords: 'GTM, Marketing, Estrategia, Análisis de Mercado, Buyer Persona, DISC, Canales',
+    creator: 'AI GTM Factory',
+    producer: 'AI GTM Factory v1.0'
   });
   
   await worker.save();

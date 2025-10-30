@@ -218,6 +218,48 @@ All colors MUST be HSL.
     display: none;
   }
 
+  .pdf-cover-page {
+    page-break-after: always !important;
+    min-height: 100vh;
+  }
+
+  .pdf-section-divider {
+    page-break-before: always !important;
+    page-break-after: auto !important;
+    padding: 3rem 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .pdf-simple-layout > * {
+    margin-bottom: 1rem;
+  }
+
+  /* Prevent page breaks inside critical components */
+  .buyer-persona,
+  .product-nucleus,
+  .disc-translator,
+  .product-understanding,
+  .positioning-map,
+  .offer-factory,
+  .channel-strategy,
+  .validation-map,
+  table,
+  .card,
+  section {
+    page-break-inside: avoid !important;
+  }
+
+  /* Headers should not be orphaned at bottom of page */
+  h1, h2, h3, h4 {
+    page-break-after: avoid !important;
+  }
+
+  /* Control widows and orphans */
+  p, ul, ol {
+    orphans: 3;
+    widows: 3;
+  }
+
   @media print {
     .pdf-only {
       display: block !important;
@@ -228,29 +270,38 @@ All colors MUST be HSL.
     }
     
     body {
-      background: white;
+      background: white !important;
       color: black;
       font-size: 12pt;
       line-height: 1.5;
     }
     
     .pdf-section {
-      page-break-inside: avoid;
+      page-break-inside: avoid !important;
     }
     
     .pdf-page-break {
-      page-break-after: always;
+      page-break-after: always !important;
     }
     
     button, .tooltip, .hover-card {
       display: none !important;
     }
     
-    /* Force backgrounds and colors */
+    /* Force all backgrounds and colors to print */
     * {
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
       color-adjust: exact !important;
+    }
+    
+    /* Simplify grids for PDF - convert to single column */
+    .grid {
+      display: block !important;
+    }
+    
+    .grid > * {
+      margin-bottom: 1.5rem !important;
     }
     
     /* Optimize shadows for print */
