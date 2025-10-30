@@ -14,6 +14,8 @@ serve(async (req) => {
 
   try {
     const { companyName, projectName, productContext, positioning } = await req.json();
+    
+    console.log('Generating title for:', { companyName, projectName });
 
     const prompt = `Genera un título ejecutivo y descriptivo para un análisis Go-to-Market. 
 
@@ -33,30 +35,39 @@ Ejemplo: "Universidad Francisco de Vitoria: Máster en RRHH - Transformación Di
 
 Genera SOLO el título, sin comillas ni explicaciones adicionales.`;
 
+    const requestBody = {
+      model: 'google/gemini-2.5-flash',
+      messages: [
+        {
+          role: 'user',
+          content: prompt
+        }
+      ],
+      max_tokens: 100
+    };
+    
+    console.log('Request body:', JSON.stringify(requestBody, null, 2));
+
     const response = await fetch(`${LOVABLE_AI_GATEWAY}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${Deno.env.get('LOVABLE_API_KEY')}`
       },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          {
-            role: 'user',
-            content: prompt
-          }
-        ],
-        temperature: 0.7,
-        max_tokens: 50
-      })
+      body: JSON.stringify(requestBody)
     });
+    
+    console.log('Response status:', response.status, response.statusText);
 
     if (!response.ok) {
-      throw new Error(`AI API error: ${response.statusText}`);
+      const errorText = await response.text();
+      console.error('AI API error response:', errorText);
+      throw new Error(`AI API error: ${response.statusText} - ${errorText}`);
     }
 
     const data = await response.json();
+    console.log('AI response:', JSON.stringify(data, null, 2));
+    
     const title = data?.choices?.[0]?.message?.content?.trim() || 
                  `${companyName}: ${projectName} - Estrategia Go-to-Market`;
 
