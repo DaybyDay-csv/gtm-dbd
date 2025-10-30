@@ -12,7 +12,6 @@ interface SectionDownloadButtonProps {
 
 const formatDataToText = (data: any, level: number = 1): string => {
   let text = '';
-  const prefix = '#'.repeat(level);
   
   if (typeof data === 'string') {
     return data + '\n\n';
@@ -20,21 +19,44 @@ const formatDataToText = (data: any, level: number = 1): string => {
   
   if (Array.isArray(data)) {
     data.forEach((item, index) => {
-      text += formatDataToText(item, level);
+      if (typeof item === 'object') {
+        text += formatDataToText(item, level);
+      } else {
+        text += `• ${item}\n`;
+      }
     });
+    text += '\n';
     return text;
   }
   
   if (typeof data === 'object' && data !== null) {
     Object.entries(data).forEach(([key, value]) => {
-      // Format key as header
-      const formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+      // Format key as clean header
+      const formattedKey = key
+        .replace(/_/g, ' ')
+        .replace(/\b\w/g, l => l.toUpperCase())
+        .replace(/([A-Z])/g, ' $1')
+        .trim();
       
-      if (typeof value === 'object' && value !== null) {
-        text += `${prefix} ${formattedKey}\n\n`;
-        text += formatDataToText(value, Math.min(level + 1, 3));
+      if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+        // Section headers
+        if (level === 1) {
+          text += `\n${'='.repeat(60)}\n${formattedKey.toUpperCase()}\n${'='.repeat(60)}\n\n`;
+        } else if (level === 2) {
+          text += `\n${formattedKey}\n${'-'.repeat(formattedKey.length)}\n\n`;
+        } else {
+          text += `\n${formattedKey}:\n`;
+        }
+        text += formatDataToText(value, level + 1);
+      } else if (Array.isArray(value)) {
+        if (level === 1) {
+          text += `\n${'='.repeat(60)}\n${formattedKey.toUpperCase()}\n${'='.repeat(60)}\n\n`;
+        } else {
+          text += `\n${formattedKey}:\n`;
+        }
+        text += formatDataToText(value, level + 1);
       } else {
-        text += `${prefix} ${formattedKey}\n\n${value}\n\n`;
+        text += `${formattedKey}: ${value}\n\n`;
       }
     });
   }
@@ -52,8 +74,10 @@ export const SectionDownloadButton = ({
 
   const handleDownloadTXT = () => {
     try {
-      const header = `# ${sectionName}\n\n`;
-      const content = formatDataToText(data, 2);
+      const title = sectionName.toUpperCase();
+      const titleBorder = '='.repeat(Math.max(60, title.length + 4));
+      const header = `\n${titleBorder}\n  ${title}\n${titleBorder}\n\n`;
+      const content = formatDataToText(data, 1);
       const fullContent = header + content;
       
       const blob = new Blob([fullContent], { type: "text/plain;charset=utf-8" });
