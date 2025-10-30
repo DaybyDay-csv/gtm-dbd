@@ -11,6 +11,7 @@ export interface AnalysisState {
   awaitingBudgetInput?: boolean;
   budgetLevel?: string;
   budgetAmount?: number;
+  channelPreference?: string;
   clientReadiness?: {
     score: number;
     maturity: string;
@@ -254,14 +255,15 @@ export const useAnalysisOrchestrator = () => {
     }
   };
 
-  const continueToPhaseSix = async (budgetLevel: string, budgetAmount: number) => {
+  const continueToPhaseSix = async (budgetLevel: string, budgetAmount: number, channelPreference?: string) => {
     try {
       setState(prev => ({ 
         ...prev, 
         isRunning: true, 
         awaitingBudgetInput: false,
         budgetLevel,
-        budgetAmount 
+        budgetAmount,
+        channelPreference
       }));
 
       if (!state.projectId) throw new Error("No project ID found");
@@ -282,6 +284,7 @@ export const useAnalysisOrchestrator = () => {
             },
             budgetLevel,
             budgetAmount,
+            channelPreference,
             outputLanguage: language,
           },
         }

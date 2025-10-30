@@ -11,7 +11,8 @@ const inputSchema = z.object({
   projectId: z.string().uuid(),
   allPhaseData: z.record(z.any()).optional(),
   budgetLevel: z.string().max(100).optional(),
-  budgetAmount: z.number().min(0).max(10000000).optional()
+  budgetAmount: z.number().min(0).max(10000000).optional(),
+  channelPreference: z.string().max(500).optional()
 });
 
 serve(async (req) => {
@@ -21,7 +22,7 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { projectId, allPhaseData, budgetLevel, budgetAmount } = inputSchema.parse(body);
+    const { projectId, allPhaseData, budgetLevel, budgetAmount, channelPreference } = inputSchema.parse(body);
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
@@ -30,6 +31,7 @@ serve(async (req) => {
 
     console.log('Starting Phase 6 - Channel Strategy Analysis for project:', projectId);
     console.log('Budget:', budgetLevel, budgetAmount);
+    console.log('Channel preference:', channelPreference || 'None');
 
     // Prepare marketplace context from Phase 1
     const marketplaceContext = allPhaseData?.phase1?.marketplacePresence?.detected
@@ -92,9 +94,30 @@ Debes analizar canales tradicionales:
 Enfoque: Atraer tráfico frío y construir audiencia desde cero.
 `;
 
+    // Channel preference context
+    const channelPreferenceContext = channelPreference
+      ? `
+═══════════════════════════════════════════════
+🎯 PREFERENCIA DE CANAL DEL USUARIO
+═══════════════════════════════════════════════
+
+El usuario ha expresado la siguiente preferencia:
+"${channelPreference}"
+
+⚠️ IMPORTANTE: 
+- Esta preferencia DEBE ser considerada en tu análisis
+- Si el canal preferido es viable, dale peso adicional en tu scoring (+10 puntos)
+- Si el canal preferido NO es óptimo para el presupuesto/contexto, explícalo claramente en el disclosure
+- Balancea la preferencia del usuario con datos objetivos
+- Si el usuario menciona querer EVITAR un canal, asegúrate de NO recomendarlo como primario
+`
+      : '';
+
     const prompt = `Eres un estratega de canales de marketing B2B/B2C. Tu misión es recomendar EL MEJOR CANAL para validar el producto.
 
 ${marketplaceContext}
+
+${channelPreferenceContext}
 
 CONTEXTO DEL NEGOCIO:
 - Tamaño empresa: ${allPhaseData?.phase1?.businessSize || 'No especificado'}

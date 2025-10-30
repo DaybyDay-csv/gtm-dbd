@@ -4,10 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Euro, TrendingUp, Target, Zap, Rocket, Crown, DollarSign, Lightbulb } from "lucide-react";
+import { Euro, TrendingUp, Target, Zap, Rocket, Crown, DollarSign, Lightbulb, MessageSquare } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 
 interface BudgetInputProps {
-  onSubmit: (budgetLevel: string, budgetAmount: number) => void;
+  onSubmit: (budgetLevel: string, budgetAmount: number, channelPreference?: string) => void;
 }
 
 const budgetLevels = [
@@ -22,6 +23,7 @@ const budgetLevels = [
 export const BudgetInput = ({ onSubmit }: BudgetInputProps) => {
   const [selectedLevel, setSelectedLevel] = useState(2); // Default to "Medio"
   const [customAmount, setCustomAmount] = useState(budgetLevels[2].range);
+  const [channelPreference, setChannelPreference] = useState("");
 
   const handleLevelChange = (value: number[]) => {
     const level = value[0];
@@ -31,7 +33,8 @@ export const BudgetInput = ({ onSubmit }: BudgetInputProps) => {
 
   const handleSubmit = () => {
     const level = budgetLevels[selectedLevel];
-    onSubmit(level.value, customAmount);
+    const preference = channelPreference.trim() || undefined;
+    onSubmit(level.value, customAmount, preference);
   };
 
   const currentLevel = budgetLevels[selectedLevel];
@@ -122,6 +125,25 @@ export const BudgetInput = ({ onSubmit }: BudgetInputProps) => {
             </div>
             <p className="text-xs text-muted-foreground">
               Puedes modificar esta cifra según tu presupuesto real
+            </p>
+          </div>
+
+          {/* Channel Preference */}
+          <div className="space-y-2">
+            <Label htmlFor="channelPreference" className="text-base flex items-center gap-2">
+              <MessageSquare className="w-4 h-4" />
+              Preferencia de canal (opcional)
+            </Label>
+            <Textarea
+              id="channelPreference"
+              value={channelPreference}
+              onChange={(e) => setChannelPreference(e.target.value)}
+              placeholder='Ej: "Prefiero Google Ads", "Quiero evitar Facebook", "Me interesa TikTok Shop"...'
+              className="min-h-[80px]"
+              maxLength={500}
+            />
+            <p className="text-xs text-muted-foreground">
+              Si tienes alguna preferencia o canal específico en mente, indícalo aquí y lo tendremos en cuenta en el análisis
             </p>
           </div>
 
