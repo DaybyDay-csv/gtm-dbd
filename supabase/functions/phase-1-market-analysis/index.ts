@@ -489,8 +489,14 @@ Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'
       throw new Error(`AI Gateway error: ${response.status} - ${errorText}`);
     }
 
+    console.log('AI Gateway response status:', response.status);
+    console.log('Response headers:', JSON.stringify(Object.fromEntries(response.headers.entries())));
+
     // Get response text first to handle empty responses
     const responseText = await response.text();
+    console.log('Response text length:', responseText.length);
+    console.log('Response text preview (first 200 chars):', responseText.substring(0, 200));
+    
     if (!responseText || responseText.trim() === '') {
       console.error('Empty response from AI Gateway');
       throw new Error('AI Gateway returned an empty response');
@@ -504,6 +510,13 @@ Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'
       throw new Error('Invalid JSON response from AI Gateway');
     }
 
+    console.log('Parsed data structure:', JSON.stringify({
+      hasChoices: !!data.choices,
+      choicesLength: data.choices?.length,
+      hasMessage: !!data.choices?.[0]?.message,
+      messageKeys: data.choices?.[0]?.message ? Object.keys(data.choices[0].message) : []
+    }));
+
     if (!data.choices || !data.choices[0] || !data.choices[0].message) {
       console.error('Unexpected AI Gateway response structure:', JSON.stringify(data));
       throw new Error('AI Gateway response missing expected fields');
@@ -512,10 +525,25 @@ Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'
     const message = data.choices[0].message;
     
     // Handle both content and reasoning fields (some models use reasoning instead of content)
-    let content = message.content || message.reasoning || '';
+    // For Gemini 2.5 Pro, check reasoning first, then content
+    let content = message.reasoning || message.content || '';
+    
+    // If content is still empty, check reasoning_details array
+    if (!content && message.reasoning_details && Array.isArray(message.reasoning_details)) {
+      const reasoningText = message.reasoning_details
+        .filter((detail: any) => detail.type === 'reasoning.text')
+        .map((detail: any) => detail.text)
+        .join('\n');
+      if (reasoningText) {
+        content = reasoningText;
+      }
+    }
+    
+    console.log('Content source:', message.reasoning ? 'reasoning' : message.content ? 'content' : 'reasoning_details');
+    console.log('Content length:', content.length);
     
     if (!content || content.trim() === '') {
-      console.error('Both content and reasoning fields are empty in AI response');
+      console.error('All content fields are empty in AI response');
       console.error('Full message object:', JSON.stringify(message));
       throw new Error('AI Gateway returned empty content');
     }
