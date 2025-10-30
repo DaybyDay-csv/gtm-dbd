@@ -173,6 +173,54 @@ export const ValidationMap = ({ data, isRunning }: ValidationMapProps) => {
         </CardHeader>
 
         <CardContent>
+          {/* Priorized Card */}
+          {filteredVariations.length > 0 && (
+            <div className="mb-8 p-6 rounded-lg border-2 border-primary bg-primary/5 relative">
+              <div className="absolute -top-3 left-6">
+                <div className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                  <Zap className="w-3 h-3" />
+                  EMPIEZA POR AQUÍ
+                </div>
+              </div>
+              <h3 className="text-lg font-bold mb-2 mt-2 flex items-center gap-2">
+                <Target className="w-5 h-5 text-primary" />
+                Test Prioritario (Próximos 7 días)
+              </h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Esta variación tiene el mayor potencial según tu buyer persona y presupuesto
+              </p>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="flex-1 space-y-2">
+                    <p className="font-semibold">{filteredVariations[0].headline}</p>
+                    <div className="flex flex-wrap gap-2">
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <DollarSign className="w-3 h-3" />
+                        {filteredVariations[0].estimatedCost}
+                      </div>
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <Clock className="w-3 h-3" />
+                        {filteredVariations[0].ttv}
+                      </div>
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <Target className="w-3 h-3" />
+                        {filteredVariations[0].channel}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <Button className="w-full" size="lg">
+                  <Lightbulb className="w-4 h-4 mr-2" />
+                  Ver plan de implementación
+                </Button>
+              </div>
+            </div>
+          )}
+
+          <div className="mb-4">
+            <h4 className="text-sm font-semibold text-muted-foreground mb-2">Todas las variaciones</h4>
+          </div>
+
           {/* Grid de 3 columnas con tarjetas compactas */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
             {filteredVariations.map((variation) => {

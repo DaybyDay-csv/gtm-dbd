@@ -2,7 +2,10 @@ import { StatusBadge } from "./StatusBadge";
 import { SystemLiveIndicator } from "./SystemLiveIndicator";
 import { ContextualNotice } from "./ContextualNotice";
 import { SectionDownloadButton } from "./SectionDownloadButton";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Lightbulb, Target, TrendingUp, ChevronDown } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface OfferFactoryProps {
   data?: {
@@ -15,14 +18,15 @@ interface OfferFactoryProps {
 }
 
 export const OfferFactory = ({ data }: OfferFactoryProps) => {
-  const offers = data?.offers?.map((o) => o.offer) || [
-    "Obtén piel radiante en 14 días",
-    "Rutina de 5 minutos garantizada",
-    "Entrega en 48 horas o gratis",
-    "Primera caja con 20% descuento"
+  const offers = data?.offers || [
+    { offer: "Obtén piel radiante en 14 días", valueGauge: { value: 85 } },
+    { offer: "Rutina de 5 minutos garantizada", valueGauge: { value: 72 } },
+    { offer: "Entrega en 48 horas o gratis", valueGauge: { value: 68 } },
+    { offer: "Primera caja con 20% descuento", valueGauge: { value: 65 } }
   ];
 
-  const valueScore = data?.overallValue || 78;
+  const hasOffers = offers.length > 0;
+  const valueScore = data?.overallValue || offers[0]?.valueGauge?.value || 78;
 
   return (
     <div className="p-6 border dotted-border rounded-lg bg-card h-full relative">
@@ -39,10 +43,15 @@ export const OfferFactory = ({ data }: OfferFactoryProps) => {
       </div>
       
       <div className="mb-6 p-4 bg-muted/50 rounded-lg border border-dashed">
-        <h4 className="font-semibold text-sm mb-2">¿Cómo comunicamos el valor de tu producto?</h4>
-        <p className="text-xs text-muted-foreground mb-3">
-          Analizamos tu producto y lo traducimos en un mensaje claro que tus clientes entienden al instante. Así mejoras la percepción de tu marca y vendes más, de forma honesta y directa.
-        </p>
+        <div className="flex items-start gap-2 mb-3">
+          <Lightbulb className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+          <div>
+            <h4 className="font-semibold text-sm mb-1">¿Cómo comunicamos el valor de tu producto?</h4>
+            <p className="text-xs text-muted-foreground">
+              Analizamos tu producto y lo traducimos en un mensaje claro que tus clientes entienden al instante. Así mejoras la percepción de tu marca y vendes más, de forma honesta y directa.
+            </p>
+          </div>
+        </div>
         <div className="grid grid-cols-2 gap-3 text-xs">
           <div className="p-3 rounded-lg bg-primary/5 border border-primary/20">
             <div className="font-semibold text-primary mb-1 flex items-center gap-1">
@@ -82,42 +91,59 @@ export const OfferFactory = ({ data }: OfferFactoryProps) => {
         </div>
       </div>
 
-      <ul className="space-y-3 mb-8">
-        {offers.map((offer, index) => (
-          <li
-            key={index}
-            className="flex items-start gap-2 text-sm p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors"
-          >
-            <span className="text-primary font-semibold">•</span>
-            <span>{offer}</span>
-          </li>
-        ))}
-      </ul>
-
-      <div className="space-y-3">
-        <div className="flex justify-between text-sm font-medium">
-          <span>Valor percibido</span>
-          <span className="text-primary">{valueScore}/100</span>
-        </div>
-        
-        <div className="h-3 bg-secondary rounded-full overflow-hidden">
-          <div
-            className="h-full bg-gradient-to-r from-primary to-primary/80 transition-all duration-500 ease-out"
-            style={{ width: `${valueScore}%` }}
-          />
-        </div>
-
-        <div className="flex justify-between text-xs text-muted-foreground pt-2">
-          <div className="text-center">
-            <div className="font-medium text-foreground">↑ Numerador</div>
-            <div>Sueño × Probabilidad</div>
+      {hasOffers && (
+        <>
+          <div className="mb-6">
+            <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+              <Target className="w-5 h-5 text-primary" />
+              Tu Oferta Más Fuerte
+            </h3>
+            <div className="p-6 rounded-lg border-2 border-primary bg-primary/5 relative">
+              {offers[0].valueGauge && offers[0].valueGauge.value >= 75 && (
+                <div className="absolute -top-3 -right-3">
+                  <div className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                    <TrendingUp className="w-3 h-3" />
+                    TOP
+                  </div>
+                </div>
+              )}
+              <p className="text-xl font-semibold mb-4">{offers[0].offer}</p>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm text-muted-foreground">Valor percibido</span>
+                <div className="flex items-center gap-2">
+                  <Progress value={offers[0].valueGauge?.value || 0} className="w-32" />
+                  <span className="text-2xl font-bold text-primary">{offers[0].valueGauge?.value || 0}</span>
+                  <span className="text-sm text-muted-foreground">/100</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="text-center">
-            <div className="font-medium text-foreground">↓ Denominador</div>
-            <div>Tiempo × Esfuerzo</div>
-          </div>
-        </div>
-      </div>
+
+          {offers.length > 1 && (
+            <Collapsible>
+              <CollapsibleTrigger asChild>
+                <Button variant="outline" className="w-full mb-4">
+                  <ChevronDown className="w-4 h-4 mr-2" />
+                  Ver más ofertas ({offers.length - 1})
+                </Button>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="space-y-4">
+                  {offers.slice(1).map((offer, index) => (
+                    <div key={index + 1} className="p-4 rounded-lg border dotted-border bg-card hover:bg-secondary/20 transition-colors">
+                      <h4 className="font-semibold mb-2 text-sm">{offer.offer}</h4>
+                      <div className="flex items-center gap-3">
+                        <Progress value={offer.valueGauge?.value || 0} className="flex-1" />
+                        <span className="text-sm font-bold text-primary">{offer.valueGauge?.value || 0}/100</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+          )}
+        </>
+      )}
 
       <div className="mt-6">
         <ContextualNotice 

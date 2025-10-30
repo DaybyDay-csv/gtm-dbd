@@ -1,7 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart3 } from "lucide-react";
+import { BarChart3, Star } from "lucide-react";
 import { Target, Lightbulb, TrendingUp, Package } from "lucide-react";
 import { SectionDownloadButton } from "./SectionDownloadButton";
+import { cn } from "@/lib/utils";
 
 interface ProductUnderstandingProps {
   data?: {
@@ -18,6 +19,9 @@ interface ProductUnderstandingProps {
 export const ProductUnderstanding = ({ data }: ProductUnderstandingProps) => {
   if (!data) return null;
 
+  const confidenceStars = 4;
+  const dataPoints = data.problemsSolved?.length || 0 + data.gapsCovered?.length || 0;
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -31,6 +35,23 @@ export const ProductUnderstanding = ({ data }: ProductUnderstandingProps) => {
         <div className="mt-2 px-3 py-1.5 bg-primary/5 border border-primary/20 rounded-full text-xs text-muted-foreground inline-flex items-center gap-1 w-fit">
           <BarChart3 className="w-3 h-3 text-primary" />
           Web Content + Your Description + Market Context
+        </div>
+        <div className="flex items-center gap-2 mt-3">
+          <span className="text-xs text-muted-foreground">Confianza del análisis:</span>
+          <div className="flex gap-0.5">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Star
+                key={i}
+                className={cn(
+                  "w-3 h-3",
+                  i <= confidenceStars ? "fill-primary text-primary" : "text-muted"
+                )}
+              />
+            ))}
+          </div>
+          <span className="text-xs text-muted-foreground">
+            Basado en {dataPoints} puntos de datos
+          </span>
         </div>
       </CardHeader>
       <CardContent className="space-y-6">

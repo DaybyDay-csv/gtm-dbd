@@ -74,6 +74,27 @@ export const BuyerPersona = ({ data }: BuyerPersonaProps) => {
           <p className="text-sm italic text-muted-foreground">"{intro}"</p>
         </div>
 
+        <div className="mt-6 w-full space-y-3">
+          <h4 className="text-sm font-semibold flex items-center gap-2">
+            <User className="w-4 h-4 text-primary" />
+            Un día en la vida de {avatar.name}
+          </h4>
+          <div className="space-y-2">
+            <div className="p-3 bg-secondary/30 rounded-lg border border-border">
+              <p className="text-xs font-semibold text-muted-foreground mb-1">Por la mañana piensa en:</p>
+              <p className="text-sm">{thoughtClouds[0]}</p>
+            </div>
+            <div className="p-3 bg-secondary/30 rounded-lg border border-border">
+              <p className="text-xs font-semibold text-muted-foreground mb-1">Su mayor frustración:</p>
+              <p className="text-sm">{thoughtClouds[1]}</p>
+            </div>
+            <div className="p-3 bg-primary/10 rounded-lg border border-primary/20">
+              <p className="text-xs font-semibold text-primary mb-1">Compraría si:</p>
+              <p className="text-sm">{thoughtClouds[2]}</p>
+            </div>
+          </div>
+        </div>
+
         {data?.objections && data.objections.length > 0 && (
           <div className="mt-6 w-full">
             <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
