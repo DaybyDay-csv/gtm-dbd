@@ -80,7 +80,7 @@ export const PositioningMap = ({ data }: PositioningMapProps) => {
             <circle
               cx={10 + ourBrand.x * 85}
               cy={90 - ourBrand.y * 80}
-              r={ourBrand.size || 3}
+              r="2"
               fill={ourBrand.color || "hsl(var(--primary))"}
             />
             <text
