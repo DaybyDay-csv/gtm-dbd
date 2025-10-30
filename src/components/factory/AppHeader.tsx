@@ -63,8 +63,8 @@ export const AppHeader = ({ analysisState, projectName, showDownloadButton = fal
               <PopoverTrigger asChild>
                 <Button 
                   variant="outline" 
-                  disabled={!canDownload} 
-                  className={`gap-2 transition-all ${animateButton ? 'animate-fade-in' : ''} ${canDownload ? 'hover-scale' : ''}`}
+                  disabled={!hasContent}
+                  className="gap-2 hover-scale transition-all"
                 >
                   <Download className="h-4 w-4" />
                   Descargar Análisis
