@@ -95,46 +95,33 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
     <section className="w-full px-8 py-16 text-center">
       <div className="max-w-5xl mx-auto space-y-8">
         <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
-          ¿Quieres dejar de tirar dinero en ads que no funcionan?
+          Wasting ad budget on speculations?
           <br />
-          <span className="text-primary">Descubre exactamente quién compra, qué decirles, y dónde encontrarlos.</span>
+          <span className="text-primary text-3xl md:text-4xl">Know exactly who buys and why.</span>
           <br />
-          En 5 minutos.
+          <span className="text-2xl md:text-3xl font-normal">In minutes, not months.</span>
         </h1>
 
-        <div className="mb-8 p-6 bg-secondary/30 rounded-lg border border-border max-w-3xl mx-auto">
-          <p className="text-lg font-semibold mb-4 flex items-center justify-center gap-2">
-            <Target className="w-5 h-5 text-primary" />
-            Esto es lo que recibes:
+        <div className="mb-8 p-4 bg-muted/30 rounded-lg border border-border max-w-2xl mx-auto">
+          <p className="text-sm font-medium mb-3 text-muted-foreground text-center">
+            Analysis includes:
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-            <div className="flex items-start gap-3 p-3 bg-background rounded-lg">
-              <User className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="font-semibold text-sm">Buyer Persona con avatar</p>
-                <p className="text-xs text-muted-foreground">Quién es, qué piensa, qué le preocupa</p>
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-left text-xs">
+            <div className="flex items-start gap-2">
+              <User className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+              <p className="text-muted-foreground">Buyer persona profile</p>
             </div>
-            <div className="flex items-start gap-3 p-3 bg-background rounded-lg">
-              <TrendingUp className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="font-semibold text-sm">Ofertas optimizadas</p>
-                <p className="text-xs text-muted-foreground">Ecuación de valor aplicada</p>
-              </div>
+            <div className="flex items-start gap-2">
+              <TrendingUp className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+              <p className="text-muted-foreground">Value-optimized offers</p>
             </div>
-            <div className="flex items-start gap-3 p-3 bg-background rounded-lg">
-              <Palette className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="font-semibold text-sm">Mensajes DISC personalizados</p>
-                <p className="text-xs text-muted-foreground">4 formas de comunicar para cada tipo</p>
-              </div>
+            <div className="flex items-start gap-2">
+              <Palette className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+              <p className="text-muted-foreground">DISC messaging variants</p>
             </div>
-            <div className="flex items-start gap-3 p-3 bg-background rounded-lg">
-              <Lightbulb className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="font-semibold text-sm">30+ variaciones creativas</p>
-                <p className="text-xs text-muted-foreground">Listas para probar en tus canales</p>
-              </div>
+            <div className="flex items-start gap-2">
+              <Lightbulb className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+              <p className="text-muted-foreground">30+ creative variations</p>
             </div>
           </div>
         </div>
