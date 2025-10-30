@@ -184,7 +184,7 @@ IMPORTANT REMINDERS:
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
+        model: 'google/gemini-2.5-pro',
         messages: [
           { role: 'system', content: 'You are a buyer persona expert. You MUST respond with ONLY a valid JSON object. Do NOT include any explanatory text, markdown formatting, or code blocks. Return ONLY the raw JSON object starting with { and ending with }. Write all content in Spanish.' },
           { role: 'user', content: prompt }
@@ -235,10 +235,10 @@ IMPORTANT REMINDERS:
     const message = data.choices[0].message;
     
     // Handle both content and reasoning fields (some models use reasoning instead of content)
-    // For Gemini 2.5 Pro, check reasoning first, then content
-    let content = message.reasoning || message.content || '';
+    // For Gemini 2.5 Pro with response_mime_type, check content FIRST (where JSON should be), then reasoning_details, then reasoning as fallback
+    let content = message.content || '';
     
-    // If content is still empty, check reasoning_details array
+    // If content is empty, check reasoning_details array, then reasoning as last resort
     if (!content && message.reasoning_details && Array.isArray(message.reasoning_details)) {
       const reasoningText = message.reasoning_details
         .filter((detail: any) => detail.type === 'reasoning.text')
@@ -247,6 +247,11 @@ IMPORTANT REMINDERS:
       if (reasoningText) {
         content = reasoningText;
       }
+    }
+    
+    // Only use reasoning field as absolute last resort (it contains thinking, not JSON)
+    if (!content && message.reasoning) {
+      content = message.reasoning;
     }
     
     console.log('Content source:', message.reasoning ? 'reasoning' : message.content ? 'content' : 'reasoning_details');
