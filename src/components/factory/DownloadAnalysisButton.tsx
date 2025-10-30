@@ -42,17 +42,22 @@ export const DownloadAnalysisButton = ({
   const handleDownloadPDF = async () => {
     try {
       setIsGeneratingPDF(true);
+      toast({
+        title: "Generando PDF...",
+        description: "Esto puede tomar unos segundos",
+      });
       
       await downloadAnalysisAsPDF(state, projectName);
       
       toast({
-        title: "Listo para descargar",
-        description: "Usa 'Guardar como PDF' en el diálogo de impresión",
+        title: "PDF descargado",
+        description: "Tu análisis completo se ha guardado en Descargas",
       });
     } catch (error) {
+      console.error('Error generating PDF:', error);
       toast({
         title: "Error al generar PDF",
-        description: "No se pudo abrir la ventana de impresión",
+        description: "No se pudo generar el PDF. Intenta de nuevo.",
         variant: "destructive",
       });
     } finally {
