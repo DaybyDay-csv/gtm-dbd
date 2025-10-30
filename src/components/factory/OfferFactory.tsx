@@ -39,41 +39,38 @@ export const OfferFactory = ({ data }: OfferFactoryProps) => {
       </div>
       
       <div className="mb-6 p-4 bg-muted/50 rounded-lg border border-dashed">
-        <h4 className="font-semibold text-sm mb-2">¿Cómo identificamos el valor de tu marca?</h4>
-      <p className="text-xs text-muted-foreground mb-3">
-        El valor de una oferta se maximiza cuando aumentamos la probabilidad de éxito del resultado deseado, mientras reducimos el tiempo y esfuerzo necesarios.
-      </p>
-      <p className="text-xs text-muted-foreground mb-3">
-        Analizamos de que forma posicionas, vendes y consigues los resultados con tu marca y lo comunicamos de una manera que el buyer entienda el valor que tu prodcuto/servicio tiene.
-      </p>
-      <div className="grid grid-cols-2 gap-3 text-xs">
+        <h4 className="font-semibold text-sm mb-2">¿Cómo comunicamos el valor de tu producto?</h4>
+        <p className="text-xs text-muted-foreground mb-3">
+          Analizamos tu producto y lo traducimos en un mensaje claro que tus clientes entienden al instante. Así mejoras la percepción de tu marca y vendes más, de forma honesta y directa.
+        </p>
+        <div className="grid grid-cols-2 gap-3 text-xs">
           <div className="p-3 rounded-lg bg-primary/5 border border-primary/20">
             <div className="font-semibold text-primary mb-1 flex items-center gap-1">
-              <span>↑</span> Aumentar (Numerador)
+              <span>↑</span> Aumentar
             </div>
             <div className="space-y-2">
               <div>
                 <span className="font-semibold">Sueño:</span>
-                <p className="text-muted-foreground">El resultado que tu cliente realmente desea alcanzar</p>
+                <p className="text-muted-foreground">El resultado que tu cliente quiere conseguir</p>
               </div>
               <div>
                 <span className="font-semibold">Probabilidad:</span>
-                <p className="text-muted-foreground">La confianza de que tu solución realmente funciona</p>
+                <p className="text-muted-foreground">La confianza de que tu solución funciona</p>
               </div>
             </div>
           </div>
           <div className="p-3 rounded-lg bg-destructive/5 border border-destructive/20">
             <div className="font-semibold text-destructive mb-1 flex items-center gap-1">
-              <span>↓</span> Reducir (Denominador)
+              <span>↓</span> Reducir
             </div>
             <div className="space-y-2">
               <div>
                 <span className="font-semibold">Tiempo:</span>
-                <p className="text-muted-foreground">Cuánto tardan en conseguir el resultado</p>
+                <p className="text-muted-foreground">Cuánto tardan en ver resultados</p>
               </div>
               <div>
                 <span className="font-semibold">Esfuerzo:</span>
-                <p className="text-muted-foreground">Lo difícil que es implementar tu solución</p>
+                <p className="text-muted-foreground">Lo fácil que es usar tu solución</p>
               </div>
             </div>
           </div>
