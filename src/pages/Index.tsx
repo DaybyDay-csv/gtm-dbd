@@ -120,7 +120,7 @@ const Index = () => {
             nextAction={displayState.phases.phase7?.variations?.[0] ? `Test: ${displayState.phases.phase7.variations[0].effect} on ${displayState.phases.phase7.variations[0].channel}` : undefined}
           />
 
-          <section className="container mx-auto px-4 py-12 space-y-8">
+          <section className="w-full px-8 py-12 space-y-8">
             <div data-phase="phase1" className="pdf-section">
               <div className={`w-full ${displayState.isRunning && !displayState.phases.phase1?.productUnderstanding ? 'charging' : ''} ${displayState.phases.phase1?.productUnderstanding ? 'magic-reveal' : ''}`}>
                 <ProductUnderstanding data={displayState.phases.phase1?.productUnderstanding} />
