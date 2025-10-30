@@ -11,27 +11,57 @@ const phaseNames: Record<string, string> = {
   phase7: "Mapa de Validación",
 };
 
-// Función para generar título impactante con IA
-const generateImpactfulTitle = async (state: AnalysisState, companyName: string, projectName: string): Promise<string> => {
+// Función para generar título impactante desde los datos del análisis
+const generateImpactfulTitle = (state: AnalysisState, companyName: string, projectName: string): string => {
   try {
+    // Extraer información clave del análisis
     const productUnderstanding = state.phases.phase1?.productUnderstanding;
     const positioning = state.phases.phase1?.positioningMap;
     
-    const productContext = productUnderstanding ? JSON.stringify(productUnderstanding).substring(0, 500) : '';
-    const positioningContext = positioning ? JSON.stringify(positioning).substring(0, 300) : '';
-
-    const { data, error } = await supabase.functions.invoke('generate-title', {
-      body: {
-        companyName,
-        projectName,
-        productContext,
-        positioning: positioningContext
-      }
-    });
-
-    if (error) throw error;
+    // Extraer tipo de producto/servicio
+    let productType = projectName;
+    if (productUnderstanding?.category) {
+      productType = productUnderstanding.category;
+    } else if (projectName.toLowerCase().includes('máster') || projectName.toLowerCase().includes('master')) {
+      productType = 'Máster';
+    } else if (projectName.toLowerCase().includes('curso')) {
+      productType = 'Curso';
+    } else if (projectName.toLowerCase().includes('programa')) {
+      productType = 'Programa';
+    }
     
-    return data?.title || `${companyName}: ${projectName} - Análisis Go-to-Market Completo`;
+    // Extraer nicho de mercado
+    let niche = '';
+    if (positioning?.marketSegment) {
+      niche = positioning.marketSegment;
+    } else if (productUnderstanding?.targetMarket) {
+      niche = productUnderstanding.targetMarket;
+    } else if (projectName.toLowerCase().includes('rrhh') || projectName.toLowerCase().includes('recursos humanos')) {
+      niche = 'Recursos Humanos';
+    } else if (projectName.toLowerCase().includes('marketing')) {
+      niche = 'Marketing';
+    } else if (projectName.toLowerCase().includes('dirección')) {
+      niche = 'Dirección y Gestión';
+    }
+    
+    // Extraer oportunidad clave
+    let opportunity = '';
+    if (positioning?.opportunityGap) {
+      opportunity = positioning.opportunityGap.split('.')[0]; // Primera frase
+    } else if (state.clientReadiness?.recommendation) {
+      opportunity = 'Estrategia de Crecimiento';
+    } else {
+      opportunity = 'Transformación Digital';
+    }
+    
+    // Construir título ejecutivo
+    if (niche && opportunity) {
+      return `${companyName}: ${productType} en ${niche} - ${opportunity}`;
+    } else if (niche) {
+      return `${companyName}: ${productType} en ${niche} - Análisis Go-to-Market`;
+    } else {
+      return `${companyName}: ${projectName} - Estrategia Go-to-Market Completa`;
+    }
   } catch (error) {
     console.error('Error generating title:', error);
     return `${companyName}: ${projectName} - Análisis Go-to-Market Completo`;
@@ -357,8 +387,8 @@ export const downloadAnalysisAsPDF = async (
   const companyName = extractCompanyName(state, projectName);
   const sanitizedCompany = companyName.replace(/[^a-zA-Z0-9]/g, '_');
 
-  // Generate impactful title with AI
-  const impactfulTitle = await generateImpactfulTitle(state, companyName, projectName);
+  // Generate impactful title from analysis data
+  const impactfulTitle = generateImpactfulTitle(state, companyName, projectName);
 
   // Prepare content with cover page, dividers, and PDF optimizations
   const preparedElement = prepareContentForPDF(element, projectName, companyName, impactfulTitle);
