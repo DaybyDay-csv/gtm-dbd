@@ -135,11 +135,11 @@ const Index = () => {
                 <ProductUnderstanding data={displayState.phases.phase1?.productUnderstanding} />
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
-                <div className={`lg:col-span-1 ${displayState.isRunning && !displayState.phases.phase1 ? 'charging' : ''} ${displayState.phases.phase1 ? 'magic-reveal' : ''}`}>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+                <div className={`w-full ${displayState.isRunning && !displayState.phases.phase1 ? 'charging' : ''} ${displayState.phases.phase1 ? 'magic-reveal' : ''}`}>
                   <PositioningMap data={displayState.phases.phase1} />
                 </div>
-                <div className={`lg:col-span-1 flex items-center justify-center ${displayState.isRunning && !displayState.phases.phase1?.productNucleus ? 'charging' : ''} ${displayState.phases.phase1?.productNucleus ? 'magic-reveal' : ''}`}>
+                <div className={`w-full flex items-center justify-center ${displayState.isRunning && !displayState.phases.phase1?.productNucleus ? 'charging' : ''} ${displayState.phases.phase1?.productNucleus ? 'magic-reveal' : ''}`}>
                   <ProductNucleus data={displayState.phases.phase1?.productNucleus} />
                 </div>
               </div>
