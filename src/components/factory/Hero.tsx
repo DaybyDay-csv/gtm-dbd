@@ -113,19 +113,27 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
               disabled={isRunning}
               required
             />
-            <Textarea
-              placeholder="What do you sell or provide? (e.g., 'We help B2B SaaS companies...')"
-              value={productDescription}
-              onChange={(e) => setProductDescription(e.target.value)}
-              className="text-base min-h-[70px]"
-              disabled={isRunning}
-              required
-            />
+            <div className="space-y-1">
+              <Textarea
+                placeholder="What do you sell or provide? (e.g., 'We help B2B SaaS companies...')"
+                value={productDescription}
+                onChange={(e) => setProductDescription(e.target.value)}
+                className="text-base min-h-[70px]"
+                disabled={isRunning}
+                required
+                minLength={10}
+              />
+              {productDescription.trim().length > 0 && productDescription.trim().length < 10 && (
+                <p className="text-xs text-destructive">
+                  Product description must be at least 10 characters ({productDescription.trim().length}/10)
+                </p>
+              )}
+            </div>
             <Button
               type="submit"
               size="lg"
               className="w-full h-14"
-              disabled={isRunning || !url.trim() || !productDescription.trim()}
+              disabled={isRunning || !url.trim() || productDescription.trim().length < 10}
             >
               <Sparkles className="mr-2 h-5 w-5" />
               Run Analysis
