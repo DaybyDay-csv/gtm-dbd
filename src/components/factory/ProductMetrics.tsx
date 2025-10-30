@@ -24,7 +24,7 @@ export const ProductMetrics = ({
   }
 
   return (
-    <section className="container mx-auto px-4 py-8">
+    <section className="container mx-auto px-4 py-8 no-pdf">
       <Card className="p-6">
         <h3 className="text-xl font-semibold mb-6">Product Metrics</h3>
 

@@ -20,7 +20,7 @@ export const AppHeader = ({ analysisState, projectName }: AppHeaderProps) => {
   const showDownloadButton = analysisState && (analysisState.phases.phase6 || analysisState.currentPhase >= 6) && !analysisState.isRunning;
 
   return (
-    <header className="border-b">
+    <header className="border-b no-pdf">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         <h1 className="text-xl font-bold">{t('nav.title')}</h1>
         <div className="flex items-center gap-4">

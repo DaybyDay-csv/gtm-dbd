@@ -82,7 +82,7 @@ export const PhaseExplainer = ({ currentPhase, isRunning }: PhaseExplainerProps)
   if (!currentExplanation) return null;
 
   return (
-    <section className="container mx-auto px-4 py-8">
+    <section className="container mx-auto px-4 py-8 no-pdf">
       <Card className="p-6 bg-gradient-to-br from-primary/5 to-background border-primary/20">
         <div className="flex items-start gap-4">
           <div className="mt-1">

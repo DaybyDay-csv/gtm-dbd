@@ -212,4 +212,50 @@ All colors MUST be HSL.
     transform: scale(0.98);
     transition: filter 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
   }
+
+  /* PDF-specific styles */
+  .pdf-only {
+    display: none;
+  }
+
+  @media print {
+    .pdf-only {
+      display: block !important;
+    }
+    
+    .no-pdf {
+      display: none !important;
+    }
+    
+    body {
+      background: white;
+      color: black;
+      font-size: 12pt;
+      line-height: 1.5;
+    }
+    
+    .pdf-section {
+      page-break-inside: avoid;
+    }
+    
+    .pdf-page-break {
+      page-break-after: always;
+    }
+    
+    button, .tooltip, .hover-card {
+      display: none !important;
+    }
+    
+    /* Force backgrounds and colors */
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }
+    
+    /* Optimize shadows for print */
+    .shadow-lg, .shadow-xl {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    }
+  }
 }

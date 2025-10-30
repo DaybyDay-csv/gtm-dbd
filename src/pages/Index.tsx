@@ -101,8 +101,10 @@ const Index = () => {
         </div>
       )}
       
-      <Hero onRunAnalysis={runAnalysis} isRunning={state.isRunning} />
-      {!displayState.isRunning && displayState.currentPhase === 0 && <EvidenceDrawer />}
+      <div className="no-pdf">
+        <Hero onRunAnalysis={runAnalysis} isRunning={state.isRunning} />
+        {!displayState.isRunning && displayState.currentPhase === 0 && <EvidenceDrawer />}
+      </div>
       
       {displayState.currentPhase > 0 && (
         <div ref={contentRef} id="analysis-content">
@@ -119,22 +121,22 @@ const Index = () => {
           />
 
           <section className="container mx-auto px-4 py-12 space-y-8">
-            <div className={`w-full ${displayState.isRunning && !displayState.phases.phase1?.productUnderstanding ? 'charging' : ''} ${displayState.phases.phase1?.productUnderstanding ? 'magic-reveal' : ''}`}>
+            <div data-phase="phase1" className={`w-full pdf-section ${displayState.isRunning && !displayState.phases.phase1?.productUnderstanding ? 'charging' : ''} ${displayState.phases.phase1?.productUnderstanding ? 'magic-reveal' : ''}`}>
               <ProductUnderstanding data={displayState.phases.phase1?.productUnderstanding} />
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className={`lg:col-span-1 ${displayState.isRunning && !displayState.phases.phase1 ? 'charging' : ''} ${displayState.phases.phase1 ? 'magic-reveal' : ''}`}>
+              <div className={`lg:col-span-1 pdf-section ${displayState.isRunning && !displayState.phases.phase1 ? 'charging' : ''} ${displayState.phases.phase1 ? 'magic-reveal' : ''}`}>
                 <PositioningMap data={displayState.phases.phase1} />
               </div>
-              <div className={`lg:col-span-1 flex items-center justify-center ${displayState.isRunning && !displayState.phases.phase1?.productNucleus ? 'charging' : ''} ${displayState.phases.phase1?.productNucleus ? 'magic-reveal' : ''}`}>
+              <div className={`lg:col-span-1 flex items-center justify-center pdf-section ${displayState.isRunning && !displayState.phases.phase1?.productNucleus ? 'charging' : ''} ${displayState.phases.phase1?.productNucleus ? 'magic-reveal' : ''}`}>
                 <ProductNucleus data={displayState.phases.phase1?.productNucleus} />
               </div>
-              <div className={`lg:col-span-1 ${displayState.isRunning && !displayState.phases.phase2 ? 'charging' : ''} ${displayState.phases.phase2 ? 'magic-reveal' : ''}`}>
+              <div data-phase="phase2" className={`lg:col-span-1 pdf-section ${displayState.isRunning && !displayState.phases.phase2 ? 'charging' : ''} ${displayState.phases.phase2 ? 'magic-reveal' : ''}`}>
                 <BuyerPersona data={displayState.phases.phase2} />
               </div>
 
-              <div className={`lg:col-span-1 ${displayState.isRunning && !displayState.phases.phase3 ? 'charging' : ''} ${displayState.phases.phase3 ? 'magic-reveal' : ''}`}>
+              <div data-phase="phase3" className={`lg:col-span-1 pdf-section ${displayState.isRunning && !displayState.phases.phase3 ? 'charging' : ''} ${displayState.phases.phase3 ? 'magic-reveal' : ''}`}>
                 <OfferFactory data={displayState.phases.phase3} />
               </div>
               
@@ -143,7 +145,7 @@ const Index = () => {
                   <SignupGate onComplete={handleSignupComplete} />
                 </div>
               ) : (
-                <div className={`lg:col-span-2 ${displayState.isRunning && !displayState.phases.phase4 ? 'charging' : ''} ${displayState.phases.phase4 ? 'magic-reveal' : ''}`}>
+                <div data-phase="phase4" className={`lg:col-span-2 pdf-section ${displayState.isRunning && !displayState.phases.phase4 ? 'charging' : ''} ${displayState.phases.phase4 ? 'magic-reveal' : ''}`}>
                   <DISCTranslator data={displayState.phases.phase4} />
                 </div>
               )}
@@ -189,15 +191,19 @@ const Index = () => {
             <>
               {state.awaitingBudgetInput && <BudgetInput onSubmit={handleBudgetSubmit} />}
               {displayState.phases.phase6 && !state.awaitingBudgetInput && (
-                <ChannelStrategy data={displayState.phases.phase6} isRunning={displayState.isRunning && displayState.currentPhase === 6} />
+                <div data-phase="phase6" className="pdf-section">
+                  <ChannelStrategy data={displayState.phases.phase6} isRunning={displayState.isRunning && displayState.currentPhase === 6} />
+                </div>
               )}
-              <ValidationMap data={displayState.phases.phase7} isRunning={displayState.isRunning && displayState.currentPhase === 7} />
+              <div data-phase="phase7" className="pdf-section">
+                <ValidationMap data={displayState.phases.phase7} isRunning={displayState.isRunning && displayState.currentPhase === 7} />
+              </div>
             </>
           )}
         </div>
       )}
       
-      <footer className="border-t dotted-border-t py-6 mt-12">
+      <footer className="border-t dotted-border-t py-6 mt-12 no-pdf">
         <p className="text-center text-sm text-muted-foreground">
           © 2025 AI GTM Factory. Built on evidence, not opinions.
         </p>
