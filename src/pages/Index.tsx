@@ -158,7 +158,7 @@ const Index = () => {
             </div>
           )}
 
-          {displayState.phases.phase6 && !displayState.isRunning && (
+          {(displayState.phases.phase6 || displayState.currentPhase >= 6) && !displayState.isRunning && (
             <div className="container mx-auto px-4 py-8 flex justify-center">
               <DownloadAnalysisButton state={displayState} projectName={displayState.phases.phase1?.productNucleus?.name || "Análisis Completo"} />
             </div>
