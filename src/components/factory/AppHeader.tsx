@@ -49,7 +49,7 @@ export const AppHeader = ({ analysisState, projectName, showDownloadButton = fal
   };
 
   return (
-    <header className="border-b no-pdf">
+    <header className="sticky top-0 z-50 border-b no-pdf bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="w-full px-8 py-4 flex items-center justify-between">
         <h1 className="text-xl font-bold">{t('nav.title')}</h1>
         <div className="flex items-center gap-4">
