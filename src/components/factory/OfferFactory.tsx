@@ -33,12 +33,53 @@ export const OfferFactory = ({ data }: OfferFactoryProps) => {
       </div>
       
       <h3 className="text-xl font-semibold mb-2">Fábrica de ofertas</h3>
-      <p className="text-sm text-muted-foreground mb-4">
-        Basado en la ecuación de valor de Hormozi
-      </p>
       <div className="mb-4 px-3 py-1.5 bg-primary/5 border border-primary/20 rounded-full text-xs text-muted-foreground inline-flex items-center gap-1 w-fit">
         <Sparkles className="h-3 w-3 text-primary" />
         Buyer Persona + Gaps + Características del Producto
+      </div>
+      
+      <div className="mb-6 p-4 bg-muted/50 rounded-lg border border-dashed">
+        <h4 className="font-semibold text-sm mb-2">¿Cómo aumentamos el valor?</h4>
+        <p className="text-xs text-muted-foreground mb-3">
+          El valor de una oferta se maximiza cuando aumentamos el resultado deseado y su probabilidad, mientras reducimos el tiempo y esfuerzo necesarios.
+        </p>
+        <div className="grid grid-cols-2 gap-3 text-xs">
+          <div className="p-3 rounded-lg bg-primary/5 border border-primary/20">
+            <div className="font-semibold text-primary mb-1 flex items-center gap-1">
+              <span>↑</span> Aumentar (Numerador)
+            </div>
+            <div className="space-y-2">
+              <div>
+                <span className="font-semibold">Sueño:</span>
+                <p className="text-muted-foreground">El resultado que tu cliente realmente desea alcanzar</p>
+              </div>
+              <div>
+                <span className="font-semibold">Probabilidad:</span>
+                <p className="text-muted-foreground">La confianza de que tu solución realmente funciona</p>
+              </div>
+            </div>
+          </div>
+          <div className="p-3 rounded-lg bg-destructive/5 border border-destructive/20">
+            <div className="font-semibold text-destructive mb-1 flex items-center gap-1">
+              <span>↓</span> Reducir (Denominador)
+            </div>
+            <div className="space-y-2">
+              <div>
+                <span className="font-semibold">Tiempo:</span>
+                <p className="text-muted-foreground">Cuánto tardan en conseguir el resultado</p>
+              </div>
+              <div>
+                <span className="font-semibold">Esfuerzo:</span>
+                <p className="text-muted-foreground">Lo difícil que es implementar tu solución</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="mt-3 p-2 bg-background rounded text-center">
+          <p className="text-xs font-mono">
+            Valor = <span className="text-primary">(Sueño × Probabilidad)</span> / <span className="text-destructive">(Tiempo × Esfuerzo)</span>
+          </p>
+        </div>
       </div>
 
       <ul className="space-y-3 mb-8">
