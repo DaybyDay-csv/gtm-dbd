@@ -106,19 +106,23 @@ const Index = () => {
         {!displayState.isRunning && displayState.currentPhase === 0 && <EvidenceDrawer />}
       </div>
       
-      {displayState.currentPhase > 0 && (
-        <div ref={contentRef} id="analysis-content">
+          {displayState.currentPhase > 0 && (
+        <div ref={contentRef} id="analysis-content" className="w-full">
           <PhaseRibbon currentPhase={displayState.currentPhase} isRunning={displayState.isRunning} />
           <PhaseExplainer currentPhase={displayState.currentPhase} isRunning={displayState.isRunning} />
-          {displayState.clientReadiness && <ClientReadiness data={displayState.clientReadiness} />}
+          <div className="w-full px-8">
+            {displayState.clientReadiness && <ClientReadiness data={displayState.clientReadiness} />}
+          </div>
           
-          <ProductMetrics
-            avatarReliability={avatarReliability}
-            hypothesesValidated={0}
-            topMessages={[]}
-            topOffers={topOffers}
-            nextAction={displayState.phases.phase7?.variations?.[0] ? `Test: ${displayState.phases.phase7.variations[0].effect} on ${displayState.phases.phase7.variations[0].channel}` : undefined}
-          />
+          <div className="w-full px-8">
+            <ProductMetrics
+              avatarReliability={avatarReliability}
+              hypothesesValidated={0}
+              topMessages={[]}
+              topOffers={topOffers}
+              nextAction={displayState.phases.phase7?.variations?.[0] ? `Test: ${displayState.phases.phase7.variations[0].effect} on ${displayState.phases.phase7.variations[0].channel}` : undefined}
+            />
+          </div>
 
           <section className="w-full px-8 py-12 space-y-8">
             <div data-phase="phase1" className="pdf-section">
@@ -158,7 +162,7 @@ const Index = () => {
           </section>
 
           {shouldShowGate && displayState.phases.phase4 && (
-            <div className="container mx-auto px-4 pb-0 pt-6">
+            <div className="w-full px-8 pb-0 pt-6">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-3">
                   <DISCTranslatorPreview />
@@ -169,12 +173,12 @@ const Index = () => {
 
 
           {shouldShowGate && (
-            <div id="locked-content" className="relative min-h-[200vh]">
+            <div id="locked-content" className="relative min-h-[200vh] w-full">
               <div className="sticky top-0 h-screen pointer-events-none z-10" style={{ background: 'linear-gradient(to bottom, rgba(var(--background), 0) 0%, rgba(var(--background), 0.95) 50%, rgba(var(--background), 1) 100%)' }}>
                 <div className="absolute inset-0 backdrop-blur-xl" />
               </div>
-              <div className="relative -mt-[100vh] z-0">
-                <div className="container mx-auto px-4 py-12 space-y-12">
+              <div className="relative -mt-[100vh] z-0 w-full">
+                <div className="w-full px-8 py-12 space-y-12">
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 opacity-40">
                     <div className={`lg:col-span-3 ${displayState.isRunning && !displayState.phases.phase4 ? 'charging' : ''} ${displayState.phases.phase4 ? 'magic-reveal' : ''}`}>
                       <DISCTranslator data={displayState.phases.phase4} />
@@ -193,17 +197,21 @@ const Index = () => {
           )}
 
           {!shouldShowGate && (
-            <>
-              {state.awaitingBudgetInput && <BudgetInput onSubmit={handleBudgetSubmit} />}
+            <div className="w-full">
+              {state.awaitingBudgetInput && (
+                <div className="w-full px-8">
+                  <BudgetInput onSubmit={handleBudgetSubmit} />
+                </div>
+              )}
               {displayState.phases.phase6 && !state.awaitingBudgetInput && (
-                <div data-phase="phase6" className="pdf-section">
+                <div data-phase="phase6" className="pdf-section w-full">
                   <ChannelStrategy data={displayState.phases.phase6} isRunning={displayState.isRunning && displayState.currentPhase === 6} />
                 </div>
               )}
-              <div data-phase="phase7" className="pdf-section">
+              <div data-phase="phase7" className="pdf-section w-full">
                 <ValidationMap data={displayState.phases.phase7} isRunning={displayState.isRunning && displayState.currentPhase === 7} />
               </div>
-            </>
+            </div>
           )}
         </div>
       )}
