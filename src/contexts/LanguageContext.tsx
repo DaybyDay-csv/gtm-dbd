@@ -67,7 +67,7 @@ const translations: Record<Language, Record<string, string>> = {
     "hero.coming_soon": "Próximamente",
     "hero.how": "¿Cómo lo sabemos?",
     "hero.method": "Sin conjeturas. <strong>Leemos + Referencias Cruzadas + Verificamos</strong>",
-    "hero.includes.title": "Esto incluye el análisis:",
+    "hero.includes.title": "Conoce tu:",
     "hero.includes.persona": "Perfil de buyer persona",
     "hero.includes.offers": "Ofertas optimizadas por valor",
     "hero.includes.disc": "Variantes de mensajes DISC",
