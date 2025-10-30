@@ -111,20 +111,25 @@ const Index = () => {
           <PhaseRibbon currentPhase={displayState.currentPhase} isRunning={displayState.isRunning} />
           <PhaseExplainer currentPhase={displayState.currentPhase} isRunning={displayState.isRunning} />
           <div className="w-full px-8">
-            {displayState.clientReadiness && <ClientReadiness data={displayState.clientReadiness} />}
+            <div className="max-w-7xl mx-auto">
+              {displayState.clientReadiness && <ClientReadiness data={displayState.clientReadiness} />}
+            </div>
           </div>
           
           <div className="w-full px-8">
-            <ProductMetrics
+            <div className="max-w-7xl mx-auto">
+              <ProductMetrics
               avatarReliability={avatarReliability}
               hypothesesValidated={0}
               topMessages={[]}
               topOffers={topOffers}
               nextAction={displayState.phases.phase7?.variations?.[0] ? `Test: ${displayState.phases.phase7.variations[0].effect} on ${displayState.phases.phase7.variations[0].channel}` : undefined}
             />
+            </div>
           </div>
 
-          <section className="w-full px-8 py-12 space-y-8">
+          <section className="w-full px-8 py-12">
+            <div className="max-w-7xl mx-auto space-y-8">
             <div data-phase="phase1" className="pdf-section">
               <div className={`w-full ${displayState.isRunning && !displayState.phases.phase1?.productUnderstanding ? 'charging' : ''} ${displayState.phases.phase1?.productUnderstanding ? 'magic-reveal' : ''}`}>
                 <ProductUnderstanding data={displayState.phases.phase1?.productUnderstanding} />
@@ -159,14 +164,17 @@ const Index = () => {
                 </div>
               )}
             </div>
+            </div>
           </section>
 
           {shouldShowGate && displayState.phases.phase4 && (
             <div className="w-full px-8 pb-0 pt-6">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="max-w-7xl mx-auto">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-3">
                   <DISCTranslatorPreview />
                 </div>
+              </div>
               </div>
             </div>
           )}
@@ -178,8 +186,9 @@ const Index = () => {
                 <div className="absolute inset-0 backdrop-blur-xl" />
               </div>
               <div className="relative -mt-[100vh] z-0 w-full">
-                <div className="w-full px-8 py-12 space-y-12">
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 opacity-40">
+                <div className="w-full px-8 py-12">
+                  <div className="max-w-7xl mx-auto space-y-12">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 opacity-40">
                     <div className={`lg:col-span-3 ${displayState.isRunning && !displayState.phases.phase4 ? 'charging' : ''} ${displayState.phases.phase4 ? 'magic-reveal' : ''}`}>
                       <DISCTranslator data={displayState.phases.phase4} />
                     </div>
@@ -191,6 +200,7 @@ const Index = () => {
                     )}
                     <ValidationMap data={displayState.phases.phase7} isRunning={displayState.isRunning && displayState.currentPhase === 7} />
                   </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -200,16 +210,22 @@ const Index = () => {
             <div className="w-full">
               {state.awaitingBudgetInput && (
                 <div className="w-full px-8">
-                  <BudgetInput onSubmit={handleBudgetSubmit} />
+                  <div className="max-w-7xl mx-auto">
+                    <BudgetInput onSubmit={handleBudgetSubmit} />
+                  </div>
                 </div>
               )}
               {displayState.phases.phase6 && !state.awaitingBudgetInput && (
-                <div data-phase="phase6" className="pdf-section w-full">
-                  <ChannelStrategy data={displayState.phases.phase6} isRunning={displayState.isRunning && displayState.currentPhase === 6} />
+                <div data-phase="phase6" className="pdf-section w-full px-8">
+                  <div className="max-w-7xl mx-auto">
+                    <ChannelStrategy data={displayState.phases.phase6} isRunning={displayState.isRunning && displayState.currentPhase === 6} />
+                  </div>
                 </div>
               )}
-              <div data-phase="phase7" className="pdf-section w-full">
-                <ValidationMap data={displayState.phases.phase7} isRunning={displayState.isRunning && displayState.currentPhase === 7} />
+              <div data-phase="phase7" className="pdf-section w-full px-8">
+                <div className="max-w-7xl mx-auto">
+                  <ValidationMap data={displayState.phases.phase7} isRunning={displayState.isRunning && displayState.currentPhase === 7} />
+                </div>
               </div>
             </div>
           )}
