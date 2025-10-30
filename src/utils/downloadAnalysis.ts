@@ -47,7 +47,7 @@ const generateImpactfulTitle = (
   return `${companyName}: ${productType} en ${niche} - ${opportunity}`;
 };
 
-// Function to create professional cover page HTML (without absolute positioning)
+// Function to create professional cover page HTML optimized for html2pdf
 const createCoverPageHTML = (
   projectName: string,
   companyName: string,
@@ -57,65 +57,86 @@ const createCoverPageHTML = (
   return `
     <div class="pdf-cover-page" style="
       page-break-after: always;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 60px 80px;
-      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      height: 297mm;
+      width: 210mm;
+      padding: 80px 60px;
+      background-color: #1a1a1a;
       color: white;
       border-top: 8px solid #ef4444;
       border-bottom: 8px solid #b91c1c;
-      border-left: 6px solid #ef4444;
-      border-right: 6px solid #ef4444;
       box-sizing: border-box;
+      position: relative;
     ">
-      <div style="max-width: 900px; width: 100%;">
+      <!-- Left red bar -->
+      <div style="
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 6px;
+        background-color: #ef4444;
+      "></div>
+      
+      <!-- Right red bar -->
+      <div style="
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 6px;
+        background-color: #ef4444;
+      "></div>
+      
+      <!-- Content centered -->
+      <div style="
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80%;
+        text-align: center;
+      ">
         <div style="
-          font-size: 16px;
+          font-size: 14px;
           letter-spacing: 3px;
           text-transform: uppercase;
           color: #ef4444;
-          margin-bottom: 30px;
+          margin-bottom: 40px;
           font-weight: 600;
         ">
-          AI GTM Factory by DaybyDay
+          AI GTM FACTORY BY DAYBYDAY
         </div>
         
         <h1 style="
-          font-size: 42px;
+          font-size: 36px;
           font-weight: 700;
-          line-height: 1.2;
-          margin: 0 0 40px 0;
+          line-height: 1.3;
+          margin: 0 0 50px 0;
           color: white;
-          text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         ">
           ${impactfulTitle}
         </h1>
         
         <div style="
-          background: rgba(239, 68, 68, 0.1);
+          background-color: rgba(239, 68, 68, 0.15);
           border: 2px solid #ef4444;
-          border-radius: 12px;
-          padding: 24px 32px;
-          margin: 40px auto;
-          display: inline-block;
-          max-width: 600px;
+          border-radius: 8px;
+          padding: 30px;
+          margin: 50px auto;
+          width: 70%;
         ">
           <div style="
-            font-size: 14px;
+            font-size: 12px;
             color: #ef4444;
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             font-weight: 600;
           ">
-            Proyecto
+            PROYECTO
           </div>
           <div style="
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
             color: white;
           ">
@@ -124,89 +145,109 @@ const createCoverPageHTML = (
         </div>
         
         <div style="
-          font-size: 16px;
+          font-size: 14px;
           color: #a3a3a3;
-          margin-top: 40px;
-          padding-top: 40px;
-          border-top: 1px solid rgba(255,255,255,0.1);
-        ">
-          <div style="margin-bottom: 8px;"><strong style="color: white;">Empresa:</strong> ${companyName}</div>
-          <div><strong style="color: white;">Fecha:</strong> ${date}</div>
-        </div>
-        
-        <div style="
-          font-size: 13px;
-          color: #737373;
           margin-top: 60px;
-          font-style: italic;
+          padding-top: 30px;
+          border-top: 1px solid rgba(255,255,255,0.2);
         ">
-          Análisis Go-to-Market Completo
+          <div style="margin-bottom: 10px;">
+            <strong style="color: white;">Empresa:</strong> ${companyName}
+          </div>
+          <div>
+            <strong style="color: white;">Fecha:</strong> ${date}
+          </div>
         </div>
+      </div>
+      
+      <div style="
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 12px;
+        color: #737373;
+        font-style: italic;
+      ">
+        Análisis Go-to-Market Completo
       </div>
     </div>
   `;
 };
 
-// Function to create section divider HTML (without absolute positioning for phase number)
+// Function to create section divider HTML optimized for html2pdf
 const createSectionDividerHTML = (phaseNumber: number, phaseName: string): string => {
   return `
     <div class="pdf-section-divider" style="
       page-break-before: always;
       page-break-after: avoid;
-      padding: 60px 40px;
-      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
-      border-left: 6px solid #ef4444;
+      height: 297mm;
+      width: 210mm;
+      padding: 80px 60px;
+      background-color: #1a1a1a;
       margin: 0;
-      min-height: 200px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      position: relative;
+      box-sizing: border-box;
     ">
+      <!-- Left red bar -->
       <div style="
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 40px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 6px;
+        background-color: #ef4444;
+      "></div>
+      
+      <!-- Content centered vertically -->
+      <div style="
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 60px;
+        right: 60px;
       ">
-        <div style="flex: 1;">
-          <div style="
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: #ef4444;
-            margin-bottom: 16px;
-            font-weight: 600;
-          ">
-            Fase ${phaseNumber}
-          </div>
-          
-          <h2 style="
-            font-size: 36px;
-            font-weight: 700;
-            color: white;
-            margin: 0;
-            line-height: 1.2;
-          ">
-            ${phaseName}
-          </h2>
-          
-          <div style="
-            height: 3px;
-            width: 100px;
-            background: linear-gradient(90deg, #ef4444 0%, transparent 100%);
-            margin-top: 24px;
-          "></div>
+        <div style="
+          font-size: 12px;
+          text-transform: uppercase;
+          letter-spacing: 3px;
+          color: #ef4444;
+          margin-bottom: 20px;
+          font-weight: 600;
+        ">
+          FASE ${phaseNumber}
         </div>
         
-        <div style="
-          font-size: 120px;
-          font-weight: 900;
-          color: rgba(239, 68, 68, 0.2);
-          line-height: 1;
-          flex-shrink: 0;
+        <h2 style="
+          font-size: 42px;
+          font-weight: 700;
+          color: white;
+          margin: 0 0 30px 0;
+          line-height: 1.2;
         ">
-          ${phaseNumber}
-        </div>
+          ${phaseName}
+        </h2>
+        
+        <div style="
+          height: 4px;
+          width: 120px;
+          background-color: #ef4444;
+          margin-top: 30px;
+        "></div>
+      </div>
+      
+      <!-- Large phase number on the right -->
+      <div style="
+        position: absolute;
+        right: 40px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 140px;
+        font-weight: 900;
+        color: rgba(239, 68, 68, 0.15);
+        line-height: 1;
+      ">
+        ${phaseNumber}
       </div>
     </div>
   `;
