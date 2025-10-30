@@ -185,25 +185,25 @@ All colors MUST be HSL.
     min-height: 100vh;
   }
 
-#locked-content::before {
-  content: '';
-  position: absolute;
-  top: -250px;
-  left: 0;
-  right: 0;
-  height: 400px;
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    hsl(var(--background) / 0.05) 20%,
-    hsl(var(--background) / 0.15) 40%,
-    hsl(var(--background) / 0.3) 60%,
-    hsl(var(--background) / 0.5) 80%,
-    hsl(var(--background) / 0.7) 100%
-  );
-  pointer-events: none;
-  z-index: 35;
-}
+  #locked-content::before {
+    content: '';
+    position: absolute;
+    top: -250px;
+    left: 0;
+    right: 0;
+    height: 400px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      hsl(var(--background) / 0.05) 20%,
+      hsl(var(--background) / 0.15) 40%,
+      hsl(var(--background) / 0.3) 60%,
+      hsl(var(--background) / 0.5) 80%,
+      hsl(var(--background) / 0.7) 100%
+    );
+    pointer-events: none;
+    z-index: 35;
+  }
 
   #locked-content > div,
   #locked-content > section {
@@ -212,13 +212,15 @@ All colors MUST be HSL.
     transform: scale(0.98);
     transition: filter 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
   }
+}
 
 /* ============================================
    PDF-SPECIFIC STYLES & PRINT OPTIMIZATION
    ============================================ */
 
-/* ============= PORTADA PROFESIONAL ============= */
+/* ============= PORTADA PROFESIONAL CON BARRAS ============= */
 .pdf-cover-page {
+  position: relative;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -229,9 +231,32 @@ All colors MUST be HSL.
   page-break-after: always !important;
 }
 
+/* Barras decorativas para la portada */
+.pdf-cover-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.9) 100%);
+}
+
+.pdf-cover-page::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.9) 100%);
+}
+
 .cover-content {
   text-align: center;
-  max-width: 800px;
+  max-width: 850px;
+  position: relative;
+  z-index: 1;
 }
 
 .cover-brand {
@@ -367,6 +392,22 @@ All colors MUST be HSL.
   margin: 0;
 }
 
+/* ============= CONTENIDO SIN CORTES ============= */
+.pdf-content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pdf-simple-layout {
+  display: block !important;
+}
+
+.pdf-simple-layout > * {
+  margin-bottom: 1.5rem !important;
+  page-break-inside: avoid !important;
+}
+
 /* ============= EVITAR CORTES DE PÁGINA ============= */
 .buyer-persona,
 .product-nucleus,
@@ -379,63 +420,93 @@ All colors MUST be HSL.
 .client-readiness,
 section,
 .card,
-table {
+table,
+.recharts-wrapper {
   page-break-inside: avoid !important;
+  break-inside: avoid !important;
+  margin-bottom: 2rem !important;
 }
 
 /* Headers nunca solos al final */
 h1, h2, h3, h4 {
   page-break-after: avoid !important;
   page-break-inside: avoid !important;
+  break-after: avoid !important;
+  break-inside: avoid !important;
 }
 
-  @media print {
-    .pdf-only {
-      display: block !important;
-    }
-    
-    .no-pdf {
-      display: none !important;
-    }
-    
-    body {
-      background: white !important;
-      color: black;
-      font-size: 12pt;
-      line-height: 1.5;
-    }
-    
-    .pdf-section {
-      page-break-inside: avoid !important;
-    }
-    
-    .pdf-page-break {
-      page-break-after: always !important;
-    }
-    
-    button, .tooltip, .hover-card {
-      display: none !important;
-    }
-    
-    /* Force all backgrounds and colors to print */
-    * {
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-      color-adjust: exact !important;
-    }
-    
-    /* Simplify grids for PDF - convert to single column */
-    .grid {
-      display: block !important;
-    }
-    
-    .grid > * {
-      margin-bottom: 1.5rem !important;
-    }
-    
-    /* Optimize shadows for print */
-    .shadow-lg, .shadow-xl {
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
-    }
+/* Párrafos y listas */
+p, ul, ol, li {
+  orphans: 3;
+  widows: 3;
+}
+
+/* Tablas sin cortes */
+table {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+
+table tr {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  
+  body {
+    background: white !important;
+    color: black;
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+  
+  .pdf-only {
+    display: block !important;
+  }
+  
+  .no-pdf {
+    display: none !important;
+  }
+  
+  .pdf-section {
+    page-break-inside: avoid !important;
+  }
+  
+  .pdf-page-break {
+    page-break-after: always !important;
+  }
+  
+  button, .tooltip, .hover-card {
+    display: none !important;
+  }
+  
+  /* Simplificar grids para PDF */
+  .grid {
+    display: block !important;
+  }
+  
+  .grid > * {
+    margin-bottom: 1.5rem !important;
+    page-break-inside: avoid !important;
+  }
+  
+  /* Optimizar sombras para impresión */
+  .shadow-lg, .shadow-xl {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  /* Forzar colores en elementos clave */
+  .pdf-cover-page,
+  .pdf-section-divider,
+  [style*="background"],
+  [style*="color"] {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 }

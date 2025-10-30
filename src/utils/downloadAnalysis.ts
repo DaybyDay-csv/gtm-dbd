@@ -1,4 +1,5 @@
 import { AnalysisState } from "@/hooks/useAnalysisOrchestrator";
+import { supabase } from "@/integrations/supabase/client";
 
 const phaseNames: Record<string, string> = {
   phase1: "Análisis de Mercado",
@@ -10,9 +11,37 @@ const phaseNames: Record<string, string> = {
   phase7: "Mapa de Validación",
 };
 
-const createCoverPageHTML = (projectName: string, companyName: string, date: string): string => {
+// Función para generar título impactante con IA
+const generateImpactfulTitle = async (state: AnalysisState, companyName: string, projectName: string): Promise<string> => {
+  try {
+    const productUnderstanding = state.phases.phase1?.productUnderstanding;
+    const positioning = state.phases.phase1?.positioningMap;
+    
+    const productContext = productUnderstanding ? JSON.stringify(productUnderstanding).substring(0, 500) : '';
+    const positioningContext = positioning ? JSON.stringify(positioning).substring(0, 300) : '';
+
+    const { data, error } = await supabase.functions.invoke('generate-title', {
+      body: {
+        companyName,
+        projectName,
+        productContext,
+        positioning: positioningContext
+      }
+    });
+
+    if (error) throw error;
+    
+    return data?.title || `${companyName}: ${projectName} - Análisis Go-to-Market Completo`;
+  } catch (error) {
+    console.error('Error generating title:', error);
+    return `${companyName}: ${projectName} - Análisis Go-to-Market Completo`;
+  }
+};
+
+const createCoverPageHTML = (projectName: string, companyName: string, date: string, impactfulTitle: string): string => {
   return `
     <div class="pdf-cover-page" style="
+      position: relative;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -23,86 +52,111 @@ const createCoverPageHTML = (projectName: string, companyName: string, date: str
       text-align: center;
       page-break-after: always;
     ">
-      <div style="max-width: 800px; width: 100%;">
-        <div style="margin-bottom: 3rem;">
-          <div style="
-            font-size: 2rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 0.5rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-          ">
-            AI GTM Factory
-          </div>
-          <div style="
-            font-size: 0.875rem;
-            font-weight: 400;
-            color: rgba(255, 255, 255, 0.8);
-            letter-spacing: 0.1em;
-          ">
-            by DaybyDay
-          </div>
-        </div>
-        
+      <!-- Barra superior -->
+      <div style="
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 8px;
+        background: linear-gradient(90deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.9) 100%);
+      "></div>
+      
+      <!-- Barra lateral izquierda -->
+      <div style="
+        position: absolute;
+        top: 8px;
+        left: 0;
+        bottom: 8px;
+        width: 4px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.8) 100%);
+      "></div>
+      
+      <!-- Barra lateral derecha -->
+      <div style="
+        position: absolute;
+        top: 8px;
+        right: 0;
+        bottom: 8px;
+        width: 4px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.8) 100%);
+      "></div>
+      
+      <!-- Barra inferior -->
+      <div style="
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 8px;
+        background: linear-gradient(90deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.9) 100%);
+      "></div>
+      
+      <div style="max-width: 850px; width: 100%; padding: 2rem;">
+        <!-- Título Impactante Principal -->
         <h1 style="
-          font-size: 3.5rem;
-          font-weight: 700;
+          font-size: 2.75rem;
+          font-weight: 800;
           color: white;
-          margin-bottom: 2rem;
-          line-height: 1.2;
+          margin-bottom: 2.5rem;
+          line-height: 1.3;
+          text-shadow: 0 2px 20px rgba(0,0,0,0.2);
+          padding: 0 1rem;
         ">
-          Análisis Go-to-Market<br/>Completo
+          ${impactfulTitle}
         </h1>
         
-        <div style="margin: 2rem 0;">
+        <!-- Branding y empresa -->
+        <div style="margin-bottom: 2rem;">
           <div style="
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.7);
-            font-style: italic;
-            margin-bottom: 0.5rem;
-          ">
-            for
-          </div>
-          <div style="
-            font-size: 2rem;
+            font-size: 1.25rem;
             font-weight: 600;
             color: white;
-            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.1em;
           ">
-            ${companyName}
+            AI GTM Factory by DaybyDay
+          </div>
+          <div style="
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.85);
+            font-style: italic;
+          ">
+            for ${companyName}
           </div>
         </div>
         
+        <!-- Separador visual -->
         <div style="
-          font-size: 1.5rem;
-          color: white;
-          opacity: 0.95;
-          padding: 1.5rem 2rem;
-          border-top: 2px solid rgba(255, 255, 255, 0.3);
-          border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+          width: 200px;
+          height: 2px;
+          background: rgba(255, 255, 255, 0.5);
           margin: 2rem auto;
-          max-width: 80%;
+        "></div>
+        
+        <!-- Info del proyecto -->
+        <div style="
+          font-size: 1.125rem;
+          color: white;
+          opacity: 0.9;
+          padding: 1.25rem 2rem;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 8px;
+          backdrop-filter: blur(10px);
+          margin: 2rem auto;
+          max-width: 600px;
         ">
           ${projectName}
         </div>
         
+        <!-- Footer con fecha -->
         <div style="margin-top: 3rem;">
           <div style="
-            font-size: 1.125rem;
+            font-size: 0.95rem;
             color: white;
-            opacity: 0.85;
-            margin-bottom: 0.5rem;
+            opacity: 0.75;
           ">
-            Documento Ejecutivo
-          </div>
-          
-          <div style="
-            font-size: 0.875rem;
-            color: white;
-            opacity: 0.7;
-          ">
-            Generado el ${date}
+            Documento Ejecutivo • ${date}
           </div>
         </div>
       </div>
@@ -165,7 +219,7 @@ const createSectionDividerHTML = (phaseNumber: number, phaseName: string): strin
   `;
 };
 
-const prepareContentForPDF = (element: HTMLElement, projectName: string, companyName: string): HTMLElement => {
+const prepareContentForPDF = (element: HTMLElement, projectName: string, companyName: string, impactfulTitle: string): HTMLElement => {
   // Clone the element
   const clonedElement = element.cloneNode(true) as HTMLElement;
   
@@ -176,7 +230,7 @@ const prepareContentForPDF = (element: HTMLElement, projectName: string, company
     day: 'numeric'
   });
   
-  const coverPageHTML = createCoverPageHTML(projectName, companyName, date);
+  const coverPageHTML = createCoverPageHTML(projectName, companyName, date, impactfulTitle);
   const coverDiv = document.createElement('div');
   coverDiv.innerHTML = coverPageHTML;
   
@@ -303,8 +357,11 @@ export const downloadAnalysisAsPDF = async (
   const companyName = extractCompanyName(state, projectName);
   const sanitizedCompany = companyName.replace(/[^a-zA-Z0-9]/g, '_');
 
+  // Generate impactful title with AI
+  const impactfulTitle = await generateImpactfulTitle(state, companyName, projectName);
+
   // Prepare content with cover page, dividers, and PDF optimizations
-  const preparedElement = prepareContentForPDF(element, projectName, companyName);
+  const preparedElement = prepareContentForPDF(element, projectName, companyName, impactfulTitle);
   
   // Wait for React renders to complete
   await new Promise(resolve => setTimeout(resolve, 500));
@@ -312,7 +369,7 @@ export const downloadAnalysisAsPDF = async (
   // Configure html2pdf options for high-quality executive document
   const dateForFilename = new Date().toISOString().split('T')[0];
   const options = {
-    margin: [20, 15, 20, 15] as [number, number, number, number],
+    margin: [15, 12, 15, 12] as [number, number, number, number],
     filename: `${sanitizedCompany}_Analisis_GTM_Completo_${dateForFilename}.pdf`,
     image: { type: 'jpeg' as const, quality: 0.98 },
     html2canvas: { 
@@ -330,10 +387,10 @@ export const downloadAnalysisAsPDF = async (
       compress: true,
     },
     pagebreak: { 
-      mode: ['avoid-all', 'css', 'legacy'],
+      mode: ['css', 'legacy'],
       before: '.pdf-section-divider',
-      after: ['.pdf-cover-page', '.pdf-section-divider'],
-      avoid: ['.pdf-section', 'table', '.buyer-persona', '.product-nucleus', '.disc-translator', '.card', 'section', '.product-understanding', '.positioning-map', '.offer-factory', '.channel-strategy', '.validation-map']
+      after: ['.pdf-cover-page'],
+      avoid: ['.buyer-persona', '.product-nucleus', '.disc-translator', '.card', '.product-understanding', '.positioning-map', '.offer-factory', '.channel-strategy', '.validation-map', '.client-readiness', 'section', 'table', 'h1', 'h2', 'h3', 'h4']
     }
   };
 
