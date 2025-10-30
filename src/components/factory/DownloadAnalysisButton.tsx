@@ -1,4 +1,4 @@
-import { Download, FileJson, FileText } from "lucide-react";
+import { Download, FileJson, FileText, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,6 +9,7 @@ import {
 import { AnalysisState } from "@/hooks/useAnalysisOrchestrator";
 import { downloadAnalysisAsJSON, downloadAnalysisAsPDF } from "@/utils/downloadAnalysis";
 import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 interface DownloadAnalysisButtonProps {
   state: AnalysisState;
@@ -20,6 +21,7 @@ export const DownloadAnalysisButton = ({
   projectName,
 }: DownloadAnalysisButtonProps) => {
   const { toast } = useToast();
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   const handleDownloadJSON = () => {
     try {
@@ -39,17 +41,22 @@ export const DownloadAnalysisButton = ({
 
   const handleDownloadPDF = async () => {
     try {
+      setIsGeneratingPDF(true);
+      
       await downloadAnalysisAsPDF(state, projectName);
+      
       toast({
-        title: "PDF generado",
-        description: "Usa 'Guardar como PDF' en el diálogo de impresión para descargar tu análisis completo",
+        title: "Listo para descargar",
+        description: "Usa 'Guardar como PDF' en el diálogo de impresión",
       });
     } catch (error) {
       toast({
         title: "Error al generar PDF",
-        description: "No se pudo generar el PDF",
+        description: "No se pudo abrir la ventana de impresión",
         variant: "destructive",
       });
+    } finally {
+      setIsGeneratingPDF(false);
     }
   };
 
@@ -59,17 +66,27 @@ export const DownloadAnalysisButton = ({
         <Button
           variant="outline"
           className="gap-2"
+          disabled={isGeneratingPDF}
         >
-          <Download className="h-4 w-4" />
-          Descargar Análisis
+          {isGeneratingPDF ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Generando...
+            </>
+          ) : (
+            <>
+              <Download className="h-4 w-4" />
+              Descargar Análisis
+            </>
+          )}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={handleDownloadJSON} className="gap-2">
+        <DropdownMenuItem onClick={handleDownloadJSON} className="gap-2" disabled={isGeneratingPDF}>
           <FileJson className="h-4 w-4" />
           Descargar como JSON
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleDownloadPDF} className="gap-2">
+        <DropdownMenuItem onClick={handleDownloadPDF} className="gap-2" disabled={isGeneratingPDF}>
           <FileText className="h-4 w-4" />
           Descargar como PDF
         </DropdownMenuItem>
