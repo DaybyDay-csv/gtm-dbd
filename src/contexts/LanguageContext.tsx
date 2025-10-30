@@ -64,8 +64,15 @@ const translations: Record<Language, Record<string, string>> = {
     'hero.docs.placeholder': 'O pega cualquier información adicional aquí...',
     'hero.docs.help': 'Sube documentos que proporcionen contexto sobre tu negocio, producto o mercado objetivo',
     'hero.optional': 'Opcional: Conecta datos más tarde para validación y aprendizaje',
+    'hero.coming_soon': 'Próximamente',
     'hero.how': '¿Cómo lo sabemos?',
     'hero.method': 'Sin conjeturas. <strong>Leemos + Referencias Cruzadas + Verificamos</strong>',
+    'hero.includes.title': 'Esto incluye el análisis:',
+    'hero.includes.persona': 'Perfil de buyer persona',
+    'hero.includes.offers': 'Ofertas optimizadas por valor',
+    'hero.includes.disc': 'Variantes de mensajes DISC',
+    'hero.includes.variations': 'Más de 30 variaciones creativas',
+    'hero.validation.min': 'La descripción del producto debe tener al menos 10 caracteres',
     'hero.ai.language': 'Idioma de Salida de IA',
     
     // Status & System
@@ -318,8 +325,15 @@ const translations: Record<Language, Record<string, string>> = {
     'hero.docs.placeholder': 'Or paste any additional information here...',
     'hero.docs.help': 'Upload documents that provide context about your business, product, or target market',
     'hero.optional': 'Optional: Connect data later for validation & learning',
+    'hero.coming_soon': 'Coming Soon',
     'hero.how': 'How do we know?',
     'hero.method': 'No guessing. We <strong>Read + Cross-Reference + Verify</strong>',
+    'hero.includes.title': 'Analysis includes:',
+    'hero.includes.persona': 'Buyer persona profile',
+    'hero.includes.offers': 'Value-optimized offers',
+    'hero.includes.disc': 'DISC messaging variants',
+    'hero.includes.variations': '30+ creative variations',
+    'hero.validation.min': 'Product description must be at least 10 characters',
     'hero.ai.language': 'AI Output Language',
     
     // Status & System

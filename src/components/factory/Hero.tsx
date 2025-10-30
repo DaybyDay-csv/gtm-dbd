@@ -6,6 +6,7 @@ import { Sparkles, ChevronDown, ChevronUp, Upload, FileText, X, Target, User, Tr
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface HeroProps {
   onRunAnalysis: (projectName: string, url: string, productDescription: string, competitors?: string, docs?: string, context?: string, vision?: string, mission?: string, values?: string) => void;
@@ -25,6 +26,7 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -95,33 +97,33 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
     <section className="w-full px-8 py-16 text-center">
       <div className="max-w-5xl mx-auto space-y-8">
         <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
-          Wasting ad budget on speculations?
+          {t('hero.headline.line1')}
           <br />
-          <span className="text-primary text-3xl md:text-4xl">Know exactly who buys and why.</span>
+          <span className="text-primary text-3xl md:text-4xl">{t('hero.headline.line2')}</span>
           <br />
-          <span className="text-2xl md:text-3xl font-normal">In minutes, not months.</span>
+          <span className="text-2xl md:text-3xl font-normal">{t('hero.headline.line3')}</span>
         </h1>
 
         <div className="mb-8 p-4 bg-muted/30 rounded-lg border border-border max-w-2xl mx-auto">
           <p className="text-sm font-medium mb-3 text-muted-foreground text-center">
-            Analysis includes:
+            {t('hero.includes.title')}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-left text-xs">
             <div className="flex items-start gap-2">
               <User className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-              <p className="text-muted-foreground">Buyer persona profile</p>
+              <p className="text-muted-foreground">{t('hero.includes.persona')}</p>
             </div>
             <div className="flex items-start gap-2">
               <TrendingUp className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-              <p className="text-muted-foreground">Value-optimized offers</p>
+              <p className="text-muted-foreground">{t('hero.includes.offers')}</p>
             </div>
             <div className="flex items-start gap-2">
               <Palette className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-              <p className="text-muted-foreground">DISC messaging variants</p>
+              <p className="text-muted-foreground">{t('hero.includes.disc')}</p>
             </div>
             <div className="flex items-start gap-2">
               <Lightbulb className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-              <p className="text-muted-foreground">30+ creative variations</p>
+              <p className="text-muted-foreground">{t('hero.includes.variations')}</p>
             </div>
           </div>
         </div>
@@ -130,7 +132,7 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
           <div className="space-y-3">
             <Input
               type="url"
-              placeholder="https://yourwebsite.com"
+              placeholder={t('hero.placeholder.url')}
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               className="text-lg h-14"
@@ -139,7 +141,7 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
             />
             <div className="space-y-1">
               <Textarea
-                placeholder="What do you sell or provide? (e.g., 'We help B2B SaaS companies...')"
+                placeholder={t('hero.placeholder.product')}
                 value={productDescription}
                 onChange={(e) => setProductDescription(e.target.value)}
                 className="text-base min-h-[70px]"
@@ -149,7 +151,7 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
               />
               {productDescription.trim().length > 0 && productDescription.trim().length < 10 && (
                 <p className="text-xs text-destructive">
-                  Product description must be at least 10 characters ({productDescription.trim().length}/10)
+                  {t('hero.validation.min')} ({productDescription.trim().length}/10)
                 </p>
               )}
             </div>
@@ -160,7 +162,7 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
               disabled={isRunning || !url.trim() || productDescription.trim().length < 10}
             >
               <Sparkles className="mr-2 h-5 w-5" />
-              Run Analysis
+              {t('hero.button.run')}
             </Button>
           </div>
 
@@ -174,15 +176,15 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
                 disabled={isRunning}
               >
                 {isAdvancedOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                Add Context, Competitors & Documents (Optional)
+                {t('hero.advanced')}
               </Button>
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-4 pt-4">
               <div className="space-y-2">
-                <Label htmlFor="context">Additional Context</Label>
+                <Label htmlFor="context">{t('hero.context.label')}</Label>
                 <Textarea
                   id="context"
-                  placeholder="Any specific context, goals, or information about your business..."
+                  placeholder={t('hero.context.placeholder')}
                   value={context}
                   onChange={(e) => setContext(e.target.value)}
                   disabled={isRunning}
@@ -191,10 +193,10 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="competitors">Known Competitors</Label>
+                <Label htmlFor="competitors">{t('hero.competitors.label')}</Label>
                 <Input
                   id="competitors"
-                  placeholder="competitor1.com, competitor2.com..."
+                  placeholder={t('hero.competitors.placeholder')}
                   value={competitors}
                   onChange={(e) => setCompetitors(e.target.value)}
                   disabled={isRunning}
@@ -203,10 +205,10 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="vision">Vision</Label>
+                  <Label htmlFor="vision">{t('hero.vision.label')}</Label>
                   <Textarea
                     id="vision"
-                    placeholder="Your vision..."
+                    placeholder={t('hero.vision.placeholder')}
                     value={vision}
                     onChange={(e) => setVision(e.target.value)}
                     disabled={isRunning}
@@ -215,10 +217,10 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="mission">Mission</Label>
+                  <Label htmlFor="mission">{t('hero.mission.label')}</Label>
                   <Textarea
                     id="mission"
-                    placeholder="Your mission..."
+                    placeholder={t('hero.mission.placeholder')}
                     value={mission}
                     onChange={(e) => setMission(e.target.value)}
                     disabled={isRunning}
@@ -227,10 +229,10 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="values">Values</Label>
+                  <Label htmlFor="values">{t('hero.values.label')}</Label>
                   <Textarea
                     id="values"
-                    placeholder="Your core values..."
+                    placeholder={t('hero.values.placeholder')}
                     value={values}
                     onChange={(e) => setValues(e.target.value)}
                     disabled={isRunning}
@@ -240,7 +242,7 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="docs">Business Documents</Label>
+                <Label htmlFor="docs">{t('hero.docs.label')}</Label>
                 <div className="space-y-3">
                   <div className="border-2 border-dashed rounded-lg p-6 text-center hover:border-primary/50 transition-colors">
                     <input
@@ -258,18 +260,18 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
                     >
                       <Upload className="w-8 h-8 text-muted-foreground" />
                       <div className="text-sm">
-                        <span className="font-semibold text-primary">Click to upload</span>
-                        <span className="text-muted-foreground"> or drag and drop</span>
+                        <span className="font-semibold text-primary">{t('hero.docs.upload')}</span>
+                        <span className="text-muted-foreground"> {t('hero.docs.drag')}</span>
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        PDF, Word, PowerPoint, Excel (max 20MB each)
+                        {t('hero.docs.types')}
                       </p>
                     </label>
                   </div>
 
                   {uploadedFiles.length > 0 && (
                     <div className="space-y-2">
-                      <p className="text-sm font-medium">Uploaded documents:</p>
+                      <p className="text-sm font-medium">{t('hero.docs.uploaded')}</p>
                       <div className="space-y-1">
                         {uploadedFiles.map((file, index) => (
                           <div
@@ -296,14 +298,14 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
 
                   <Textarea
                     id="docs"
-                    placeholder="Or paste any additional information here..."
+                    placeholder={t('hero.docs.placeholder')}
                     value={docs}
                     onChange={(e) => setDocs(e.target.value)}
                     disabled={isRunning}
                     className="min-h-[80px]"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Upload documents that provide context about your business, product, or target market (e.g., product specs, market research, business plans, customer insights)
+                    {t('hero.docs.help')}
                   </p>
                 </div>
               </div>
@@ -311,18 +313,16 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
           </Collapsible>
 
           <div className="flex items-center justify-center gap-2 text-sm">
-            <span className="text-muted-foreground">Optional: Connect data later for validation & learning</span>
+            <span className="text-muted-foreground">{t('hero.optional')}</span>
             <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-muted text-muted-foreground border border-border animate-fade-in">
-              Coming Soon
+              {t('hero.coming_soon')}
             </span>
           </div>
         </form>
 
         <div className="pt-8">
-          <p className="text-xl font-semibold mb-4">How do we know?</p>
-          <p className="text-muted-foreground">
-            No guessing. We <strong>Read + Cross-Reference + Verify</strong>
-          </p>
+          <p className="text-xl font-semibold mb-4">{t('hero.how')}</p>
+          <p className="text-muted-foreground" dangerouslySetInnerHTML={{ __html: t('hero.method') }} />
         </div>
       </div>
     </section>
