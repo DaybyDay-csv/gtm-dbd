@@ -11,239 +11,202 @@ const phaseNames: Record<string, string> = {
   phase7: "Mapa de Validación",
 };
 
-// Función para generar título impactante desde los datos del análisis
-const generateImpactfulTitle = (state: AnalysisState, companyName: string, projectName: string): string => {
-  try {
-    // Extraer información clave del análisis
-    const productUnderstanding = state.phases.phase1?.productUnderstanding;
-    const positioning = state.phases.phase1?.positioningMap;
-    
-    // Extraer tipo de producto/servicio
-    let productType = projectName;
-    if (productUnderstanding?.category) {
-      productType = productUnderstanding.category;
-    } else if (projectName.toLowerCase().includes('máster') || projectName.toLowerCase().includes('master')) {
-      productType = 'Máster';
-    } else if (projectName.toLowerCase().includes('curso')) {
-      productType = 'Curso';
-    } else if (projectName.toLowerCase().includes('programa')) {
-      productType = 'Programa';
-    }
-    
-    // Extraer nicho de mercado
-    let niche = '';
-    if (positioning?.marketSegment) {
-      niche = positioning.marketSegment;
-    } else if (productUnderstanding?.targetMarket) {
-      niche = productUnderstanding.targetMarket;
-    } else if (projectName.toLowerCase().includes('rrhh') || projectName.toLowerCase().includes('recursos humanos')) {
-      niche = 'Recursos Humanos';
-    } else if (projectName.toLowerCase().includes('marketing')) {
-      niche = 'Marketing';
-    } else if (projectName.toLowerCase().includes('dirección')) {
-      niche = 'Dirección y Gestión';
-    }
-    
-    // Extraer oportunidad clave
-    let opportunity = '';
-    if (positioning?.opportunityGap) {
-      opportunity = positioning.opportunityGap.split('.')[0]; // Primera frase
-    } else if (state.clientReadiness?.recommendation) {
-      opportunity = 'Estrategia de Crecimiento';
-    } else {
-      opportunity = 'Transformación Digital';
-    }
-    
-    // Construir título ejecutivo
-    if (niche && opportunity) {
-      return `${companyName}: ${productType} en ${niche} - ${opportunity}`;
-    } else if (niche) {
-      return `${companyName}: ${productType} en ${niche} - Análisis Go-to-Market`;
-    } else {
-      return `${companyName}: ${projectName} - Estrategia Go-to-Market Completa`;
-    }
-  } catch (error) {
-    console.error('Error generating title:', error);
-    return `${companyName}: ${projectName} - Análisis Go-to-Market Completo`;
+// Function to generate an impactful, executive title
+const generateImpactfulTitle = (
+  state: AnalysisState,
+  companyName: string,
+  projectName: string
+): string => {
+  // Extract product/service type with better fallbacks
+  let productType = "Solución";
+  if (state.phases.phase1?.productUnderstanding) {
+    const pu = state.phases.phase1.productUnderstanding;
+    productType = pu.productName || pu.category || pu.type || pu.description?.split(' ').slice(0, 3).join(' ') || productType;
   }
+  
+  // Extract niche/market with context
+  let niche = "Mercado Especializado";
+  if (state.phases.phase2?.positioningMap) {
+    const pm = state.phases.phase2.positioningMap;
+    niche = pm.targetNiche || pm.market || pm.segment || niche;
+  }
+  
+  // Extract key opportunity/differentiator
+  let opportunity = "Oportunidad Estratégica";
+  if (state.phases.phase3?.clientReadiness?.reasoning) {
+    const reasoning = state.phases.phase3.clientReadiness.reasoning;
+    const firstSentence = reasoning.split(/[.!?]/)[0].trim();
+    if (firstSentence.length > 10 && firstSentence.length < 80) {
+      opportunity = firstSentence;
+    }
+  } else if (state.phases.phase2?.positioningMap?.differentiation) {
+    opportunity = state.phases.phase2.positioningMap.differentiation.split(/[.!?]/)[0].trim();
+  }
+
+  // Create an impactful executive title
+  return `${companyName}: ${productType} en ${niche} - ${opportunity}`;
 };
 
-const createCoverPageHTML = (projectName: string, companyName: string, date: string, impactfulTitle: string): string => {
+// Function to create professional cover page HTML (without absolute positioning)
+const createCoverPageHTML = (
+  projectName: string,
+  companyName: string,
+  date: string,
+  impactfulTitle: string
+): string => {
   return `
     <div class="pdf-cover-page" style="
-      position: relative;
+      page-break-after: always;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      background: linear-gradient(135deg, hsl(0 70% 50%) 0%, hsl(0 70% 60%) 100%);
-      padding: 4rem 2rem;
       text-align: center;
-      page-break-after: always;
+      padding: 60px 80px;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      color: white;
+      border-top: 8px solid #ef4444;
+      border-bottom: 8px solid #b91c1c;
+      border-left: 6px solid #ef4444;
+      border-right: 6px solid #ef4444;
+      box-sizing: border-box;
     ">
-      <!-- Barra superior -->
-      <div style="
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 8px;
-        background: linear-gradient(90deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.9) 100%);
-      "></div>
-      
-      <!-- Barra lateral izquierda -->
-      <div style="
-        position: absolute;
-        top: 8px;
-        left: 0;
-        bottom: 8px;
-        width: 4px;
-        background: linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.8) 100%);
-      "></div>
-      
-      <!-- Barra lateral derecha -->
-      <div style="
-        position: absolute;
-        top: 8px;
-        right: 0;
-        bottom: 8px;
-        width: 4px;
-        background: linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.8) 100%);
-      "></div>
-      
-      <!-- Barra inferior -->
-      <div style="
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 8px;
-        background: linear-gradient(90deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.9) 100%);
-      "></div>
-      
-      <div style="max-width: 850px; width: 100%; padding: 2rem;">
-        <!-- Título Impactante Principal -->
+      <div style="max-width: 900px; width: 100%;">
+        <div style="
+          font-size: 16px;
+          letter-spacing: 3px;
+          text-transform: uppercase;
+          color: #ef4444;
+          margin-bottom: 30px;
+          font-weight: 600;
+        ">
+          AI GTM Factory by DaybyDay
+        </div>
+        
         <h1 style="
-          font-size: 2.75rem;
-          font-weight: 800;
+          font-size: 42px;
+          font-weight: 700;
+          line-height: 1.2;
+          margin: 0 0 40px 0;
           color: white;
-          margin-bottom: 2.5rem;
-          line-height: 1.3;
-          text-shadow: 0 2px 20px rgba(0,0,0,0.2);
-          padding: 0 1rem;
+          text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         ">
           ${impactfulTitle}
         </h1>
         
-        <!-- Branding y empresa -->
-        <div style="margin-bottom: 2rem;">
-          <div style="
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: white;
-            margin-bottom: 0.75rem;
-            letter-spacing: 0.1em;
-          ">
-            AI GTM Factory by DaybyDay
-          </div>
-          <div style="
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.85);
-            font-style: italic;
-          ">
-            for ${companyName}
-          </div>
-        </div>
-        
-        <!-- Separador visual -->
         <div style="
-          width: 200px;
-          height: 2px;
-          background: rgba(255, 255, 255, 0.5);
-          margin: 2rem auto;
-        "></div>
-        
-        <!-- Info del proyecto -->
-        <div style="
-          font-size: 1.125rem;
-          color: white;
-          opacity: 0.9;
-          padding: 1.25rem 2rem;
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 8px;
-          backdrop-filter: blur(10px);
-          margin: 2rem auto;
+          background: rgba(239, 68, 68, 0.1);
+          border: 2px solid #ef4444;
+          border-radius: 12px;
+          padding: 24px 32px;
+          margin: 40px auto;
+          display: inline-block;
           max-width: 600px;
         ">
-          ${projectName}
+          <div style="
+            font-size: 14px;
+            color: #ef4444;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            font-weight: 600;
+          ">
+            Proyecto
+          </div>
+          <div style="
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+          ">
+            ${projectName}
+          </div>
         </div>
         
-        <!-- Footer con fecha -->
-        <div style="margin-top: 3rem;">
-          <div style="
-            font-size: 0.95rem;
-            color: white;
-            opacity: 0.75;
-          ">
-            Documento Ejecutivo • ${date}
-          </div>
+        <div style="
+          font-size: 16px;
+          color: #a3a3a3;
+          margin-top: 40px;
+          padding-top: 40px;
+          border-top: 1px solid rgba(255,255,255,0.1);
+        ">
+          <div style="margin-bottom: 8px;"><strong style="color: white;">Empresa:</strong> ${companyName}</div>
+          <div><strong style="color: white;">Fecha:</strong> ${date}</div>
+        </div>
+        
+        <div style="
+          font-size: 13px;
+          color: #737373;
+          margin-top: 60px;
+          font-style: italic;
+        ">
+          Análisis Go-to-Market Completo
         </div>
       </div>
     </div>
   `;
 };
 
+// Function to create section divider HTML (without absolute positioning for phase number)
 const createSectionDividerHTML = (phaseNumber: number, phaseName: string): string => {
   return `
     <div class="pdf-section-divider" style="
       page-break-before: always;
       page-break-after: avoid;
-      padding: 4rem 2rem 2rem;
-      margin-bottom: 2rem;
-      background: linear-gradient(135deg, hsl(0 70% 50% / 0.08) 0%, hsl(0 70% 60% / 0.03) 100%);
-      border-left: 6px solid hsl(0 70% 50%);
+      padding: 60px 40px;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+      border-left: 6px solid #ef4444;
+      margin: 0;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     ">
-      <div style="max-width: 1000px; margin: 0 auto;">
-        <div style="
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-          margin-bottom: 1rem;
-        ">
-          <span style="
-            font-size: 0.75rem;
+      <div style="
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 40px;
+      ">
+        <div style="flex: 1;">
+          <div style="
+            font-size: 14px;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: hsl(0 70% 50%);
+            letter-spacing: 3px;
+            color: #ef4444;
+            margin-bottom: 16px;
             font-weight: 600;
           ">
-            Fase
-          </span>
-          <span style="
-            font-size: 3rem;
+            Fase ${phaseNumber}
+          </div>
+          
+          <h2 style="
+            font-size: 36px;
             font-weight: 700;
-            color: hsl(0 70% 50%);
-            line-height: 1;
+            color: white;
+            margin: 0;
+            line-height: 1.2;
           ">
-            ${phaseNumber}
-          </span>
+            ${phaseName}
+          </h2>
+          
+          <div style="
+            height: 3px;
+            width: 100px;
+            background: linear-gradient(90deg, #ef4444 0%, transparent 100%);
+            margin-top: 24px;
+          "></div>
         </div>
         
         <div style="
-          height: 2px;
-          background: linear-gradient(to right, hsl(0 70% 50%), hsl(0 70% 50% / 0.3), transparent);
-          margin: 1rem 0;
-        "></div>
-        
-        <h2 style="
-          font-size: 2.5rem;
-          font-weight: 700;
-          color: hsl(0 0% 10%);
-          margin: 0;
+          font-size: 120px;
+          font-weight: 900;
+          color: rgba(239, 68, 68, 0.2);
+          line-height: 1;
+          flex-shrink: 0;
         ">
-          ${phaseName}
-        </h2>
+          ${phaseNumber}
+        </div>
       </div>
     </div>
   `;
@@ -401,26 +364,32 @@ export const downloadAnalysisAsPDF = async (
   const options = {
     margin: [15, 12, 15, 12] as [number, number, number, number],
     filename: `${sanitizedCompany}_Analisis_GTM_Completo_${dateForFilename}.pdf`,
-    image: { type: 'jpeg' as const, quality: 0.98 },
+    image: { type: 'jpeg' as const, quality: 0.95 },
     html2canvas: { 
-      scale: 3,
+      scale: 3, // Higher quality
       useCORS: true,
-      logging: false,
       letterRendering: true,
-      windowWidth: 1200,
-      backgroundColor: '#ffffff',
+      logging: false,
+      windowWidth: 1200, // Wider for better capture
+      backgroundColor: '#ffffff'
     },
     jsPDF: { 
       unit: 'mm' as const, 
       format: 'a4' as const, 
       orientation: 'portrait' as const,
       compress: true,
+      precision: 16
     },
     pagebreak: { 
-      mode: ['css', 'legacy'],
-      before: '.pdf-section-divider',
-      after: ['.pdf-cover-page'],
-      avoid: ['.buyer-persona', '.product-nucleus', '.disc-translator', '.card', '.product-understanding', '.positioning-map', '.offer-factory', '.channel-strategy', '.validation-map', '.client-readiness', 'section', 'table', 'h1', 'h2', 'h3', 'h4']
+      mode: ['avoid-all', 'css', 'legacy'],
+      before: ['.pdf-section-divider', '.page-break-before'],
+      after: ['.pdf-cover-page', '.page-break-after'],
+      avoid: [
+        '.buyer-persona', '.product-nucleus', '.disc-translator', 
+        '.positioning-map', '.validation-map', '.channel-strategy',
+        'section', '.card', 'table', '.recharts-wrapper',
+        'h1', 'h2', 'h3', 'h4'
+      ]
     }
   };
 

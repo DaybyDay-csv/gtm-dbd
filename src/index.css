@@ -218,38 +218,27 @@ All colors MUST be HSL.
    PDF-SPECIFIC STYLES & PRINT OPTIMIZATION
    ============================================ */
 
-/* ============= PORTADA PROFESIONAL CON BARRAS ============= */
+/* Professional PDF Cover Page - No absolute positioning */
 .pdf-cover-page {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg, hsl(0 70% 50%) 0%, hsl(0 70% 60%) 100%);
-  padding: 4rem 2rem;
   page-break-after: always !important;
-}
-
-/* Barras decorativas para la portada */
-.pdf-cover-page::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 8px;
-  background: linear-gradient(90deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.9) 100%);
-}
-
-.pdf-cover-page::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 8px;
-  background: linear-gradient(90deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.9) 100%);
+  break-after: page !important;
+  min-height: 100vh;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%) !important;
+  color: white !important;
+  border-top: 8px solid #ef4444 !important;
+  border-bottom: 8px solid #b91c1c !important;
+  border-left: 6px solid #ef4444 !important;
+  border-right: 6px solid #ef4444 !important;
+  box-sizing: border-box !important;
+  padding: 60px 80px !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+  color-adjust: exact !important;
 }
 
 .cover-content {
@@ -337,16 +326,25 @@ All colors MUST be HSL.
   opacity: 0.7;
 }
 
-/* ============= DIVISORES DE SECCIÓN ============= */
+/* Section Dividers for PDF - Flex layout instead of absolute */
 .pdf-section-divider {
   page-break-before: always !important;
   page-break-after: avoid !important;
-  padding: 4rem 2rem 2rem;
-  background: linear-gradient(135deg, 
-    hsl(0 70% 50% / 0.08) 0%, 
-    hsl(0 70% 60% / 0.03) 100%);
-  border-left: 6px solid hsl(0 70% 50%);
-  margin-bottom: 2rem;
+  page-break-inside: avoid !important;
+  break-before: page !important;
+  break-after: avoid !important;
+  break-inside: avoid !important;
+  padding: 60px 40px !important;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%) !important;
+  border-left: 6px solid #ef4444 !important;
+  color: white !important;
+  min-height: 200px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+  color-adjust: exact !important;
 }
 
 .divider-content {
@@ -392,121 +390,201 @@ All colors MUST be HSL.
   margin: 0;
 }
 
-/* ============= CONTENIDO SIN CORTES ============= */
+/* General PDF Content Styles */
 .pdf-content {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+  background: white !important;
+  color: #1a1a1a !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+  color-adjust: exact !important;
 }
 
 .pdf-simple-layout {
   display: block !important;
+  width: 100% !important;
 }
 
-.pdf-simple-layout > * {
-  margin-bottom: 1.5rem !important;
-  page-break-inside: avoid !important;
-}
-
-/* ============= EVITAR CORTES DE PÁGINA ============= */
+/* Comprehensive Page Break Prevention */
+section,
+.card,
 .buyer-persona,
 .product-nucleus,
 .disc-translator,
-.product-understanding,
+.disc-translator-preview,
 .positioning-map,
-.offer-factory,
-.channel-strategy,
 .validation-map,
+.channel-strategy,
+.product-metrics,
 .client-readiness,
-section,
-.card,
+.offer-factory,
+.budget-input,
 table,
-.recharts-wrapper {
+.recharts-wrapper,
+.evidence-drawer,
+.phase-ribbon,
+article,
+.alert,
+blockquote {
   page-break-inside: avoid !important;
   break-inside: avoid !important;
-  margin-bottom: 2rem !important;
 }
 
-/* Headers nunca solos al final */
-h1, h2, h3, h4 {
+/* Prevent Breaking After Headings */
+h1, h2, h3, h4, h5, h6 {
   page-break-after: avoid !important;
-  page-break-inside: avoid !important;
   break-after: avoid !important;
+  page-break-inside: avoid !important;
   break-inside: avoid !important;
-}
-
-/* Párrafos y listas */
-p, ul, ol, li {
   orphans: 3;
   widows: 3;
 }
 
-/* Tablas sin cortes */
-table {
+/* Keep headings with their following content */
+h1 + *, h2 + *, h3 + *, h4 + * {
+  page-break-before: avoid !important;
+  break-before: avoid !important;
+}
+
+/* Utility classes for explicit page break control */
+.page-break-before {
+  page-break-before: always !important;
+  break-before: page !important;
+}
+
+.page-break-after {
+  page-break-after: always !important;
+  break-after: page !important;
+}
+
+.page-break-avoid {
   page-break-inside: avoid !important;
   break-inside: avoid !important;
 }
 
-table tr {
-  page-break-inside: avoid !important;
-  break-inside: avoid !important;
-}
-
+/* ============================================
+   PRINT MEDIA QUERIES - Enhanced for Professional Output
+   ============================================ */
 @media print {
-  * {
+  /* Force background colors and images for all elements */
+  *,
+  *::before,
+  *::after {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     color-adjust: exact !important;
   }
-  
-  body {
-    background: white !important;
-    color: black;
-    font-size: 12pt;
-    line-height: 1.5;
-  }
-  
-  .pdf-only {
-    display: block !important;
-  }
-  
-  .no-pdf {
-    display: none !important;
-  }
-  
-  .pdf-section {
-    page-break-inside: avoid !important;
-  }
-  
-  .pdf-page-break {
-    page-break-after: always !important;
-  }
-  
-  button, .tooltip, .hover-card {
-    display: none !important;
-  }
-  
-  /* Simplificar grids para PDF */
-  .grid {
-    display: block !important;
-  }
-  
-  .grid > * {
-    margin-bottom: 1.5rem !important;
-    page-break-inside: avoid !important;
-  }
-  
-  /* Optimizar sombras para impresión */
-  .shadow-lg, .shadow-xl {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
-  }
-  
-  /* Forzar colores en elementos clave */
+
+  /* Specific enforcement for styled sections */
   .pdf-cover-page,
   .pdf-section-divider,
   [style*="background"],
-  [style*="color"] {
+  [style*="border"],
+  [class*="gradient"] {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* Hide all interactive and non-essential elements */
+  button,
+  .no-pdf,
+  nav,
+  header,
+  .toast,
+  .toaster,
+  .dialog,
+  .dropdown,
+  .popover,
+  .tooltip,
+  .sheet,
+  .drawer,
+  input[type="checkbox"]:not(:checked),
+  input[type="radio"]:not(:checked),
+  .hover-card,
+  [role="tooltip"],
+  .context-menu,
+  .menubar {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Simplify complex layouts for PDF */
+  .grid {
+    display: block !important;
+  }
+
+  .grid > * {
+    margin-bottom: 20px !important;
+    width: 100% !important;
+  }
+
+  /* Simplify flexbox layouts */
+  .flex {
+    display: block !important;
+  }
+
+  .flex > * {
+    margin-bottom: 12px !important;
+  }
+
+  /* Optimize shadows for print (lighter) */
+  .shadow,
+  .shadow-sm,
+  .shadow-md,
+  .shadow-lg,
+  .shadow-xl,
+  [class*="shadow-"] {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+  }
+
+  /* Ensure content visibility and clean background */
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Ensure cover page and dividers maintain styling */
+  .pdf-cover-page,
+  .pdf-section-divider {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Optimize text rendering */
+  p, li, td, th {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Ensure tables stay together */
+  table {
+    page-break-inside: avoid !important;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr, td, th {
+    page-break-inside: avoid !important;
+  }
+
+  /* Remove unnecessary margins for print */
+  @page {
+    margin: 15mm;
+  }
+
+  /* Ensure images don't break across pages */
+  img {
+    page-break-inside: avoid !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Charts and complex visuals */
+  .recharts-wrapper,
+  svg {
+    page-break-inside: avoid !important;
+    max-width: 100% !important;
   }
 }
