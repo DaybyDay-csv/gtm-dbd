@@ -237,7 +237,7 @@ IMPORTANTE:
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-pro',
+        model: 'google/gemini-2.5-flash',
         messages: [
           { role: 'system', content: 'Eres un estratega de canales de marketing experto. Siempre devuelves JSON válido sin markdown.' },
           { role: 'user', content: prompt }

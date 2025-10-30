@@ -84,7 +84,7 @@ Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-pro',
+        model: 'google/gemini-2.5-flash',
         messages: [
           { role: 'system', content: 'You are a value equation expert using Hormozi framework. Always return valid JSON.' },
           { role: 'user', content: prompt }

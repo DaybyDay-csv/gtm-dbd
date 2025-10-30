@@ -128,7 +128,7 @@ Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-pro',
+        model: 'google/gemini-2.5-flash',
         messages: [
           { role: 'system', content: 'Eres un copywriter experto en growth marketing. Siempre devuelves JSON válido sin markdown.' },
           { role: 'user', content: prompt }

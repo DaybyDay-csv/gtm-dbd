@@ -474,7 +474,7 @@ Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-pro',
+        model: 'google/gemini-2.5-flash',
         messages: [
           { role: 'system', content: 'You are a market analysis expert. Always return valid JSON. Keep all text fields concise.' },
           { role: 'user', content: prompt }
