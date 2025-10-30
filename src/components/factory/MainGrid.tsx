@@ -16,7 +16,7 @@ export const MainGrid = ({ analysisState, showBlurOnPhase4Plus = false }: MainGr
   const hasData = (data: any) => data && Object.keys(data).length > 0;
 
   return (
-    <section className="container mx-auto px-4 py-12 space-y-8">
+    <section className="w-full px-8 py-12 space-y-8">
       {/* Product Understanding - Full Width First */}
       <div className={`w-full ${isRunning && !hasData(phases.phase1?.productUnderstanding) ? 'charging' : ''} ${hasData(phases.phase1?.productUnderstanding) ? 'magic-reveal' : ''}`}>
         <ProductUnderstanding data={phases.phase1?.productUnderstanding} />

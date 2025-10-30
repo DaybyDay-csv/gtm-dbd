@@ -38,7 +38,7 @@ export const BudgetInput = ({ onSubmit }: BudgetInputProps) => {
   const LevelIcon = currentLevel.icon;
 
   return (
-    <section className="container mx-auto px-4 py-12">
+    <section className="w-full px-8 py-12">
       <Card className="max-w-3xl mx-auto border-2 dotted-border shadow-lg">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl mb-2 flex items-center gap-2 justify-center">

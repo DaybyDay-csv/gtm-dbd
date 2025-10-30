@@ -25,11 +25,11 @@ export const ProductMetrics = ({
   }
 
   return (
-    <section className="container mx-auto px-4 py-8 no-pdf">
+    <section className="w-full px-8 py-8 no-pdf">
       <Card className="p-6 relative">
         <div className="absolute top-4 right-4">
           <SectionDownloadButton 
-            sectionName="Product Metrics" 
+            sectionName="Product Metrics"
             data={{ avatarReliability, hypothesesValidated, topMessages, topOffers, nextAction }} 
           />
         </div>

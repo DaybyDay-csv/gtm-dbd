@@ -84,7 +84,7 @@ const Index = () => {
       
       {isDevMode && displayState.currentPhase === 0 && (
         <div className="bg-amber-500/10 border-b border-amber-500/20 py-3">
-          <div className="container mx-auto px-4">
+          <div className="w-full px-8">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Wrench className="w-6 h-6 text-amber-600" />

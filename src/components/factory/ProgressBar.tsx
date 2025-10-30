@@ -35,7 +35,7 @@ interface ProgressBarProps {
 export const ProgressBar = ({ currentPhase, isRunning }: ProgressBarProps) => {
   return (
     <nav className="border-b dotted-border-b bg-secondary/30">
-      <div className="container mx-auto px-4 py-6">
+      <div className="w-full px-8 py-6">
         <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {phaseDefinitions.map((phase, index) => {
             const phaseNumber = index + 1;

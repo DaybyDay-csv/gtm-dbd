@@ -92,7 +92,7 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
   };
 
   return (
-    <section className="container mx-auto px-4 py-16 text-center">
+    <section className="w-full px-8 py-16 text-center">
       <div className="max-w-5xl mx-auto space-y-8">
         <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
           Wasting ad budget on speculations?

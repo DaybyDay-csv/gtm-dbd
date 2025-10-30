@@ -54,7 +54,7 @@ const phases = [
 
 export const PhaseRibbon = ({ currentPhase, isRunning }: PhaseRibbonProps) => {
   return (
-    <section className="container mx-auto px-4 py-8 no-pdf">
+    <section className="w-full px-8 py-8 no-pdf">
       <div className="flex items-center justify-center gap-2 md:gap-4 flex-wrap">
         {phases.map((phase, idx) => {
           const Icon = phase.icon;

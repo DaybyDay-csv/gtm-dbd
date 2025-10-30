@@ -22,7 +22,7 @@ export const Header = ({ onRunAnalysis, isRunning }: HeaderProps) => {
 
   return (
     <header className="border-b dotted-border-b">
-      <div className="container mx-auto px-4 py-8">
+      <div className="w-full px-8 py-8">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
             AI Marketing Factory

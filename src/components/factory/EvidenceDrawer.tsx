@@ -29,7 +29,7 @@ export const EvidenceDrawer = () => {
   ];
 
   return (
-    <section className="container mx-auto px-4 py-8">
+    <section className="w-full px-8 py-8">
       <div className="max-w-5xl mx-auto">
         <div className="mb-6 text-center">
           <h3 className="text-xl font-semibold mb-2">Evidence from Real Tests</h3>
