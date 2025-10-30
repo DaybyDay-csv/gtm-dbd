@@ -39,8 +39,8 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.title": "GTM Factory",
 
     // Hero Section
-    "hero.headline.line1": "¿Tirando presupuesto publicitario en corazonadas?",
-    "hero.headline.line2": "Conoce exactamente quién compra y por qué.",
+    "hero.headline.line1": "¿Gastando presupuesto publicitario en corazonadas?",
+    "hero.headline.line2": "Conoce exactamente quién te compra y por qué.",
     "hero.headline.line3": "En minutos, no meses.",
     "hero.button.run": "Ejecutar Análisis",
     "hero.placeholder.url": "https://tuwebsite.com",
