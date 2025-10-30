@@ -253,8 +253,40 @@ IMPORTANTE:
     }
 
     const data = await response.json();
-    const content = data.choices[0].message.content;
-    const result = JSON.parse(content);
+    let content = data.choices[0].message.content;
+    
+    // Clean up the content - remove markdown code blocks if present
+    content = content.trim();
+    if (content.startsWith('```json')) {
+      content = content.replace(/```json\n?/g, '').replace(/```\n?$/g, '');
+    } else if (content.startsWith('```')) {
+      content = content.replace(/```\n?/g, '');
+    }
+    content = content.trim();
+    
+    // Try to parse JSON with better error handling
+    let result;
+    try {
+      result = JSON.parse(content);
+    } catch (parseError) {
+      const errorMessage = parseError instanceof Error ? parseError.message : 'Unknown parse error';
+      console.error('JSON Parse Error:', parseError);
+      console.error('Content that failed to parse (first 500 chars):', content.substring(0, 500));
+      console.error('Content that failed to parse (last 500 chars):', content.substring(Math.max(0, content.length - 500)));
+      
+      // Try to extract valid JSON if there's extra text
+      const jsonMatch = content.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        try {
+          result = JSON.parse(jsonMatch[0]);
+          console.log('Successfully recovered JSON from match');
+        } catch (secondError) {
+          throw new Error(`Failed to parse AI response as JSON: ${errorMessage}`);
+        }
+      } else {
+        throw new Error(`Failed to parse AI response as JSON: ${errorMessage}`);
+      }
+    }
 
     console.log('Phase 6 completed successfully');
 
