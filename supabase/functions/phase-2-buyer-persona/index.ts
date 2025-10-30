@@ -267,6 +267,20 @@ IMPORTANT REMINDERS:
     }
     content = content.trim();
     
+    // Try to extract JSON object from content (handles markdown and reasoning text)
+    // Look for the first { and last } to extract just the JSON
+    const firstBrace = content.indexOf('{');
+    const lastBrace = content.lastIndexOf('}');
+    
+    if (firstBrace === -1 || lastBrace === -1 || firstBrace >= lastBrace) {
+      console.error('No valid JSON object found in content');
+      console.error('Content preview:', content.substring(0, 500));
+      throw new Error('AI response does not contain a valid JSON object');
+    }
+    
+    // Extract the JSON portion
+    content = content.substring(firstBrace, lastBrace + 1);
+    
     // Remove control characters that can break JSON parsing
     content = content.replace(/[\u0000-\u001F\u007F-\u009F]/g, (char: string) => {
       if (char === '\n' || char === '\r' || char === '\t') {
@@ -279,24 +293,13 @@ IMPORTANT REMINDERS:
     let result;
     try {
       result = JSON.parse(content);
+      console.log('Successfully parsed JSON response');
     } catch (parseError) {
       const errorMessage = parseError instanceof Error ? parseError.message : 'Unknown parse error';
       console.error('JSON Parse Error:', parseError);
       console.error('Content that failed to parse (first 500 chars):', content.substring(0, 500));
       console.error('Content that failed to parse (last 500 chars):', content.substring(Math.max(0, content.length - 500)));
-      
-      // Try to extract valid JSON if there's extra text
-      const jsonMatch = content.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        try {
-          result = JSON.parse(jsonMatch[0]);
-          console.log('Successfully recovered JSON from match');
-        } catch (secondError) {
-          throw new Error(`Failed to parse AI response as JSON: ${errorMessage}`);
-        }
-      } else {
-        throw new Error(`Failed to parse AI response as JSON: ${errorMessage}`);
-      }
+      throw new Error(`Failed to parse AI response as JSON: ${errorMessage}`);
     }
 
     console.log('Phase 2 completed successfully');
