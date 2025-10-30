@@ -1,4 +1,63 @@
 import { AnalysisState } from "@/hooks/useAnalysisOrchestrator";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+
+export const capturePageAsPDF = async (projectName: string): Promise<void> => {
+  const element = document.getElementById("analysis-content");
+  
+  if (!element) {
+    throw new Error("No se encontró el contenido del análisis para capturar");
+  }
+
+  try {
+    // Capture the element with high quality settings
+    const canvas = await html2canvas(element, {
+      scale: 2, // High resolution (2x)
+      useCORS: true, // Allow external images
+      logging: false,
+      backgroundColor: "#ffffff",
+      allowTaint: false,
+      scrollY: -window.scrollY,
+      scrollX: -window.scrollX,
+      windowWidth: document.documentElement.scrollWidth,
+      windowHeight: document.documentElement.scrollHeight,
+    });
+
+    // Create PDF in A4 portrait format
+    const pdf = new jsPDF("p", "mm", "a4");
+    
+    const imgData = canvas.toDataURL("image/png");
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+    
+    // Calculate dimensions to fit content to page width
+    const imgWidth = pdfWidth;
+    const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+    
+    // Calculate how many pages are needed
+    const pageHeight = pdfHeight;
+    let heightLeft = imgHeight;
+    let position = 0;
+
+    // Add first page
+    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+
+    // Add additional pages if needed
+    while (heightLeft > 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
+
+    // Download the PDF
+    pdf.save(`${projectName.replace(/\s+/g, "-")}-analisis-completo.pdf`);
+  } catch (error) {
+    console.error("Error capturing page as PDF:", error);
+    throw error;
+  }
+};
 
 export const downloadAnalysisAsJSON = (state: AnalysisState, projectName: string) => {
   const analysisData = {

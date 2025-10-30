@@ -1,4 +1,5 @@
-import { Download, FileJson, FileText } from "lucide-react";
+import { useState } from "react";
+import { Download, FileJson, FileText, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AnalysisState } from "@/hooks/useAnalysisOrchestrator";
-import { downloadAnalysisAsJSON, downloadAnalysisAsPDF } from "@/utils/downloadAnalysis";
+import { downloadAnalysisAsJSON, capturePageAsPDF } from "@/utils/downloadAnalysis";
 import { useToast } from "@/hooks/use-toast";
 
 interface DownloadAnalysisButtonProps {
@@ -20,6 +21,7 @@ export const DownloadAnalysisButton = ({
   projectName,
 }: DownloadAnalysisButtonProps) => {
   const { toast } = useToast();
+  const [isCapturing, setIsCapturing] = useState(false);
 
   const handleDownloadJSON = () => {
     try {
@@ -37,19 +39,22 @@ export const DownloadAnalysisButton = ({
     }
   };
 
-  const handleDownloadPDF = async () => {
+  const handleCapturePageAsPDF = async () => {
+    setIsCapturing(true);
     try {
-      await downloadAnalysisAsPDF(state, projectName);
+      await capturePageAsPDF(projectName);
       toast({
-        title: "Impresión lista",
-        description: "Usa 'Guardar como PDF' en el diálogo de impresión",
+        title: "PDF descargado",
+        description: "El análisis completo se ha capturado como PDF",
       });
     } catch (error) {
       toast({
-        title: "Error al generar PDF",
-        description: "No se pudo generar el PDF",
+        title: "Error al capturar",
+        description: "No se pudo generar el PDF de la página",
         variant: "destructive",
       });
+    } finally {
+      setIsCapturing(false);
     }
   };
 
@@ -65,13 +70,17 @@ export const DownloadAnalysisButton = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={handleDownloadJSON} className="gap-2">
+        <DropdownMenuItem onClick={handleDownloadJSON} className="gap-2" disabled={isCapturing}>
           <FileJson className="h-4 w-4" />
           Descargar como JSON
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleDownloadPDF} className="gap-2">
-          <FileText className="h-4 w-4" />
-          Imprimir / Guardar PDF
+        <DropdownMenuItem onClick={handleCapturePageAsPDF} className="gap-2" disabled={isCapturing}>
+          {isCapturing ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <FileText className="h-4 w-4" />
+          )}
+          Capturar como PDF
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
