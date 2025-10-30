@@ -59,36 +59,45 @@ export const AppHeader = ({ analysisState, projectName, showDownloadButton = fal
               projectName={projectName || "Análisis Completo"} 
             />
           ) : (
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button 
-                  variant="outline" 
-                  disabled={!hasContent}
-                  className="gap-2 hover-scale transition-all"
-                >
-                  <Download className="h-4 w-4" />
-                  Descargar Análisis
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <h4 className="font-semibold">Loguéate para descargar tu análisis</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Obtén tu análisis completo en PDF y JSON
-                    </p>
+            <>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    disabled={!hasContent}
+                    className="gap-2 hover-scale transition-all"
+                  >
+                    <Download className="h-4 w-4" />
+                    Descargar Análisis
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80">
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <h4 className="font-semibold">Loguéate para descargar tu análisis</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Obtén tu análisis completo en PDF y JSON
+                      </p>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Button onClick={() => navigate("/auth")} className="w-full">
+                        Crear Cuenta
+                      </Button>
+                      <Button onClick={() => navigate("/auth")} variant="outline" className="w-full">
+                        Iniciar Sesión
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <Button onClick={() => navigate("/auth")} className="w-full">
-                      Crear Cuenta
-                    </Button>
-                    <Button onClick={() => navigate("/auth")} variant="outline" className="w-full">
-                      Iniciar Sesión
-                    </Button>
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
+                </PopoverContent>
+              </Popover>
+              <Button 
+                onClick={() => navigate("/auth")}
+                className="gap-2 hover-scale transition-all"
+              >
+                <LogOut className="h-4 w-4" />
+                Iniciar Sesión
+              </Button>
+            </>
           )}
           <Button
             variant="ghost"
