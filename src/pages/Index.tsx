@@ -145,21 +145,23 @@ const Index = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div data-phase="phase2" className={`lg:col-span-1 pdf-section ${displayState.isRunning && !displayState.phases.phase2 ? 'charging' : ''} ${displayState.phases.phase2 ? 'magic-reveal' : ''}`}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div data-phase="phase2" className={`w-full pdf-section ${displayState.isRunning && !displayState.phases.phase2 ? 'charging' : ''} ${displayState.phases.phase2 ? 'magic-reveal' : ''}`}>
                 <BuyerPersona data={displayState.phases.phase2} />
               </div>
 
-              <div data-phase="phase3" className={`lg:col-span-1 pdf-section ${displayState.isRunning && !displayState.phases.phase3 ? 'charging' : ''} ${displayState.phases.phase3 ? 'magic-reveal' : ''}`}>
+              <div data-phase="phase3" className={`w-full pdf-section ${displayState.isRunning && !displayState.phases.phase3 ? 'charging' : ''} ${displayState.phases.phase3 ? 'magic-reveal' : ''}`}>
                 <OfferFactory data={displayState.phases.phase3} />
               </div>
-              
+            </div>
+            
+            <div className="w-full mt-6">
               {shouldShowGate ? (
-                <div className="lg:col-span-2 flex items-center justify-center min-h-[400px]">
+                <div className="flex items-center justify-center min-h-[400px]">
                   <SignupGate onComplete={handleSignupComplete} />
                 </div>
               ) : (
-                <div data-phase="phase4" className={`lg:col-span-2 pdf-section ${displayState.isRunning && !displayState.phases.phase4 ? 'charging' : ''} ${displayState.phases.phase4 ? 'magic-reveal' : ''}`}>
+                <div data-phase="phase4" className={`pdf-section ${displayState.isRunning && !displayState.phases.phase4 ? 'charging' : ''} ${displayState.phases.phase4 ? 'magic-reveal' : ''}`}>
                   <DISCTranslator data={displayState.phases.phase4} />
                 </div>
               )}
