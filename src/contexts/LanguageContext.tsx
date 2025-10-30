@@ -36,7 +36,7 @@ const translations: Record<Language, Record<string, string>> = {
     'settings.save_changes': 'Guardar cambios',
     'settings.saved': 'Guardado',
     'settings.language_updated': 'Tu idioma preferido ha sido actualizado',
-    'nav.title': 'GTM Factory',
+    'nav.title': 'GTM Factory by DaybyDay',
     
     // Hero Section
     'hero.headline.line1': '¿Tirando presupuesto publicitario en especulaciones?',
