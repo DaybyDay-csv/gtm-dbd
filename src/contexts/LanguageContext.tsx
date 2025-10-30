@@ -36,7 +36,7 @@ const translations: Record<Language, Record<string, string>> = {
     'settings.save_changes': 'Guardar cambios',
     'settings.saved': 'Guardado',
     'settings.language_updated': 'Tu idioma preferido ha sido actualizado',
-    'nav.title': 'GTM Factory by DaybyDay',
+    'nav.title': 'GTM Factory',
     
     // Hero Section
     'hero.headline.line1': '¿Tirando presupuesto publicitario en especulaciones?',
@@ -529,7 +529,7 @@ const translations: Record<Language, Record<string, string>> = {
     'dev.load': 'Load Mock Data',
     
     // Footer
-    'footer.copyright': '© 2025 AI GTM Factory. Built on evidence, not opinions.',
+    'footer.copyright': '© 2025 AI GTM Factory. Built on evidence, not opinions. By Day by Day',
   }
 };
 
