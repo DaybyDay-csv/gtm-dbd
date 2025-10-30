@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 
-const LOVABLE_AI_API = 'https://api.lovable.app/v1';
+const LOVABLE_AI_GATEWAY = 'https://ai.gateway.lovable.dev/v1';
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -33,11 +33,11 @@ Ejemplo: "Universidad Francisco de Vitoria: Máster en RRHH - Transformación Di
 
 Genera SOLO el título, sin comillas ni explicaciones adicionales.`;
 
-    const response = await fetch(`${LOVABLE_AI_API}/chat/completions`, {
+    const response = await fetch(`${LOVABLE_AI_GATEWAY}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${Deno.env.get('SUPABASE_ANON_KEY')}`
+        'Authorization': `Bearer ${Deno.env.get('LOVABLE_API_KEY')}`
       },
       body: JSON.stringify({
         model: 'google/gemini-2.5-flash',
