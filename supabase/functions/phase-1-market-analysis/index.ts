@@ -479,7 +479,7 @@ Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'
           { role: 'system', content: 'You are a market analysis expert. Always return valid JSON. Keep all text fields concise.' },
           { role: 'user', content: prompt }
         ],
-        response_format: { type: "json_object" }
+        response_mime_type: "application/json"
       }),
     });
 

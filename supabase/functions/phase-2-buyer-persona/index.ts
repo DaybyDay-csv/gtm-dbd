@@ -189,7 +189,7 @@ IMPORTANT REMINDERS:
           { role: 'system', content: 'You are a buyer persona expert. Always return valid JSON in Spanish.' },
           { role: 'user', content: prompt }
         ],
-        response_format: { type: "json_object" }
+        response_mime_type: "application/json"
       }),
     });
 
