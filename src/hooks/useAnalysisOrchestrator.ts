@@ -81,7 +81,7 @@ export const useAnalysisOrchestrator = () => {
       const { data: { session } } = await supabase.auth.getSession();
 
       // Get or create session token for unauthenticated access
-      const sessionToken = !session?.user?.id ? getOrCreateSessionToken() : null;
+      const sessionToken = !session?.user?.id ? await getOrCreateSessionToken() : null;
 
       // Always create a new project for each analysis
       const { data: newProject, error: projectError } = await supabase
@@ -110,7 +110,7 @@ export const useAnalysisOrchestrator = () => {
       setState(prev => ({ ...prev, currentPhase: 1 }));
       const phase1Response = await supabase.functions.invoke(
         "phase-1-market-analysis",
-        { body: { projectId: project.id, url, productDescription, competitors, docs, context, vision, mission, values, outputLanguage: language } }
+        { body: { projectId: project.id, url, productDescription, competitors, docs, context, vision, mission, values, outputLanguage: language, sessionToken: sessionToken || undefined } }
       );
       
       if (phase1Response.error) {

@@ -12,3 +12,6 @@ verify_jwt = false
 
 [functions.phase-7-creative-variations]
 verify_jwt = false
+
+[functions.create-session]
+verify_jwt = false

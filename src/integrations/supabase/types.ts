@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      anonymous_sessions: {
+        Row: {
+          created_at: string
+          expires_at: string
+          ip_address: string | null
+          last_used_at: string | null
+          revoked: boolean
+          token: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          ip_address?: string | null
+          last_used_at?: string | null
+          revoked?: boolean
+          token: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          ip_address?: string | null
+          last_used_at?: string | null
+          revoked?: boolean
+          token?: string
+        }
+        Relationships: []
+      }
       experiments: {
         Row: {
           buyer_field: string | null
@@ -189,6 +216,33 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limits: {
+        Row: {
+          created_at: string
+          endpoint: string
+          id: string
+          rate_limit_key: string
+          request_count: number
+          window_start: string
+        }
+        Insert: {
+          created_at?: string
+          endpoint: string
+          id?: string
+          rate_limit_key: string
+          request_count?: number
+          window_start?: string
+        }
+        Update: {
+          created_at?: string
+          endpoint?: string
+          id?: string
+          rate_limit_key?: string
+          request_count?: number
+          window_start?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -198,6 +252,17 @@ export type Database = {
         Args: { project_uuid: string; session_tok: string }
         Returns: boolean
       }
+      check_rate_limit: {
+        Args: {
+          endpoint: string
+          key: string
+          max_requests: number
+          window_minutes: number
+        }
+        Returns: Json
+      }
+      cleanup_security_tables: { Args: never; Returns: undefined }
+      is_valid_session_token: { Args: { token: string }; Returns: boolean }
       owns_project: { Args: { project_uuid: string }; Returns: boolean }
     }
     Enums: {

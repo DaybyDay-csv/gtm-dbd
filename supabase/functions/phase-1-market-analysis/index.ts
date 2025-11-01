@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -17,7 +18,8 @@ const inputSchema = z.object({
   mission: z.string().max(1000).optional(),
   values: z.string().max(1000).optional(),
   docs: z.string().max(5000).optional(),
-  outputLanguage: z.enum(['es', 'en']).default('es')
+  outputLanguage: z.enum(['es', 'en']).default('es'),
+  sessionToken: z.string().optional()
 });
 
 // SSRF protection: validate URL is not private/internal
@@ -30,8 +32,24 @@ function isUrlSafe(url: string): boolean {
       return false;
     }
     
-    // Block private IP ranges and localhost
-    const hostname = parsed.hostname;
+    // Block private IP ranges, localhost, and cloud metadata endpoints
+    const hostname = parsed.hostname.toLowerCase();
+    
+    // Cloud provider metadata endpoints
+    const blockedHosts = [
+      'metadata.google.internal',
+      'metadata.goog',
+      '169.254.169.254',
+      'instance-data',
+      'metadata.azure.com',
+      'metadata.internal'
+    ];
+    
+    if (blockedHosts.some(blocked => hostname.includes(blocked))) {
+      return false;
+    }
+    
+    // Private IP ranges and localhost
     const privatePatterns = [
       /^10\./,
       /^172\.(1[6-9]|2\d|3[01])\./,
@@ -41,7 +59,9 @@ function isUrlSafe(url: string): boolean {
       /^localhost$/i,
       /^0\.0\.0\.0$/,
       /^\[?::1\]?$/,
-      /^\[?fe80:/i
+      /^\[?fe80:/i,
+      /^\[?fc00:/i,
+      /^\[?fd00:/i
     ];
     
     if (privatePatterns.some(pattern => pattern.test(hostname))) {
@@ -60,9 +80,63 @@ serve(async (req) => {
   }
 
   try {
+    // Initialize Supabase client for rate limiting
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    );
+
     // Validate input
     const body = await req.json();
     const validated = inputSchema.parse(body);
+    
+    // Determine rate limit key (session token, user ID, or IP)
+    const authHeader = req.headers.get('authorization');
+    const sessionToken = validated.sessionToken;
+    const ipAddress = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    
+    let rateLimitKey = ipAddress; // Default to IP
+    let maxRequests = 3; // Anonymous users: 3 requests per day
+    let windowMinutes = 1440; // 24 hours
+    
+    // If user is authenticated, increase limits
+    if (authHeader) {
+      try {
+        const { data: { user } } = await supabase.auth.getUser(authHeader.replace('Bearer ', ''));
+        if (user) {
+          rateLimitKey = user.id;
+          maxRequests = 50; // Authenticated users: 50 requests per day
+        }
+      } catch (e) {
+        console.log('User not authenticated, using anonymous limits');
+      }
+    } else if (sessionToken) {
+      // Use session token for anonymous users
+      rateLimitKey = sessionToken;
+    }
+    
+    // Check rate limit
+    const { data: rateLimitResult } = await supabase.rpc('check_rate_limit', {
+      key: rateLimitKey,
+      endpoint: 'phase-1-market-analysis',
+      max_requests: maxRequests,
+      window_minutes: windowMinutes
+    });
+    
+    if (rateLimitResult && !rateLimitResult.allowed) {
+      console.log(`Rate limit exceeded for ${rateLimitKey}`);
+      return new Response(
+        JSON.stringify({ 
+          error: 'Rate limit exceeded. Please sign up for unlimited access or try again later.',
+          retryAfter: rateLimitResult.retry_after,
+          limit: rateLimitResult.limit,
+          currentCount: rateLimitResult.current_count
+        }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
+    console.log(`Rate limit check passed: ${rateLimitResult?.current_count}/${rateLimitResult?.limit} requests used`);
     
     // SSRF protection
     if (!isUrlSafe(validated.url)) {
@@ -90,6 +164,7 @@ serve(async (req) => {
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
       
       const websiteResponse = await fetch(url, {
+        redirect: 'manual', // Prevent redirects to internal resources
         headers: {
           'User-Agent': 'Mozilla/5.0 (compatible; GTM-Factory-Bot/1.0)'
         },
@@ -98,14 +173,30 @@ serve(async (req) => {
       
       clearTimeout(timeoutId);
       
-      if (!websiteResponse.ok) {
-        throw new Error(`Failed to fetch website: ${websiteResponse.status}`);
+      // Block redirects
+      if ([301, 302, 303, 307, 308].includes(websiteResponse.status)) {
+        throw new Error('Redirects are not allowed for security reasons');
       }
       
-      const html = await websiteResponse.text();
+      // Validate content type
+      const contentType = websiteResponse.headers.get('content-type') || '';
+      if (!contentType.includes('text/html') && !contentType.includes('text/plain')) {
+        throw new Error('Only HTML and text content is allowed');
+      }
+      
+      if (!websiteResponse.ok) {
+        throw new Error(`HTTP ${websiteResponse.status}: ${websiteResponse.statusText}`);
+      }
+      
+      const htmlContent = await websiteResponse.text();
+      
+      // Enforce size limit (5MB)
+      if (htmlContent.length > 5 * 1024 * 1024) {
+        throw new Error('Response too large (max 5MB)');
+      }
       
       // Extract meaningful text content (remove scripts, styles, etc.)
-      const textContent = html
+      const textContent = htmlContent
         .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
         .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
         .replace(/<[^>]+>/g, ' ')

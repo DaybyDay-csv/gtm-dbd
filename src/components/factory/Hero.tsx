@@ -326,7 +326,9 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
 
         <div className="pt-8">
           <p className="text-xl font-semibold mb-4">{t('hero.how')}</p>
-          <p className="text-muted-foreground" dangerouslySetInnerHTML={{ __html: t('hero.method') }} />
+          <p className="text-muted-foreground">
+            {t('hero.method.part1')} <strong className="text-foreground">{t('hero.method.part2')}</strong>
+          </p>
         </div>
       </div>
     </section>
