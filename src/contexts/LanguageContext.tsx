@@ -340,7 +340,7 @@ const translations: Record<Language, Record<string, string>> = {
     "hero.how": "How do we know?",
     "hero.method.part1": "No guessing.",
     "hero.method.part2": "Read + Cross-Reference + Verify",
-    "hero.includes.title": "Go To Market Analysis includes:",
+    "hero.includes.title": "Go-To-Market analysis includes:",
     "hero.includes.persona": "Buyer persona profile",
     "hero.includes.offers": "Value-optimized offers for your Buyer",
     "hero.includes.disc": "DISC messaging variants for your Buyer",
