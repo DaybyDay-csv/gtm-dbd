@@ -72,9 +72,9 @@ const translations: Record<Language, Record<string, string>> = {
     "hero.method.part2": "Leemos lo que ya existe + Cruzamos Referencias + Verificamos con el mercado",
     "hero.includes.title": "Conoce tu:",
     "hero.includes.persona": "Perfil de buyer persona",
-    "hero.includes.offers": "Ofertas optimizadas por valor",
-    "hero.includes.disc": "Variantes de mensajes DISC",
-    "hero.includes.variations": "Más de 30 variaciones creativas",
+    "hero.includes.offers": "Ofertas optimizadas por valor para tu buyer",
+    "hero.includes.disc": "Variantes de mensajes para tu buyer",
+    "hero.includes.variations": "Más de 30 variaciones creativas para tu buyer",
     "hero.validation.min": "La descripción del producto debe tener al menos 10 caracteres",
     "hero.ai.language": "Idioma de Salida de IA",
 
