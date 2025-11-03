@@ -7,6 +7,7 @@ import { DownloadAnalysisButton } from "./DownloadAnalysisButton";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { AnalysisState } from "@/hooks/useAnalysisOrchestrator";
 import { useState, useEffect } from "react";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 
 interface AppHeaderProps {
   analysisState?: AnalysisState;
@@ -56,6 +57,7 @@ export const AppHeader = ({ analysisState, projectName, showDownloadButton = fal
           <p className="text-xs text-muted-foreground">{t('nav.subtitle')}</p>
         </Link>
         <div className="flex items-center gap-4">
+          <ThemeSwitcher />
           {user ? (
             <DownloadAnalysisButton
               state={analysisState || emptyState} 
