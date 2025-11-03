@@ -73,7 +73,7 @@ const translations: Record<Language, Record<string, string>> = {
     "hero.includes.title": "El análisis Go-To-Market Incluye:",
     "hero.includes.persona": "Tu Buyer persona",
     "hero.includes.offers": "Ofertas optimizadas por valor para tu Buyer",
-    "hero.includes.disc": "Variantes de mensajes para tu Buyer",
+    "hero.includes.disc": "Variantes de mensajes DISC para tu Buyer",
     "hero.includes.variations": "Más de 30 variaciones creativas para tu Buyer",
     "hero.validation.min": "La descripción del producto debe tener al menos 10 caracteres",
     "hero.ai.language": "Idioma de Salida de IA",
