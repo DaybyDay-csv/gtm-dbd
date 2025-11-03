@@ -90,32 +90,32 @@ All colors MUST be HSL.
   }
 
   .red-theme {
-    --background: 0 0% 5%;
-    --foreground: 0 0% 98%;
+    --background: 0 40% 15%;
+    --foreground: 0 0% 100%;
 
-    --card: 0 0% 8%;
-    --card-foreground: 0 0% 98%;
+    --card: 0 35% 18%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 0 0% 8%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 0 35% 18%;
+    --popover-foreground: 0 0% 100%;
 
     --primary: 0 84% 60%;
-    --primary-foreground: 0 0% 98%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 20% 15%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 0 0% 8%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 0 10% 12%;
-    --muted-foreground: 0 0% 60%;
+    --muted: 0 0% 8%;
+    --muted-foreground: 0 0% 70%;
 
-    --accent: 0 50% 20%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 0 0% 8%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 0 30% 18%;
-    --input: 0 30% 18%;
+    --border: 0 20% 25%;
+    --input: 0 20% 25%;
     --ring: 0 84% 60%;
 
     /* DISC colors - red themed */
