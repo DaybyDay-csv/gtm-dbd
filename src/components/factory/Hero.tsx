@@ -174,7 +174,7 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
             <CollapsibleTrigger asChild>
               <Button 
                 type="button" 
-                variant="ghost" 
+                variant="outline" 
                 size="sm"
                 className="w-full gap-2"
                 disabled={isRunning}
