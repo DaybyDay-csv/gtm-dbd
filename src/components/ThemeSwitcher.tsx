@@ -1,46 +1,34 @@
-import { Sun, Moon, Flame } from "lucide-react";
+import { Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme, Theme } from "@/hooks/useTheme";
 
 export const ThemeSwitcher = () => {
   const { theme, setTheme } = useTheme();
 
-  const cycleTheme = () => {
-    const themes: Theme[] = ['light', 'dark', 'red'];
-    const currentIndex = themes.indexOf(theme);
-    const nextIndex = (currentIndex + 1) % themes.length;
-    setTheme(themes[nextIndex]);
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
   };
 
   const getIcon = () => {
     switch (theme) {
-      case 'light':
+      case "light":
         return <Sun className="h-4 w-4" />;
-      case 'dark':
+      case "dark":
         return <Moon className="h-4 w-4" />;
-      case 'red':
-        return <Flame className="h-4 w-4" />;
     }
   };
 
   const getLabel = () => {
     switch (theme) {
-      case 'light':
-        return 'Light';
-      case 'dark':
-        return 'Dark';
-      case 'red':
-        return 'Red';
+      case "light":
+        return "Light";
+      case "dark":
+        return "Dark";
     }
   };
 
   return (
-    <Button
-      variant="outline"
-      size="sm"
-      onClick={cycleTheme}
-      className="gap-2"
-    >
+    <Button variant="outline" size="sm" onClick={toggleTheme} className="gap-2">
       {getIcon()}
       {getLabel()}
     </Button>

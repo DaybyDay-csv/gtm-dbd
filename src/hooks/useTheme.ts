@@ -1,28 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-export type Theme = 'light' | 'dark' | 'red';
+export type Theme = "light" | "dark";
 
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>(() => {
-    const stored = localStorage.getItem('theme') as Theme;
-    return stored || 'light';
+    const stored = localStorage.getItem("theme") as Theme;
+    return stored || "light";
   });
 
   useEffect(() => {
     const root = document.documentElement;
-    
-    // Remove all theme classes
-    root.classList.remove('light', 'dark', 'red-theme');
-    
-    // Add the current theme class
-    if (theme === 'red') {
-      root.classList.add('red-theme');
-    } else if (theme === 'dark') {
-      root.classList.add('dark');
+
+    root.classList.remove("light", "dark");
+
+    if (theme === "dark") {
+      root.classList.add("dark");
+    } else {
+      root.classList.add("light");
     }
-    
-    // Store preference
-    localStorage.setItem('theme', theme);
+
+    localStorage.setItem("theme", theme);
   }, [theme]);
 
   return { theme, setTheme };
