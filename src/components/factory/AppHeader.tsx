@@ -51,12 +51,12 @@ export const AppHeader = ({ analysisState, projectName, showDownloadButton = fal
 
   return (
     <header className="sticky top-0 z-50 border-b no-pdf bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="w-full px-8 py-4 flex items-center justify-between">
+      <div className="w-full px-4 md:px-8 py-3 md:py-4 flex items-center justify-between gap-2">
         <Link to="/" className="flex flex-col hover:opacity-80 transition-opacity">
-          <h1 className="text-xl font-bold">{t('nav.title')}</h1>
-          <p className="text-xs text-muted-foreground">{t('nav.subtitle')}</p>
+          <h1 className="text-base md:text-xl font-bold">{t('nav.title')}</h1>
+          <p className="text-[10px] md:text-xs text-muted-foreground hidden sm:block">{t('nav.subtitle')}</p>
         </Link>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-1 md:gap-4">
           <ThemeSwitcher />
           {user ? (
             <DownloadAnalysisButton
@@ -69,11 +69,12 @@ export const AppHeader = ({ analysisState, projectName, showDownloadButton = fal
                 <PopoverTrigger asChild>
                   <Button 
                     variant="outline" 
+                    size="sm"
                     disabled={!hasContent}
-                    className="gap-2 hover-scale transition-all"
+                    className="gap-1 md:gap-2 hover-scale transition-all text-xs md:text-sm"
                   >
-                    <Download className="h-4 w-4" />
-                    Descargar Análisis
+                    <Download className="h-3 w-3 md:h-4 md:w-4" />
+                    <span className="hidden sm:inline">Descargar Análisis</span>
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-80">
@@ -97,10 +98,11 @@ export const AppHeader = ({ analysisState, projectName, showDownloadButton = fal
               </Popover>
               <Button 
                 onClick={() => navigate("/auth")}
-                className="gap-2 hover-scale transition-all"
+                size="sm"
+                className="gap-1 md:gap-2 hover-scale transition-all text-xs md:text-sm"
               >
-                <LogOut className="h-4 w-4" />
-                Iniciar Sesión
+                <LogOut className="h-3 w-3 md:h-4 md:w-4" />
+                <span className="hidden sm:inline">Iniciar Sesión</span>
               </Button>
             </>
           )}
@@ -108,14 +110,15 @@ export const AppHeader = ({ analysisState, projectName, showDownloadButton = fal
             variant="ghost"
             size="sm"
             onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}
-            className="gap-2"
+            className="gap-1 md:gap-2 text-xs md:text-sm"
           >
-            <Globe className="h-4 w-4" />
-            {language === 'es' ? '🇪🇸 ES' : '🇺🇸 EN'}
+            <Globe className="h-3 w-3 md:h-4 md:w-4" />
+            <span className="hidden sm:inline">{language === 'es' ? '🇪🇸 ES' : '🇺🇸 EN'}</span>
+            <span className="sm:hidden">{language === 'es' ? '🇪🇸' : '🇺🇸'}</span>
           </Button>
           {user && (
             <>
-              <span className="text-sm text-muted-foreground">{user.email}</span>
+              <span className="text-xs md:text-sm text-muted-foreground hidden lg:inline">{user.email}</span>
               <Button
                 variant="outline"
                 size="sm"

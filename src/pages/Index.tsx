@@ -141,8 +141,8 @@ const Index = () => {
             </div>
           </div>
 
-          <section className="w-full px-8 py-12">
-            <div className="max-w-7xl mx-auto space-y-8">
+          <section className="w-full px-4 sm:px-6 md:px-8 py-8 md:py-12">
+            <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
               <div data-phase="phase1" className="pdf-section">
                 <div
                   className={`w-full ${displayState.isRunning && !displayState.phases.phase1?.productUnderstanding ? "charging" : ""} ${displayState.phases.phase1?.productUnderstanding ? "magic-reveal" : ""}`}

@@ -94,25 +94,25 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
   };
 
   return (
-    <section className="w-full px-8 py-16 text-center">
-      <div className="max-w-5xl mx-auto space-y-8">
-        <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
+    <section className="w-full px-4 sm:px-6 md:px-8 py-8 md:py-16 text-center">
+      <div className="max-w-5xl mx-auto space-y-6 md:space-y-8">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
           {t('hero.headline.line1')}
           <br />
-          <span className="text-primary text-3xl md:text-4xl">{t('hero.headline.line2')}</span>
+          <span className="text-primary text-xl sm:text-2xl md:text-3xl lg:text-4xl">{t('hero.headline.line2')}</span>
           <br />
-          <span className="text-2xl md:text-3xl font-normal">{t('hero.headline.line3')}</span>
+          <span className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-normal">{t('hero.headline.line3')}</span>
         </h1>
         
         <p className="text-sm text-muted-foreground italic">
           {t('hero.evidence')}
         </p>
 
-        <div className="mb-8 p-4 bg-muted/30 rounded-lg border border-border max-w-2xl mx-auto">
-          <p className="text-sm font-medium mb-3 text-muted-foreground text-center">
+        <div className="mb-6 md:mb-8 p-3 md:p-4 bg-muted/30 rounded-lg border border-border max-w-2xl mx-auto">
+          <p className="text-xs md:text-sm font-medium mb-2 md:mb-3 text-muted-foreground text-center">
             {t('hero.includes.title')}
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-left text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 md:gap-2 text-left text-[11px] md:text-xs">
             <div className="flex items-start gap-2">
               <User className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
               <p className="text-muted-foreground">{t('hero.includes.persona')}</p>
@@ -132,14 +132,14 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-4">
-          <div className="space-y-3">
+        <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-3 md:space-y-4">
+          <div className="space-y-2 md:space-y-3">
             <Input
               type="url"
               placeholder={t('hero.placeholder.url')}
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              className="text-lg h-14"
+              className="text-sm md:text-base lg:text-lg h-11 md:h-14"
               disabled={isRunning}
               required
             />
@@ -148,7 +148,7 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
                 placeholder={t('hero.placeholder.product')}
                 value={productDescription}
                 onChange={(e) => setProductDescription(e.target.value)}
-                className="text-base min-h-[70px]"
+                className="text-sm md:text-base min-h-[60px] md:min-h-[70px]"
                 disabled={isRunning}
                 required
                 minLength={10}
@@ -162,10 +162,10 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
             <Button
               type="submit"
               size="lg"
-              className="w-full h-14"
+              className="w-full h-11 md:h-14 text-sm md:text-base"
               disabled={isRunning || !url.trim() || productDescription.trim().length < 10}
             >
-              <Sparkles className="mr-2 h-5 w-5" />
+              <Sparkles className="mr-2 h-4 w-4 md:h-5 md:w-5" />
               {t('hero.button.run')}
             </Button>
           </div>
