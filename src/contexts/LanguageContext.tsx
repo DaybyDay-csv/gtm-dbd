@@ -47,7 +47,7 @@ const translations: Record<Language, Record<string, string>> = {
     "hero.button.run": "Ejecutar Análisis",
     "hero.placeholder.url": "https://tuwebsite.com",
     "hero.placeholder.product": '¿Qué vendes o proporcionas? (ej. "Ayudamos a empresas B2B SaaS...")',
-    "hero.advanced": "Añadir Contexto, Competidores y Documentos (Opcional)",
+    "hero.advanced": "Añadir Contexto y Documentos (Opcional)",
     "hero.context.label": "Contexto Adicional",
     "hero.context.placeholder": "Cualquier contexto específico, objetivos o información sobre tu negocio...",
     "hero.competitors.label": "Competidores Conocidos",
