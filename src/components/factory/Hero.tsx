@@ -316,7 +316,7 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
             </CollapsibleContent>
           </Collapsible>
 
-          <div className="flex items-center justify-center gap-2 text-sm">
+          <div className="flex flex-col items-center justify-center gap-1 text-sm">
             <span className="text-muted-foreground">{t('hero.optional')}</span>
             <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-muted text-muted-foreground border border-border animate-fade-in">
               {t('hero.coming_soon')}
