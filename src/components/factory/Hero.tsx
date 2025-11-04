@@ -94,7 +94,7 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
   };
 
   return (
-    <section className="w-full px-4 sm:px-6 md:px-8 py-8 md:py-16 text-center">
+    <section className="w-full max-w-full px-4 sm:px-6 md:px-8 py-8 md:py-16 text-center overflow-x-hidden">
       <div className="max-w-5xl mx-auto space-y-6 md:space-y-8">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
           {t('hero.headline.line1')}

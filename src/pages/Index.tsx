@@ -79,7 +79,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <AppHeader
         analysisState={displayState}
         projectName={displayState.phases.phase1?.productNucleus?.name}
@@ -141,7 +141,7 @@ const Index = () => {
             </div>
           </div>
 
-          <section className="w-full px-4 sm:px-6 md:px-8 py-8 md:py-12">
+          <section className="w-full max-w-full px-4 sm:px-6 md:px-8 py-8 md:py-12 overflow-x-hidden">
             <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
               <div data-phase="phase1" className="pdf-section">
                 <div

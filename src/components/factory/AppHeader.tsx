@@ -2,9 +2,10 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
-import { FolderOpen, LogOut, Globe, Settings, Download } from "lucide-react";
+import { FolderOpen, LogOut, Globe, Settings, Download, Menu } from "lucide-react";
 import { DownloadAnalysisButton } from "./DownloadAnalysisButton";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { AnalysisState } from "@/hooks/useAnalysisOrchestrator";
 import { useState, useEffect } from "react";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
@@ -51,12 +52,14 @@ export const AppHeader = ({ analysisState, projectName, showDownloadButton = fal
 
   return (
     <header className="sticky top-0 z-50 border-b no-pdf bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="w-full px-4 md:px-8 py-3 md:py-4 flex items-center justify-between gap-2">
-        <Link to="/" className="flex flex-col hover:opacity-80 transition-opacity">
-          <h1 className="text-base md:text-xl font-bold">{t('nav.title')}</h1>
+      <div className="w-full max-w-full px-4 md:px-8 py-3 md:py-4 flex items-center justify-between gap-2">
+        <Link to="/" className="flex flex-col hover:opacity-80 transition-opacity flex-shrink-0">
+          <h1 className="text-base md:text-xl font-bold whitespace-nowrap">{t('nav.title')}</h1>
           <p className="text-[10px] md:text-xs text-muted-foreground hidden sm:block">{t('nav.subtitle')}</p>
         </Link>
-        <div className="flex items-center gap-1 md:gap-4">
+        
+        {/* Desktop Navigation */}
+        <div className="hidden lg:flex items-center gap-2 xl:gap-4">
           <ThemeSwitcher />
           {user ? (
             <DownloadAnalysisButton
@@ -71,10 +74,10 @@ export const AppHeader = ({ analysisState, projectName, showDownloadButton = fal
                     variant="outline" 
                     size="sm"
                     disabled={!hasContent}
-                    className="gap-1 md:gap-2 hover-scale transition-all text-xs md:text-sm"
+                    className="gap-2 hover-scale transition-all"
                   >
-                    <Download className="h-3 w-3 md:h-4 md:w-4" />
-                    <span className="hidden sm:inline">Descargar Análisis</span>
+                    <Download className="h-4 w-4" />
+                    Descargar Análisis
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-80">
@@ -99,10 +102,10 @@ export const AppHeader = ({ analysisState, projectName, showDownloadButton = fal
               <Button 
                 onClick={() => navigate("/auth")}
                 size="sm"
-                className="gap-1 md:gap-2 hover-scale transition-all text-xs md:text-sm"
+                className="gap-2 hover-scale transition-all"
               >
-                <LogOut className="h-3 w-3 md:h-4 md:w-4" />
-                <span className="hidden sm:inline">Iniciar Sesión</span>
+                <LogOut className="h-4 w-4" />
+                Iniciar Sesión
               </Button>
             </>
           )}
@@ -110,15 +113,14 @@ export const AppHeader = ({ analysisState, projectName, showDownloadButton = fal
             variant="ghost"
             size="sm"
             onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}
-            className="gap-1 md:gap-2 text-xs md:text-sm"
+            className="gap-2"
           >
-            <Globe className="h-3 w-3 md:h-4 md:w-4" />
-            <span className="hidden sm:inline">{language === 'es' ? '🇪🇸 ES' : '🇺🇸 EN'}</span>
-            <span className="sm:hidden">{language === 'es' ? '🇪🇸' : '🇺🇸'}</span>
+            <Globe className="h-4 w-4" />
+            {language === 'es' ? '🇪🇸 ES' : '🇺🇸 EN'}
           </Button>
           {user && (
             <>
-              <span className="text-xs md:text-sm text-muted-foreground hidden lg:inline">{user.email}</span>
+              <span className="text-sm text-muted-foreground hidden xl:inline">{user.email}</span>
               <Button
                 variant="outline"
                 size="sm"
@@ -143,6 +145,90 @@ export const AppHeader = ({ analysisState, projectName, showDownloadButton = fal
               </Button>
             </>
           )}
+        </div>
+
+        {/* Mobile Navigation */}
+        <div className="flex lg:hidden items-center gap-2">
+          <ThemeSwitcher />
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="sm" className="px-2">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[280px] sm:w-[350px]">
+              <div className="flex flex-col gap-4 mt-8">
+                <Button
+                  variant="ghost"
+                  onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}
+                  className="justify-start gap-2"
+                >
+                  <Globe className="h-4 w-4" />
+                  {language === 'es' ? '🇪🇸 Español' : '🇺🇸 English'}
+                </Button>
+                
+                {user ? (
+                  <>
+                    <div className="px-3 py-2 text-sm text-muted-foreground border-b">
+                      {user.email}
+                    </div>
+                    <DownloadAnalysisButton
+                      state={analysisState || emptyState} 
+                      projectName={projectName || "Análisis Completo"} 
+                    />
+                    <Button
+                      variant="outline"
+                      onClick={() => navigate("/projects")}
+                      className="justify-start"
+                    >
+                      <FolderOpen className="mr-2 h-4 w-4" />
+                      {t('nav.projects')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      asChild
+                      className="justify-start"
+                    >
+                      <Link to="/settings">
+                        <Settings className="mr-2 h-4 w-4" />
+                        {t('nav.settings')}
+                      </Link>
+                    </Button>
+                    <Button variant="outline" onClick={signOut} className="justify-start">
+                      <LogOut className="mr-2 h-4 w-4" />
+                      {t('nav.signout')}
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    {hasContent ? (
+                      <div className="space-y-4 border-b pb-4">
+                        <p className="text-sm text-muted-foreground px-3">
+                          Loguéate para descargar tu análisis completo
+                        </p>
+                        <div className="flex flex-col gap-2">
+                          <Button onClick={() => navigate("/auth")} className="w-full">
+                            Crear Cuenta
+                          </Button>
+                          <Button onClick={() => navigate("/auth")} variant="outline" className="w-full">
+                            Iniciar Sesión
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <Button 
+                        onClick={() => navigate("/auth")}
+                        className="justify-start gap-2"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Iniciar Sesión
+                      </Button>
+                    )}
+                  </>
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </header>
