@@ -31,7 +31,26 @@ export const BudgetInput = ({ onSubmit }: BudgetInputProps) => {
     setCustomAmount(budgetLevels[level].range);
   };
 
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Allow empty string for editing
+    if (value === '') {
+      setCustomAmount(0);
+      return;
+    }
+    const numValue = Number(value);
+    // Validate it's a valid positive number
+    if (!isNaN(numValue) && numValue >= 0) {
+      setCustomAmount(Math.floor(numValue));
+    }
+  };
+
   const handleSubmit = () => {
+    // Validate amount is a valid positive number
+    if (isNaN(customAmount) || customAmount < 0) {
+      console.error('Invalid budget amount');
+      return;
+    }
     const level = budgetLevels[selectedLevel];
     const preference = channelPreference.trim() || undefined;
     onSubmit(level.value, customAmount, preference);
@@ -117,7 +136,7 @@ export const BudgetInput = ({ onSubmit }: BudgetInputProps) => {
                 id="amount"
                 type="number"
                 value={customAmount}
-                onChange={(e) => setCustomAmount(Number(e.target.value))}
+                onChange={handleAmountChange}
                 className="pl-10 text-lg font-semibold"
                 min={0}
                 step={100}
