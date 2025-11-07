@@ -4,8 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Euro, TrendingUp, Target, Zap, Rocket, Crown, DollarSign, Lightbulb, MessageSquare } from "lucide-react";
+import { Euro, TrendingUp, Target, Zap, Rocket, Crown, DollarSign, Lightbulb, MessageSquare, AlertCircle } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface BudgetInputProps {
   onSubmit: (budgetLevel: string, budgetAmount: number, channelPreference?: string) => void;
@@ -21,18 +23,22 @@ const budgetLevels = [
 ];
 
 export const BudgetInput = ({ onSubmit }: BudgetInputProps) => {
+  const { toast } = useToast();
   const [selectedLevel, setSelectedLevel] = useState(2); // Default to "Medio"
   const [customAmount, setCustomAmount] = useState(budgetLevels[2].range);
   const [channelPreference, setChannelPreference] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   const handleLevelChange = (value: number[]) => {
     const level = value[0];
     setSelectedLevel(level);
     setCustomAmount(budgetLevels[level].range);
+    setError(null);
   };
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+    setError(null);
     // Allow empty string for editing
     if (value === '') {
       setCustomAmount(0);
@@ -48,11 +54,18 @@ export const BudgetInput = ({ onSubmit }: BudgetInputProps) => {
   const handleSubmit = () => {
     // Validate amount is a valid positive number
     if (isNaN(customAmount) || customAmount < 0) {
-      console.error('Invalid budget amount');
+      setError('Por favor, introduce un presupuesto válido (debe ser un número positivo)');
       return;
     }
+    
     const level = budgetLevels[selectedLevel];
     const preference = channelPreference.trim() || undefined;
+    
+    toast({
+      title: "✓ Presupuesto confirmado",
+      description: `Se ha guardado tu presupuesto de €${customAmount.toLocaleString('es-ES')}`,
+    });
+    
     onSubmit(level.value, customAmount, preference);
   };
 
@@ -137,11 +150,17 @@ export const BudgetInput = ({ onSubmit }: BudgetInputProps) => {
                 type="number"
                 value={customAmount}
                 onChange={handleAmountChange}
-                className="pl-10 text-lg font-semibold"
+                className={`pl-10 text-lg font-semibold ${error ? 'border-red-500' : ''}`}
                 min={0}
                 step={100}
               />
             </div>
+            {error && (
+              <Alert variant="destructive" className="mt-2">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
             <p className="text-xs text-muted-foreground">
               Puedes modificar esta cifra según tu presupuesto real
             </p>
