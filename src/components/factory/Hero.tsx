@@ -2,11 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Sparkles, ChevronDown, ChevronUp, Upload, FileText, X, Target, User, TrendingUp, Palette, Lightbulb } from "lucide-react";
+import { Sparkles, ChevronDown, ChevronUp, Upload, FileText, X, Target, User, TrendingUp, Palette, Lightbulb, AlertCircle } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface HeroProps {
   onRunAnalysis: (projectName: string, url: string, productDescription: string, competitors?: string, docs?: string, context?: string, vision?: string, mission?: string, values?: string) => void;
@@ -67,6 +68,17 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate context length
+    if (context.trim().length > 2000) {
+      toast({
+        title: "Error en el contexto",
+        description: "El contexto adicional no puede exceder 2000 caracteres",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     if (url.trim() && productDescription.trim()) {
       const projectName = `Analysis ${new Date().toISOString().split('T')[0]}`;
       
@@ -192,8 +204,22 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
                   value={context}
                   onChange={(e) => setContext(e.target.value)}
                   disabled={isRunning}
-                  className="min-h-[80px]"
+                  className={`min-h-[80px] ${context.length > 2000 ? 'border-destructive' : ''}`}
+                  maxLength={2500}
                 />
+                <div className="flex justify-between items-center">
+                  <p className={`text-xs ${context.length > 2000 ? 'text-destructive font-medium' : 'text-muted-foreground'}`}>
+                    {context.length}/2000 caracteres
+                  </p>
+                </div>
+                {context.length > 2000 && (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>
+                      El contexto adicional no puede exceder 2000 caracteres. Por favor, reduce el texto.
+                    </AlertDescription>
+                  </Alert>
+                )}
               </div>
               
               <div className="space-y-2">
