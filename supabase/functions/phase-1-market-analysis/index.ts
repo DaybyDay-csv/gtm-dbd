@@ -12,7 +12,7 @@ const inputSchema = z.object({
   projectId: z.string().uuid(),
   url: z.string().url().max(2048),
   productDescription: z.string().trim().min(10).max(5000),
-  context: z.string().max(2000).optional(),
+  context: z.string().max(5000).optional(),
   competitors: z.string().max(1000).optional(),
   vision: z.string().max(1000).optional(),
   mission: z.string().max(1000).optional(),

@@ -70,10 +70,10 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
     e.preventDefault();
     
     // Validate context length
-    if (context.trim().length > 2000) {
+    if (context.trim().length > 5000) {
       toast({
         title: "Error en el contexto",
-        description: "El contexto adicional no puede exceder 2000 caracteres",
+        description: "El contexto adicional no puede exceder 5000 caracteres",
         variant: "destructive"
       });
       return;
@@ -204,19 +204,19 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
                   value={context}
                   onChange={(e) => setContext(e.target.value)}
                   disabled={isRunning}
-                  className={`min-h-[80px] ${context.length > 2000 ? 'border-destructive' : ''}`}
-                  maxLength={2500}
+                  className={`min-h-[80px] ${context.length > 5000 ? 'border-destructive' : ''}`}
+                  maxLength={5500}
                 />
                 <div className="flex justify-between items-center">
-                  <p className={`text-xs ${context.length > 2000 ? 'text-destructive font-medium' : 'text-muted-foreground'}`}>
-                    {context.length}/2000 caracteres
+                  <p className={`text-xs ${context.length > 5000 ? 'text-destructive font-medium' : 'text-muted-foreground'}`}>
+                    {context.length}/5000 caracteres
                   </p>
                 </div>
-                {context.length > 2000 && (
+                {context.length > 5000 && (
                   <Alert variant="destructive">
                     <AlertCircle className="h-4 w-4" />
                     <AlertDescription>
-                      El contexto adicional no puede exceder 2000 caracteres. Por favor, reduce el texto.
+                      El contexto adicional no puede exceder 5000 caracteres. Por favor, reduce el texto.
                     </AlertDescription>
                   </Alert>
                 )}
