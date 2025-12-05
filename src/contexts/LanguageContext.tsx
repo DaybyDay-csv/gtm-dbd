@@ -40,7 +40,7 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.title": "GTM Factory",
 
     // Hero Section
-    "hero.headline.line1": "¿Gastando presupuesto publicitario en corazonadas?",
+    "hero.headline.line1": "Conoce a tus clientes.",
     "hero.headline.line2": "Conoce exactamente quién te compra y por qué.",
     "hero.headline.line3": "En minutos, no meses.",
     "hero.evidence": "Basado en evidencia, no en opiniones.",
@@ -310,7 +310,7 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.title": "GTM Factory",
 
     // Hero Section
-    "hero.headline.line1": "Wasting ad budget on speculations?",
+    "hero.headline.line1": "Get to know your clients.",
     "hero.headline.line2": "Know exactly who buys and why.",
     "hero.headline.line3": "In minutes, not months.",
     "hero.evidence": "Built on evidence, not opinions.",
