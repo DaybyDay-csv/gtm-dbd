@@ -2,20 +2,36 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Sparkles, ChevronDown, ChevronUp, Upload, FileText, X, Target, User, TrendingUp, Palette, Lightbulb, AlertCircle } from "lucide-react";
+import { Sparkles, ChevronDown, ChevronUp, Upload, FileText, X, Target, User, TrendingUp, Palette, Lightbulb, AlertCircle, Check, Loader2, Play } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useState, useEffect, useCallback } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface HeroProps {
-  onRunAnalysis: (projectName: string, url: string, productDescription: string, competitors?: string, docs?: string, context?: string, vision?: string, mission?: string, values?: string) => void;
+  onRunAnalysis: (projectName: string, url: string, productDescription: string, competitors?: string, docs?: string, context?: string, vision?: string, mission?: string, values?: string, industry?: string) => void;
   isRunning: boolean;
+  onLoadDemo?: () => void;
 }
 
-export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
+type UrlValidationState = 'idle' | 'validating' | 'valid' | 'invalid';
+
+const INDUSTRIES = [
+  { value: 'saas', labelKey: 'hero.industry.saas' },
+  { value: 'ecommerce', labelKey: 'hero.industry.ecommerce' },
+  { value: 'services', labelKey: 'hero.industry.services' },
+  { value: 'education', labelKey: 'hero.industry.education' },
+  { value: 'healthcare', labelKey: 'hero.industry.healthcare' },
+  { value: 'finance', labelKey: 'hero.industry.finance' },
+  { value: 'other', labelKey: 'hero.industry.other' },
+];
+
+export const Hero = ({ onRunAnalysis, isRunning, onLoadDemo }: HeroProps) => {
   const [url, setUrl] = useState("");
+  const [urlValidation, setUrlValidation] = useState<UrlValidationState>('idle');
+  const [industry, setIndustry] = useState("");
   const [productDescription, setProductDescription] = useState("");
   const [context, setContext] = useState("");
   const [competitors, setCompetitors] = useState("");
@@ -28,6 +44,37 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
   const { t } = useLanguage();
+
+  // Debounced URL validation
+  const validateUrl = useCallback((urlToValidate: string) => {
+    if (!urlToValidate.trim()) {
+      setUrlValidation('idle');
+      return;
+    }
+
+    setUrlValidation('validating');
+
+    // Simulate validation delay for UX
+    const timer = setTimeout(() => {
+      try {
+        const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/i;
+        if (urlPattern.test(urlToValidate)) {
+          setUrlValidation('valid');
+        } else {
+          setUrlValidation('invalid');
+        }
+      } catch {
+        setUrlValidation('invalid');
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const cleanup = validateUrl(url);
+    return cleanup;
+  }, [url, validateUrl]);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -48,8 +95,8 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
 
     if (validFiles.length !== files.length) {
       toast({
-        title: "Invalid file type",
-        description: "Please upload only PDF, Word, PowerPoint, or Excel documents",
+        title: t('hero.upload.invalid'),
+        description: t('hero.upload.invalidDesc'),
         variant: "destructive"
       });
       return;
@@ -57,8 +104,8 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
 
     setUploadedFiles(prev => [...prev, ...validFiles]);
     toast({
-      title: "Files added",
-      description: `${validFiles.length} document(s) added successfully`
+      title: t('hero.upload.success'),
+      description: t('hero.upload.successDesc').replace('{count}', validFiles.length.toString())
     });
   };
 
@@ -72,8 +119,8 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
     // Validate context length
     if (context.trim().length > 5000) {
       toast({
-        title: "Error en el contexto",
-        description: "El contexto adicional no puede exceder 5000 caracteres",
+        title: t('hero.context.error'),
+        description: t('hero.context.errorDesc'),
         variant: "destructive"
       });
       return;
@@ -100,8 +147,22 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
         context.trim() || undefined,
         vision.trim() || undefined,
         mission.trim() || undefined,
-        values.trim() || undefined
+        values.trim() || undefined,
+        industry || undefined
       );
+    }
+  };
+
+  const getUrlValidationIcon = () => {
+    switch (urlValidation) {
+      case 'validating':
+        return <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />;
+      case 'valid':
+        return <Check className="w-4 h-4 text-green-600" />;
+      case 'invalid':
+        return <AlertCircle className="w-4 h-4 text-destructive" />;
+      default:
+        return null;
     }
   };
 
@@ -146,15 +207,48 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
 
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-3 md:space-y-4">
           <div className="space-y-2 md:space-y-3">
-            <Input
-              type="url"
-              placeholder={t('hero.placeholder.url')}
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              className="text-sm md:text-base lg:text-lg h-11 md:h-14"
-              disabled={isRunning}
-              required
-            />
+            {/* Industry Selector */}
+            <Select value={industry} onValueChange={setIndustry} disabled={isRunning}>
+              <SelectTrigger className="text-sm md:text-base h-11 md:h-12">
+                <SelectValue placeholder={t('hero.industry.placeholder')} />
+              </SelectTrigger>
+              <SelectContent>
+                {INDUSTRIES.map((ind) => (
+                  <SelectItem key={ind.value} value={ind.value}>
+                    {t(ind.labelKey)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* URL Input with validation */}
+            <div className="relative">
+              <Input
+                type="url"
+                placeholder={t('hero.placeholder.url')}
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                className="text-sm md:text-base lg:text-lg h-11 md:h-14 pr-10"
+                disabled={isRunning}
+                required
+              />
+              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                {getUrlValidationIcon()}
+              </div>
+            </div>
+            {urlValidation === 'valid' && url && (
+              <p className="text-xs text-green-600 text-left flex items-center gap-1">
+                <Check className="w-3 h-3" />
+                {t('hero.url.valid')}
+              </p>
+            )}
+            {urlValidation === 'invalid' && url && (
+              <p className="text-xs text-destructive text-left flex items-center gap-1">
+                <AlertCircle className="w-3 h-3" />
+                {t('hero.url.invalid')}
+              </p>
+            )}
+
             <div className="space-y-1">
               <Textarea
                 placeholder={t('hero.placeholder.product')}
@@ -171,15 +265,32 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
                 </p>
               )}
             </div>
-            <Button
-              type="submit"
-              size="lg"
-              className="w-full h-11 md:h-14 text-sm md:text-base"
-              disabled={isRunning || !url.trim() || productDescription.trim().length < 10}
-            >
-              <Sparkles className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-              {t('hero.button.run')}
-            </Button>
+            
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Button
+                type="submit"
+                size="lg"
+                className="flex-1 h-11 md:h-14 text-sm md:text-base"
+                disabled={isRunning || !url.trim() || productDescription.trim().length < 10 || urlValidation === 'invalid'}
+              >
+                <Sparkles className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+                {t('hero.button.run')}
+              </Button>
+              
+              {onLoadDemo && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="lg"
+                  className="h-11 md:h-14 text-sm md:text-base"
+                  onClick={onLoadDemo}
+                  disabled={isRunning}
+                >
+                  <Play className="mr-2 h-4 w-4" />
+                  {t('hero.button.demo')}
+                </Button>
+              )}
+            </div>
           </div>
 
           <Collapsible open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
@@ -209,14 +320,14 @@ export const Hero = ({ onRunAnalysis, isRunning }: HeroProps) => {
                 />
                 <div className="flex justify-between items-center">
                   <p className={`text-xs ${context.length > 5000 ? 'text-destructive font-medium' : 'text-muted-foreground'}`}>
-                    {context.length}/5000 caracteres
+                    {context.length}/5000 {t('hero.characters')}
                   </p>
                 </div>
                 {context.length > 5000 && (
                   <Alert variant="destructive">
                     <AlertCircle className="h-4 w-4" />
                     <AlertDescription>
-                      El contexto adicional no puede exceder 5000 caracteres. Por favor, reduce el texto.
+                      {t('hero.context.errorDesc')}
                     </AlertDescription>
                   </Alert>
                 )}

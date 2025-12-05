@@ -28,6 +28,7 @@ const Index = () => {
   const [searchParams] = useSearchParams();
   const projectIdFromUrl = searchParams.get("project");
   const isDevMode = searchParams.get("dev") === "TRUE";
+  const isDemoMode = searchParams.get("demo") === "true";
 
   const { state, runAnalysis, continueToPhaseSix, loadMockData } = useAnalysisOrchestrator();
   const { projectData, loading: loadingProject } = useProjectLoader(projectIdFromUrl);
@@ -37,8 +38,16 @@ const Index = () => {
   const prevRunningState = useRef(state.isRunning);
   const [showSignupGate, setShowSignupGate] = useState(false);
   const [projectId, setProjectId] = useState<string | null>(null);
+  const [selectedIndustry, setSelectedIndustry] = useState<string>("");
 
   const displayState = projectData || state;
+
+  // Load demo data if demo mode
+  useEffect(() => {
+    if (isDemoMode && displayState.currentPhase === 0) {
+      loadMockData();
+    }
+  }, [isDemoMode, displayState.currentPhase, loadMockData]);
 
   useEffect(() => {
     if (state.isRunning && !prevRunningState.current && state.currentPhase > 0) {
@@ -47,8 +56,9 @@ const Index = () => {
     prevRunningState.current = state.isRunning;
   }, [state.isRunning, state.currentPhase]);
 
+  // Move signup gate to after Phase 5 (show more value first)
   useEffect(() => {
-    if (!user && state.currentPhase >= 4) {
+    if (!user && state.currentPhase >= 5) {
       setShowSignupGate(true);
       if (state.projectId) {
         setProjectId(state.projectId);
@@ -66,7 +76,30 @@ const Index = () => {
     }
   };
 
-  const shouldShowGate = displayState.currentPhase >= 3 && !user && !projectIdFromUrl;
+  const handleRunAnalysis = (
+    projectName: string,
+    url: string,
+    productDescription: string,
+    competitors?: string,
+    docs?: string,
+    context?: string,
+    vision?: string,
+    mission?: string,
+    values?: string,
+    industry?: string
+  ) => {
+    if (industry) {
+      setSelectedIndustry(industry);
+    }
+    runAnalysis(projectName, url, productDescription, competitors, docs, context, vision, mission, values);
+  };
+
+  const handleLoadDemo = () => {
+    loadMockData();
+  };
+
+  // Show gate after Phase 4 (DISC) instead of Phase 3
+  const shouldShowGate = displayState.currentPhase >= 5 && !user && !projectIdFromUrl;
   const avatarReliability = displayState.phases.phase2?.profile?.reliability || 0;
   const topOffers =
     displayState.phases.phase3?.offers?.slice(0, 3).map((o: any) => ({
@@ -111,8 +144,8 @@ const Index = () => {
       )}
 
       <div className="no-pdf">
-        <Hero onRunAnalysis={runAnalysis} isRunning={state.isRunning} />
-        {!displayState.isRunning && displayState.currentPhase === 0 && <EvidenceDrawer />}
+        <Hero onRunAnalysis={handleRunAnalysis} isRunning={state.isRunning} onLoadDemo={handleLoadDemo} />
+        {!displayState.isRunning && displayState.currentPhase === 0 && <EvidenceDrawer industry={selectedIndustry} />}
       </div>
 
       {displayState.currentPhase > 0 && (
@@ -180,37 +213,27 @@ const Index = () => {
                 </div>
               </div>
 
-              <div className="w-full mt-6">
-                {shouldShowGate ? (
-                  <div className="flex items-center justify-center min-h-[400px]">
+              {/* Phase 4 - DISC Translator - Now shown before signup gate */}
+              <div
+                data-phase="phase4"
+                className={`w-full mt-6 pdf-section ${displayState.isRunning && !displayState.phases.phase4 ? "charging" : ""} ${displayState.phases.phase4 ? "magic-reveal" : ""}`}
+              >
+                <DISCTranslator data={displayState.phases.phase4} />
+              </div>
+
+              {/* Signup Gate - Now appears after Phase 4 */}
+              {shouldShowGate && (
+                <div className="w-full mt-6">
+                  <div className="flex items-center justify-center py-8">
                     <SignupGate onComplete={handleSignupComplete} />
                   </div>
-                ) : (
-                  <div
-                    data-phase="phase4"
-                    className={`pdf-section ${displayState.isRunning && !displayState.phases.phase4 ? "charging" : ""} ${displayState.phases.phase4 ? "magic-reveal" : ""}`}
-                  >
-                    <DISCTranslator data={displayState.phases.phase4} />
-                  </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </section>
 
-          {shouldShowGate && displayState.phases.phase4 && (
-            <div className="w-full px-8 pb-0 pt-6">
-              <div className="max-w-7xl mx-auto">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  <div className="lg:col-span-3">
-                    <DISCTranslatorPreview />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
           {shouldShowGate && (
-            <div id="locked-content" className="relative min-h-[200vh] w-full">
+            <div id="locked-content" className="relative min-h-[100vh] w-full">
               <div
                 className="sticky top-0 h-screen pointer-events-none z-10"
                 style={{
@@ -223,13 +246,6 @@ const Index = () => {
               <div className="relative -mt-[100vh] z-0 w-full">
                 <div className="w-full px-8 py-12">
                   <div className="max-w-7xl mx-auto space-y-12">
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 opacity-40">
-                      <div
-                        className={`lg:col-span-3 ${displayState.isRunning && !displayState.phases.phase4 ? "charging" : ""} ${displayState.phases.phase4 ? "magic-reveal" : ""}`}
-                      >
-                        <DISCTranslator data={displayState.phases.phase4} />
-                      </div>
-                    </div>
                     <div className="opacity-40">
                       {state.awaitingBudgetInput && <BudgetInput onSubmit={handleBudgetSubmit} />}
                       {displayState.phases.phase6 && !state.awaitingBudgetInput && (
