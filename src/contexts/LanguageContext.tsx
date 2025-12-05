@@ -109,7 +109,7 @@ const translations: Record<Language, Record<string, string>> = {
     "hero.tone.required": "Tono requerido",
     "hero.tone.requiredDesc": "Por favor selecciona un tono de comunicación para personalizar el análisis",
     "hero.tone.hint": "Requerido - Define cómo quieres comunicarte con tu audiencia",
-    "hero.tone.disclaimer": "💡 ¿Quieres personalizar más? Añade detalles de la personalidad de tu marca en 'Añadir Contexto y Documentos'",
+    "hero.tone.disclaimer": "Añade mas detalles de la personalidad de tu marca en 'Añadir Contexto y Documentos'",
     
     // Brand Voice
     "hero.brandVoice.label": "Voz y Personalidad de Marca",
