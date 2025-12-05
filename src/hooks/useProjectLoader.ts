@@ -19,15 +19,26 @@ export const useProjectLoader = (projectId: string | null) => {
     setLoading(true);
     try {
       // Get session token for unauthenticated access
-      const sessionToken = getOrCreateSessionToken();
+      const sessionToken = await getOrCreateSessionToken();
       
-      // Load project details - verify access via session token or user_id
-      const { data: project, error: projectError } = await supabase
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      // Build filter based on authentication status
+      let query = supabase
         .from("projects")
         .select("*")
-        .eq("id", id)
-        .or(`user_id.eq.${(await supabase.auth.getUser()).data.user?.id},and(user_id.is.null,session_token.eq.${sessionToken})`)
-        .single();
+        .eq("id", id);
+      
+      if (user) {
+        // Authenticated: check user_id or session token (for unclaimed projects)
+        query = query.or(`user_id.eq.${user.id},session_token.eq.${sessionToken}`);
+      } else {
+        // Unauthenticated: only allow access via session token
+        query = query.eq("session_token", sessionToken);
+      }
+      
+      const { data: project, error: projectError } = await query.single();
 
       if (projectError) throw projectError;
 
