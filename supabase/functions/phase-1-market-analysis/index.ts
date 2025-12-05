@@ -18,6 +18,7 @@ const inputSchema = z.object({
   mission: z.string().max(1000).optional(),
   values: z.string().max(1000).optional(),
   docs: z.string().max(5000).optional(),
+  tone: z.enum(['professional', 'friendly', 'technical', 'inspirational', 'direct', 'empathetic']).optional(),
   outputLanguage: z.enum(['es', 'en']).default('es'),
   sessionToken: z.string().optional()
 });
@@ -146,7 +147,7 @@ serve(async (req) => {
       );
     }
     
-    const { projectId, url, productDescription, context, competitors, vision, mission, values, docs, outputLanguage } = validated;
+    const { projectId, url, productDescription, context, competitors, vision, mission, values, docs, tone, outputLanguage } = validated;
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
@@ -263,6 +264,17 @@ ${websiteContent}
 - Mission: ${mission || 'Extract from website content'}
 - Values: ${values || 'Extract from website content'}
 - Additional documentation: ${docs || 'None provided'}
+- Communication Tone: ${tone || 'professional'}
+
+⚠️ COMMUNICATION TONE INSTRUCTION:
+The client has selected "${tone || 'professional'}" as their preferred communication tone. 
+ALL messaging recommendations, headlines, CTAs, and copy suggestions should reflect this tone:
+${tone === 'professional' ? '- Professional/Formal: Use precise language, industry terminology, credibility-focused messaging' : ''}
+${tone === 'friendly' ? '- Friendly/Casual: Use conversational language, approachable tone, relatable examples' : ''}
+${tone === 'technical' ? '- Technical/Expert: Use detailed specifications, data-driven messaging, expert terminology' : ''}
+${tone === 'inspirational' ? '- Inspirational/Motivational: Use aspirational language, emotional appeals, vision-focused messaging' : ''}
+${tone === 'direct' ? '- Direct/Assertive: Use clear, concise statements, action-oriented language, no fluff' : ''}
+${tone === 'empathetic' ? '- Empathetic/Warm: Use understanding language, pain-point acknowledgment, supportive messaging' : ''}
 
 ═══════════════════════════════════════════════
 🛒 MARKETPLACE DETECTION (IMPORTANT)

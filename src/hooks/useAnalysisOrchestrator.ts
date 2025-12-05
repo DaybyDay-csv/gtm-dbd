@@ -57,7 +57,8 @@ export const useAnalysisOrchestrator = () => {
     context?: string,
     vision?: string,
     mission?: string,
-    values?: string
+    values?: string,
+    tone?: string
   ) => {
     try {
       // Reset state for fresh analysis
@@ -110,7 +111,7 @@ export const useAnalysisOrchestrator = () => {
       setState(prev => ({ ...prev, currentPhase: 1 }));
       const phase1Response = await supabase.functions.invoke(
         "phase-1-market-analysis",
-        { body: { projectId: project.id, url, productDescription, competitors, docs, context, vision, mission, values, outputLanguage: language, sessionToken: sessionToken || undefined } }
+        { body: { projectId: project.id, url, productDescription, competitors, docs, context, vision, mission, values, tone, outputLanguage: language, sessionToken: sessionToken || undefined } }
       );
       
       if (phase1Response.error) {

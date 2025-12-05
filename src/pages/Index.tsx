@@ -86,12 +86,13 @@ const Index = () => {
     vision?: string,
     mission?: string,
     values?: string,
-    industry?: string
+    industry?: string,
+    tone?: string
   ) => {
     if (industry) {
       setSelectedIndustry(industry);
     }
-    runAnalysis(projectName, url, productDescription, competitors, docs, context, vision, mission, values);
+    runAnalysis(projectName, url, productDescription, competitors, docs, context, vision, mission, values, tone);
   };
 
   const handleLoadDemo = () => {

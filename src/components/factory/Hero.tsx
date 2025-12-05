@@ -11,12 +11,21 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface HeroProps {
-  onRunAnalysis: (projectName: string, url: string, productDescription: string, competitors?: string, docs?: string, context?: string, vision?: string, mission?: string, values?: string, industry?: string) => void;
+  onRunAnalysis: (projectName: string, url: string, productDescription: string, competitors?: string, docs?: string, context?: string, vision?: string, mission?: string, values?: string, industry?: string, tone?: string) => void;
   isRunning: boolean;
   onLoadDemo?: () => void;
 }
 
 type UrlValidationState = 'idle' | 'validating' | 'valid' | 'invalid';
+
+const TONES = [
+  { value: 'professional', labelKey: 'hero.tone.professional' },
+  { value: 'friendly', labelKey: 'hero.tone.friendly' },
+  { value: 'technical', labelKey: 'hero.tone.technical' },
+  { value: 'inspirational', labelKey: 'hero.tone.inspirational' },
+  { value: 'direct', labelKey: 'hero.tone.direct' },
+  { value: 'empathetic', labelKey: 'hero.tone.empathetic' },
+];
 
 const INDUSTRIES = [
   { value: 'saas', labelKey: 'hero.industry.saas' },
@@ -31,6 +40,7 @@ const INDUSTRIES = [
 export const Hero = ({ onRunAnalysis, isRunning, onLoadDemo }: HeroProps) => {
   const [url, setUrl] = useState("");
   const [urlValidation, setUrlValidation] = useState<UrlValidationState>('idle');
+  const [tone, setTone] = useState("");
   const [industry, setIndustry] = useState("");
   const [productDescription, setProductDescription] = useState("");
   const [context, setContext] = useState("");
@@ -125,6 +135,16 @@ export const Hero = ({ onRunAnalysis, isRunning, onLoadDemo }: HeroProps) => {
       });
       return;
     }
+
+    // Validate tone is selected (required)
+    if (!tone) {
+      toast({
+        title: t('hero.tone.required'),
+        description: t('hero.tone.requiredDesc'),
+        variant: "destructive"
+      });
+      return;
+    }
     
     if (url.trim() && productDescription.trim()) {
       const projectName = `Analysis ${new Date().toISOString().split('T')[0]}`;
@@ -148,7 +168,8 @@ export const Hero = ({ onRunAnalysis, isRunning, onLoadDemo }: HeroProps) => {
         vision.trim() || undefined,
         mission.trim() || undefined,
         values.trim() || undefined,
-        industry || undefined
+        industry || undefined,
+        tone
       );
     }
   };
@@ -207,6 +228,28 @@ export const Hero = ({ onRunAnalysis, isRunning, onLoadDemo }: HeroProps) => {
 
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-3 md:space-y-4">
           <div className="space-y-2 md:space-y-3">
+            {/* Tone Selector - Required */}
+            <div className="space-y-1">
+              <Select value={tone} onValueChange={setTone} disabled={isRunning} required>
+                <SelectTrigger className={`text-sm md:text-base h-11 md:h-12 ${!tone ? 'border-primary' : ''}`}>
+                  <SelectValue placeholder={t('hero.tone.placeholder')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {TONES.map((t_item) => (
+                    <SelectItem key={t_item.value} value={t_item.value}>
+                      {t(t_item.labelKey)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {!tone && (
+                <p className="text-xs text-muted-foreground flex items-center gap-1">
+                  <AlertCircle className="w-3 h-3" />
+                  {t('hero.tone.hint')}
+                </p>
+              )}
+            </div>
+
             {/* Industry Selector */}
             <Select value={industry} onValueChange={setIndustry} disabled={isRunning}>
               <SelectTrigger className="text-sm md:text-base h-11 md:h-12">
@@ -271,7 +314,7 @@ export const Hero = ({ onRunAnalysis, isRunning, onLoadDemo }: HeroProps) => {
                 type="submit"
                 size="lg"
                 className="flex-1 h-11 md:h-14 text-sm md:text-base"
-                disabled={isRunning || !url.trim() || productDescription.trim().length < 10 || urlValidation === 'invalid'}
+                disabled={isRunning || !tone || !url.trim() || productDescription.trim().length < 10 || urlValidation === 'invalid'}
               >
                 <Sparkles className="mr-2 h-4 w-4 md:h-5 md:w-5" />
                 {t('hero.button.run')}
