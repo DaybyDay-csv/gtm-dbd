@@ -19,6 +19,7 @@ const inputSchema = z.object({
   values: z.string().max(1000).optional(),
   docs: z.string().max(5000).optional(),
   tone: z.enum(['professional', 'friendly', 'technical', 'inspirational', 'direct', 'empathetic']).optional(),
+  brandVoice: z.string().max(2000).optional(),
   outputLanguage: z.enum(['es', 'en']).default('es'),
   sessionToken: z.string().optional()
 });
@@ -147,7 +148,7 @@ serve(async (req) => {
       );
     }
     
-    const { projectId, url, productDescription, context, competitors, vision, mission, values, docs, tone, outputLanguage } = validated;
+    const { projectId, url, productDescription, context, competitors, vision, mission, values, docs, tone, brandVoice, outputLanguage } = validated;
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
@@ -265,6 +266,7 @@ ${websiteContent}
 - Values: ${values || 'Extract from website content'}
 - Additional documentation: ${docs || 'None provided'}
 - Communication Tone: ${tone || 'professional'}
+- Brand Voice & Personality: ${brandVoice || 'Not specified'}
 
 ⚠️ COMMUNICATION TONE INSTRUCTION:
 The client has selected "${tone || 'professional'}" as their preferred communication tone. 
@@ -275,6 +277,14 @@ ${tone === 'technical' ? '- Technical/Expert: Use detailed specifications, data-
 ${tone === 'inspirational' ? '- Inspirational/Motivational: Use aspirational language, emotional appeals, vision-focused messaging' : ''}
 ${tone === 'direct' ? '- Direct/Assertive: Use clear, concise statements, action-oriented language, no fluff' : ''}
 ${tone === 'empathetic' ? '- Empathetic/Warm: Use understanding language, pain-point acknowledgment, supportive messaging' : ''}
+${brandVoice ? `
+
+⚠️ BRAND VOICE & PERSONALITY (DETAILED CLIENT INPUT):
+The client has provided the following specific brand voice guidelines:
+"${brandVoice}"
+
+APPLY these brand voice guidelines to ALL messaging recommendations. The brand voice takes precedence over generic tone instructions when there's a conflict. Ensure every headline, CTA, and copy suggestion reflects this unique brand personality.
+` : ''}
 
 ═══════════════════════════════════════════════
 🛒 MARKETPLACE DETECTION (IMPORTANT)
