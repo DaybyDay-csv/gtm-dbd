@@ -11,7 +11,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface HeroProps {
-  onRunAnalysis: (projectName: string, url: string, productDescription: string, competitors?: string, docs?: string, context?: string, vision?: string, mission?: string, values?: string, industry?: string, tone?: string) => void;
+  onRunAnalysis: (projectName: string, url: string, productDescription: string, competitors?: string, docs?: string, context?: string, vision?: string, mission?: string, values?: string, industry?: string, tone?: string, brandVoice?: string) => void;
   isRunning: boolean;
   onLoadDemo?: () => void;
 }
@@ -45,6 +45,7 @@ export const Hero = ({ onRunAnalysis, isRunning, onLoadDemo }: HeroProps) => {
   const [productDescription, setProductDescription] = useState("");
   const [context, setContext] = useState("");
   const [competitors, setCompetitors] = useState("");
+  const [brandVoice, setBrandVoice] = useState("");
   const [vision, setVision] = useState("");
   const [mission, setMission] = useState("");
   const [values, setValues] = useState("");
@@ -169,7 +170,8 @@ export const Hero = ({ onRunAnalysis, isRunning, onLoadDemo }: HeroProps) => {
         mission.trim() || undefined,
         values.trim() || undefined,
         industry || undefined,
-        tone
+        tone,
+        brandVoice.trim() || undefined
       );
     }
   };
@@ -388,6 +390,22 @@ export const Hero = ({ onRunAnalysis, isRunning, onLoadDemo }: HeroProps) => {
                   onChange={(e) => setCompetitors(e.target.value)}
                   disabled={isRunning}
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="brandVoice">{t('hero.brandVoice.label')}</Label>
+                <Textarea
+                  id="brandVoice"
+                  placeholder={t('hero.brandVoice.placeholder')}
+                  value={brandVoice}
+                  onChange={(e) => setBrandVoice(e.target.value)}
+                  disabled={isRunning}
+                  className="min-h-[80px]"
+                  maxLength={2000}
+                />
+                <p className="text-xs text-muted-foreground">
+                  {t('hero.brandVoice.hint')}
+                </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

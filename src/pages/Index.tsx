@@ -87,12 +87,13 @@ const Index = () => {
     mission?: string,
     values?: string,
     industry?: string,
-    tone?: string
+    tone?: string,
+    brandVoice?: string
   ) => {
     if (industry) {
       setSelectedIndustry(industry);
     }
-    runAnalysis(projectName, url, productDescription, competitors, docs, context, vision, mission, values, tone);
+    runAnalysis(projectName, url, productDescription, competitors, docs, context, vision, mission, values, tone, brandVoice);
   };
 
   const handleLoadDemo = () => {

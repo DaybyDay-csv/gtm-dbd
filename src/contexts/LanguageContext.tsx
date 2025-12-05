@@ -110,6 +110,11 @@ const translations: Record<Language, Record<string, string>> = {
     "hero.tone.requiredDesc": "Por favor selecciona un tono de comunicación para personalizar el análisis",
     "hero.tone.hint": "Requerido - Define cómo quieres comunicarte con tu audiencia",
     "hero.tone.disclaimer": "💡 ¿Quieres personalizar más? Añade detalles de la personalidad de tu marca en 'Añadir Contexto y Documentos'",
+    
+    // Brand Voice
+    "hero.brandVoice.label": "Voz y Personalidad de Marca",
+    "hero.brandVoice.placeholder": "Describe la personalidad de tu marca: ¿Cómo hablas? ¿Qué palabras usas? ¿Qué tono evitas? Ej: 'Somos cercanos pero profesionales, usamos humor sutil, evitamos jerga técnica...'",
+    "hero.brandVoice.hint": "Define cómo quieres que suene tu marca en todas las comunicaciones",
 
     // Status & System
     "status.theoretical": "Teórico",
@@ -479,6 +484,11 @@ const translations: Record<Language, Record<string, string>> = {
     "hero.tone.requiredDesc": "Please select a communication tone to personalize the analysis",
     "hero.tone.hint": "Required - Define how you want to communicate with your audience",
     "hero.tone.disclaimer": "💡 Want more customization? Add your brand personality details in 'Add Context and Docs'",
+    
+    // Brand Voice
+    "hero.brandVoice.label": "Brand Voice & Personality",
+    "hero.brandVoice.placeholder": "Describe your brand personality: How do you speak? What words do you use? What tone do you avoid? E.g., 'We're approachable but professional, use subtle humor, avoid technical jargon...'",
+    "hero.brandVoice.hint": "Define how you want your brand to sound across all communications",
 
     // Status & System
     "status.theoretical": "Theoretical",
