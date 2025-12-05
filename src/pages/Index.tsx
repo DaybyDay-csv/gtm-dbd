@@ -3,9 +3,10 @@ import { useSearchParams } from "react-router-dom";
 import { useAnalysisOrchestrator } from "@/hooks/useAnalysisOrchestrator";
 import { useProjectLoader } from "@/hooks/useProjectLoader";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { AppHeader } from "@/components/factory/AppHeader";
-import { Wrench } from "lucide-react";
+import { Wrench, Loader2 } from "lucide-react";
 import { Hero } from "@/components/factory/Hero";
 import { EvidenceDrawer } from "@/components/factory/EvidenceDrawer";
 import { PhaseRibbon } from "@/components/factory/PhaseRibbon";
@@ -164,6 +165,25 @@ const Index = () => {
   const handleBudgetSubmit = (budgetLevel: string, budgetAmount: number) => {
     continueToPhaseSix(budgetLevel, budgetAmount);
   };
+
+  const { t } = useLanguage();
+
+  // Show loading spinner while validating project access
+  if (loadingProject && projectIdFromUrl) {
+    return (
+      <div className="min-h-screen bg-background overflow-x-hidden">
+        <AppHeader
+          analysisState={displayState}
+          projectName={displayState.phases.phase1?.productNucleus?.name}
+          showDownloadButton={false}
+        />
+        <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+          <Loader2 className="h-12 w-12 text-primary animate-spin" />
+          <p className="text-muted-foreground text-lg">{t('project.loading') || 'Cargando proyecto...'}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
