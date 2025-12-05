@@ -20,7 +20,7 @@ export const ProductUnderstanding = ({ data }: ProductUnderstandingProps) => {
   if (!data) return null;
 
   const confidenceStars = 4;
-  const dataPoints = data.problemsSolved?.length || 0 + data.gapsCovered?.length || 0;
+  const dataPoints = (data.problemsSolved?.length || 0) + (data.gapsCovered?.length || 0);
 
   return (
     <Card className="w-full">
@@ -62,19 +62,21 @@ export const ProductUnderstanding = ({ data }: ProductUnderstandingProps) => {
         </div>
 
         {/* Problems Solved */}
-        <div>
-          <div className="flex items-center gap-2 mb-3">
-            <Target className="w-4 h-4 text-destructive" />
-            <h5 className="font-semibold">Problems Solved</h5>
+        {data.problemsSolved && data.problemsSolved.length > 0 && (
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <Target className="w-4 h-4 text-destructive" />
+              <h5 className="font-semibold">Problems Solved</h5>
+            </div>
+            <ul className="space-y-2">
+              {data.problemsSolved.map((problem, idx) => (
+                <li key={idx} className="text-sm pl-4 border-l-2 border-destructive/20">
+                  {problem}
+                </li>
+              ))}
+            </ul>
           </div>
-          <ul className="space-y-2">
-            {data.problemsSolved.map((problem, idx) => (
-              <li key={idx} className="text-sm pl-4 border-l-2 border-destructive/20">
-                {problem}
-              </li>
-            ))}
-          </ul>
-        </div>
+        )}
 
         {/* Utility */}
         <div>
@@ -101,16 +103,18 @@ export const ProductUnderstanding = ({ data }: ProductUnderstandingProps) => {
         </div>
 
         {/* Gaps Covered */}
-        <div>
-          <h5 className="font-semibold mb-3">Market Gaps & Opportunities</h5>
-          <div className="space-y-2">
-            {data.gapsCovered.map((gap, idx) => (
-              <div key={idx} className="text-sm p-3 bg-primary/5 rounded-lg border border-primary/10">
-                {gap}
-              </div>
-            ))}
+        {data.gapsCovered && data.gapsCovered.length > 0 && (
+          <div>
+            <h5 className="font-semibold mb-3">Market Gaps & Opportunities</h5>
+            <div className="space-y-2">
+              {data.gapsCovered.map((gap, idx) => (
+                <div key={idx} className="text-sm p-3 bg-primary/5 rounded-lg border border-primary/10">
+                  {gap}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </CardContent>
     </Card>
   );
