@@ -649,7 +649,13 @@ Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'
     // Extract the JSON portion
     content = content.substring(firstBrace, lastBrace + 1);
     
-    // Remove control characters that can break JSON parsing
+    // Comprehensive JSON cleaning
+    // 1. Replace smart/curly quotes with regular quotes
+    content = content
+      .replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"')  // Double smart quotes
+      .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'"); // Single smart quotes
+    
+    // 2. Remove control characters that can break JSON parsing
     content = content.replace(/[\u0000-\u001F\u007F-\u009F]/g, (char: string) => {
       if (char === '\n' || char === '\r' || char === '\t') {
         return ' ';
@@ -657,17 +663,55 @@ Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'
       return '';
     });
     
-    // Try to parse JSON with better error handling
+    // 3. Fix trailing commas before closing brackets/braces
+    content = content.replace(/,(\s*[}\]])/g, '$1');
+    
+    // 4. Normalize multiple spaces to single space
+    content = content.replace(/\s+/g, ' ');
+    
+    // 5. Remove any BOM or zero-width characters
+    content = content.replace(/[\uFEFF\u200B-\u200D\u2060]/g, '');
+    
+    // Try to parse JSON with better error handling and retry logic
     let result;
     try {
       result = JSON.parse(content);
       console.log('Successfully parsed JSON response');
     } catch (parseError) {
-      const errorMessage = parseError instanceof Error ? parseError.message : 'Unknown parse error';
-      console.error('JSON Parse Error:', parseError);
-      console.error('Content that failed to parse (first 500 chars):', content.substring(0, 500));
-      console.error('Content that failed to parse (last 500 chars):', content.substring(Math.max(0, content.length - 500)));
-      throw new Error(`Failed to parse AI response as JSON: ${errorMessage}`);
+      // Second attempt: try to fix common issues
+      console.log('First parse failed, attempting cleanup...');
+      
+      try {
+        // Try removing any text after the last closing brace
+        let cleanContent = content;
+        
+        // Find balanced braces
+        let braceCount = 0;
+        let endIndex = -1;
+        for (let i = 0; i < cleanContent.length; i++) {
+          if (cleanContent[i] === '{') braceCount++;
+          else if (cleanContent[i] === '}') {
+            braceCount--;
+            if (braceCount === 0) {
+              endIndex = i;
+              break;
+            }
+          }
+        }
+        
+        if (endIndex > 0) {
+          cleanContent = cleanContent.substring(0, endIndex + 1);
+        }
+        
+        result = JSON.parse(cleanContent);
+        console.log('Successfully parsed JSON after cleanup');
+      } catch (secondError) {
+        const errorMessage = parseError instanceof Error ? parseError.message : 'Unknown parse error';
+        console.error('JSON Parse Error:', parseError);
+        console.error('Content that failed to parse (first 500 chars):', content.substring(0, 500));
+        console.error('Content that failed to parse (last 500 chars):', content.substring(Math.max(0, content.length - 500)));
+        throw new Error(`Failed to parse AI response as JSON: ${errorMessage}`);
+      }
     }
 
     console.log('Phase 1 completed successfully');
