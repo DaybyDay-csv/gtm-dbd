@@ -248,6 +248,9 @@ export const Hero = ({ onRunAnalysis, isRunning, onLoadDemo }: HeroProps) => {
                   {t('hero.tone.hint')}
                 </p>
               )}
+              <p className="text-xs text-muted-foreground/70 italic">
+                {t('hero.tone.disclaimer')}
+              </p>
             </div>
 
             {/* Industry Selector */}
