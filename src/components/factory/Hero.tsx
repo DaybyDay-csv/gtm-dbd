@@ -230,46 +230,7 @@ export const Hero = ({ onRunAnalysis, isRunning, onLoadDemo }: HeroProps) => {
 
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-3 md:space-y-4">
           <div className="space-y-2 md:space-y-3">
-            {/* Tone Selector - Required */}
-            <div className="space-y-1">
-              <Select value={tone} onValueChange={setTone} disabled={isRunning} required>
-                <SelectTrigger className={`text-sm md:text-base h-11 md:h-12 ${!tone ? 'border-primary' : ''}`}>
-                  <SelectValue placeholder={t('hero.tone.placeholder')} />
-                </SelectTrigger>
-                <SelectContent>
-                  {TONES.map((t_item) => (
-                    <SelectItem key={t_item.value} value={t_item.value}>
-                      {t(t_item.labelKey)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {!tone && (
-                <p className="text-xs text-muted-foreground flex items-center gap-1">
-                  <AlertCircle className="w-3 h-3" />
-                  {t('hero.tone.hint')}
-                </p>
-              )}
-              <p className="text-xs text-muted-foreground/70 italic">
-                {t('hero.tone.disclaimer')}
-              </p>
-            </div>
-
-            {/* Industry Selector */}
-            <Select value={industry} onValueChange={setIndustry} disabled={isRunning}>
-              <SelectTrigger className="text-sm md:text-base h-11 md:h-12">
-                <SelectValue placeholder={t('hero.industry.placeholder')} />
-              </SelectTrigger>
-              <SelectContent>
-                {INDUSTRIES.map((ind) => (
-                  <SelectItem key={ind.value} value={ind.value}>
-                    {t(ind.labelKey)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {/* URL Input with validation */}
+            {/* 1. URL Input - Website first */}
             <div className="relative">
               <Input
                 type="url"
@@ -297,6 +258,7 @@ export const Hero = ({ onRunAnalysis, isRunning, onLoadDemo }: HeroProps) => {
               </p>
             )}
 
+            {/* 2. Product Description - What do you sell */}
             <div className="space-y-1">
               <Textarea
                 placeholder={t('hero.placeholder.product')}
@@ -313,6 +275,50 @@ export const Hero = ({ onRunAnalysis, isRunning, onLoadDemo }: HeroProps) => {
                 </p>
               )}
             </div>
+
+            {/* 3. Tone & Industry - Side by side on larger screens */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {/* Tone Selector - Required */}
+              <div className="space-y-1">
+                <Select value={tone} onValueChange={setTone} disabled={isRunning} required>
+                  <SelectTrigger className={`text-sm md:text-base h-11 md:h-12 ${!tone ? 'border-primary' : ''}`}>
+                    <SelectValue placeholder={t('hero.tone.placeholder')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {TONES.map((t_item) => (
+                      <SelectItem key={t_item.value} value={t_item.value}>
+                        {t(t_item.labelKey)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {!tone && (
+                  <p className="text-xs text-muted-foreground flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {t('hero.tone.hint')}
+                  </p>
+                )}
+              </div>
+
+              {/* Industry Selector */}
+              <Select value={industry} onValueChange={setIndustry} disabled={isRunning}>
+                <SelectTrigger className="text-sm md:text-base h-11 md:h-12">
+                  <SelectValue placeholder={t('hero.industry.placeholder')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {INDUSTRIES.map((ind) => (
+                    <SelectItem key={ind.value} value={ind.value}>
+                      {t(ind.labelKey)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* 4. Disclaimer - context hint */}
+            <p className="text-xs text-muted-foreground/70 italic text-center">
+              {t('hero.tone.disclaimer')}
+            </p>
             
             <div className="flex flex-col sm:flex-row gap-2">
               <Button
