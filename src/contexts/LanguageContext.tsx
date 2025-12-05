@@ -39,6 +39,9 @@ const translations: Record<Language, Record<string, string>> = {
     "settings.language_updated": "Tu idioma preferido ha sido actualizado",
     "nav.title": "GTM Factory",
 
+    // Project
+    "project.loading": "Cargando proyecto...",
+
     // Hero Section
     "hero.headline.line1": "Conoce a tus clientes.",
     "hero.headline.line2": "Conoce exactamente quién te compra y por qué.",
@@ -416,6 +419,9 @@ const translations: Record<Language, Record<string, string>> = {
     "settings.saved": "Saved",
     "settings.language_updated": "Your preferred language has been updated",
     "nav.title": "GTM Factory",
+
+    // Project
+    "project.loading": "Loading project...",
 
     // Hero Section
     "hero.headline.line1": "Get to know your clients.",
