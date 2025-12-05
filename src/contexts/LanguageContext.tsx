@@ -98,6 +98,18 @@ const translations: Record<Language, Record<string, string>> = {
     "hero.industry.finance": "Finanzas / Fintech",
     "hero.industry.other": "Otra",
 
+    // Tone selector
+    "hero.tone.placeholder": "Selecciona el tono de comunicación *",
+    "hero.tone.professional": "Profesional / Formal",
+    "hero.tone.friendly": "Amigable / Casual",
+    "hero.tone.technical": "Técnico / Experto",
+    "hero.tone.inspirational": "Inspirador / Motivacional",
+    "hero.tone.direct": "Directo / Asertivo",
+    "hero.tone.empathetic": "Empático / Cercano",
+    "hero.tone.required": "Tono requerido",
+    "hero.tone.requiredDesc": "Por favor selecciona un tono de comunicación para personalizar el análisis",
+    "hero.tone.hint": "Requerido - Define cómo quieres comunicarte con tu audiencia",
+
     // Status & System
     "status.theoretical": "Teórico",
     "status.partial": "Parcial",
@@ -453,6 +465,18 @@ const translations: Record<Language, Record<string, string>> = {
     "hero.industry.healthcare": "Healthcare",
     "hero.industry.finance": "Finance / Fintech",
     "hero.industry.other": "Other",
+
+    // Tone selector
+    "hero.tone.placeholder": "Select communication tone *",
+    "hero.tone.professional": "Professional / Formal",
+    "hero.tone.friendly": "Friendly / Casual",
+    "hero.tone.technical": "Technical / Expert",
+    "hero.tone.inspirational": "Inspirational / Motivational",
+    "hero.tone.direct": "Direct / Assertive",
+    "hero.tone.empathetic": "Empathetic / Warm",
+    "hero.tone.required": "Tone required",
+    "hero.tone.requiredDesc": "Please select a communication tone to personalize the analysis",
+    "hero.tone.hint": "Required - Define how you want to communicate with your audience",
 
     // Status & System
     "status.theoretical": "Theoretical",
