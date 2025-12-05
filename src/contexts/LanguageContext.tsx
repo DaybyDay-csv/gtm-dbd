@@ -206,6 +206,10 @@ const translations: Record<Language, Record<string, string>> = {
     "phase.validation.tooltip": "Mapa de hipótesis testeables por canal con KPIs y siguiente acción",
     "phase.progress": "Fase",
     "phase.remaining": "min restantes",
+    "phase.processing": "Procesando...",
+    "phase.completed": "Completado",
+    "phase.phases": "fases",
+    "phase.goToProgress": "Ver progreso",
     
     // Legacy phase keys
     "phase.1.name": "Mercado",
@@ -579,6 +583,10 @@ const translations: Record<Language, Record<string, string>> = {
     "phase.validation.tooltip": "Map of testable hypotheses by channel with KPIs and next action",
     "phase.progress": "Phase",
     "phase.remaining": "min remaining",
+    "phase.processing": "Processing...",
+    "phase.completed": "Completed",
+    "phase.phases": "phases",
+    "phase.goToProgress": "Go to progress",
     
     // Legacy phase keys
     "phase.1.name": "Market",

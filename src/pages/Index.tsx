@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useAnalysisOrchestrator } from "@/hooks/useAnalysisOrchestrator";
 import { useProjectLoader } from "@/hooks/useProjectLoader";
@@ -23,6 +23,7 @@ import { ClientReadiness } from "@/components/factory/ClientReadiness";
 import { SignupGate } from "@/components/factory/SignupGate";
 import { BudgetInput } from "@/components/factory/BudgetInput";
 import { ChannelStrategy } from "@/components/factory/ChannelStrategy";
+import { FloatingProgress } from "@/components/factory/FloatingProgress";
 
 const Index = () => {
   const [searchParams] = useSearchParams();
@@ -35,12 +36,66 @@ const Index = () => {
   const { user } = useAuth();
 
   const contentRef = useRef<HTMLDivElement>(null);
-  const prevRunningState = useRef(state.isRunning);
+  const phaseRibbonRef = useRef<HTMLDivElement>(null);
+  const prevPhaseRef = useRef(state.currentPhase);
+  const prevRunningRef = useRef(state.isRunning);
   const [showSignupGate, setShowSignupGate] = useState(false);
   const [projectId, setProjectId] = useState<string | null>(null);
   const [selectedIndustry, setSelectedIndustry] = useState<string>("");
+  const [isPhaseRibbonVisible, setIsPhaseRibbonVisible] = useState(true);
 
   const displayState = projectData || state;
+
+  // Intersection observer for phase ribbon visibility
+  useEffect(() => {
+    if (!phaseRibbonRef.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsPhaseRibbonVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(phaseRibbonRef.current);
+    return () => observer.disconnect();
+  }, [displayState.currentPhase]);
+
+  // Auto-scroll when analysis starts
+  useEffect(() => {
+    if (state.isRunning && !prevRunningRef.current && state.currentPhase > 0) {
+      // Scroll to processing section when analysis starts
+      setTimeout(() => {
+        contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 300);
+    }
+    prevRunningRef.current = state.isRunning;
+  }, [state.isRunning, state.currentPhase]);
+
+  // Auto-scroll when a phase completes
+  useEffect(() => {
+    const phaseCompleted = state.currentPhase > prevPhaseRef.current;
+    
+    if (phaseCompleted && !state.isRunning) {
+      // Analysis finished - scroll to last completed section
+      const lastPhaseSection = document.querySelector(`[data-phase="phase${state.currentPhase}"]`);
+      if (lastPhaseSection) {
+        setTimeout(() => {
+          lastPhaseSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 500);
+      }
+    } else if (phaseCompleted && state.isRunning) {
+      // A phase just completed, scroll to the newly completed section
+      const completedPhaseSection = document.querySelector(`[data-phase="phase${prevPhaseRef.current}"]`);
+      if (completedPhaseSection) {
+        setTimeout(() => {
+          completedPhaseSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 500);
+      }
+    }
+    
+    prevPhaseRef.current = state.currentPhase;
+  }, [state.currentPhase, state.isRunning]);
 
   // Load demo data if demo mode
   useEffect(() => {
@@ -48,13 +103,6 @@ const Index = () => {
       loadMockData();
     }
   }, [isDemoMode, displayState.currentPhase, loadMockData]);
-
-  useEffect(() => {
-    if (state.isRunning && !prevRunningState.current && state.currentPhase > 0) {
-      contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-    prevRunningState.current = state.isRunning;
-  }, [state.isRunning, state.currentPhase]);
 
   // Move signup gate to after Phase 5 (show more value first)
   useEffect(() => {
@@ -65,6 +113,10 @@ const Index = () => {
       }
     }
   }, [user, state.currentPhase, state.projectId]);
+
+  const handleScrollToPhases = useCallback(() => {
+    phaseRibbonRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
 
   const handleSignupComplete = async () => {
     setShowSignupGate(false);
@@ -152,7 +204,9 @@ const Index = () => {
 
       {displayState.currentPhase > 0 && (
         <div ref={contentRef} id="analysis-content" className="w-full">
-          <PhaseRibbon currentPhase={displayState.currentPhase} isRunning={displayState.isRunning} />
+          <div ref={phaseRibbonRef}>
+            <PhaseRibbon currentPhase={displayState.currentPhase} isRunning={displayState.isRunning} />
+          </div>
           <PhaseExplainer currentPhase={displayState.currentPhase} isRunning={displayState.isRunning} />
           <div className="w-full px-8">
             <div className="max-w-7xl mx-auto">
@@ -298,6 +352,14 @@ const Index = () => {
           )}
         </div>
       )}
+
+      {/* Floating Progress Indicator */}
+      <FloatingProgress
+        currentPhase={displayState.currentPhase}
+        isRunning={displayState.isRunning}
+        isVisible={!isPhaseRibbonVisible && displayState.currentPhase > 0}
+        onScrollToPhases={handleScrollToPhases}
+      />
 
       <footer className="border-t dotted-border-t py-6 mt-12 no-pdf">
         <p className="text-center text-sm text-muted-foreground">
