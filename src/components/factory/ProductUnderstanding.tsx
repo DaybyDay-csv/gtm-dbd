@@ -68,7 +68,7 @@ export const ProductUnderstanding = ({ data }: ProductUnderstandingProps) => {
             <h5 className="font-semibold">Problems Solved</h5>
           </div>
           <ul className="space-y-2">
-            {(data.problemsSolved || []).map((problem, idx) => (
+            {data.problemsSolved.map((problem, idx) => (
               <li key={idx} className="text-sm pl-4 border-l-2 border-destructive/20">
                 {problem}
               </li>
@@ -104,7 +104,7 @@ export const ProductUnderstanding = ({ data }: ProductUnderstandingProps) => {
         <div>
           <h5 className="font-semibold mb-3">Market Gaps & Opportunities</h5>
           <div className="space-y-2">
-            {(data.gapsCovered || []).map((gap, idx) => (
+            {data.gapsCovered.map((gap, idx) => (
               <div key={idx} className="text-sm p-3 bg-primary/5 rounded-lg border border-primary/10">
                 {gap}
               </div>
