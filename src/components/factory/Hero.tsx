@@ -293,9 +293,8 @@ export const Hero = ({ onRunAnalysis, isRunning, onLoadDemo }: HeroProps) => {
                   </SelectContent>
                 </Select>
                 {!tone && (
-                  <p className="text-xs text-muted-foreground flex items-center gap-1">
-                    <AlertCircle className="w-3 h-3" />
-                    {t('hero.tone.hint')}
+                  <p className="text-[10px] text-muted-foreground/60 whitespace-nowrap">
+                    * {t('hero.tone.hint')}
                   </p>
                 )}
               </div>

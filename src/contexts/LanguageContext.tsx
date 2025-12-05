@@ -108,7 +108,7 @@ const translations: Record<Language, Record<string, string>> = {
     "hero.tone.empathetic": "Empático / Cercano",
     "hero.tone.required": "Tono requerido",
     "hero.tone.requiredDesc": "Por favor selecciona un tono de comunicación para personalizar el análisis",
-    "hero.tone.hint": "Requerido - Define cómo quieres comunicarte con tu audiencia",
+    "hero.tone.hint": "Requerido",
     "hero.tone.disclaimer": "Añade mas detalles de la personalidad de tu marca en 'Añadir Contexto y Documentos'",
     
     // Brand Voice
@@ -482,7 +482,7 @@ const translations: Record<Language, Record<string, string>> = {
     "hero.tone.empathetic": "Empathetic / Warm",
     "hero.tone.required": "Tone required",
     "hero.tone.requiredDesc": "Please select a communication tone to personalize the analysis",
-    "hero.tone.hint": "Required - Define how you want to communicate with your audience",
+    "hero.tone.hint": "Required",
     "hero.tone.disclaimer": "💡 Want more customization? Add your brand personality details in 'Add Context and Docs'",
     
     // Brand Voice
