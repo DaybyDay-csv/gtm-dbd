@@ -147,6 +147,8 @@ export default function Projects() {
   };
 
   return (
+    <>
+      <Seo title="Your projects — GTM Factory" description="Manage your saved GTM analyses and pick up where you left off." path="/projects" />
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
