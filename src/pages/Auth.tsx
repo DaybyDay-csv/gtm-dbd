@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
+import { Seo } from '@/components/Seo';
 
 const authSchema = z.object({
   email: z.string().email('Invalid email address').max(255),
@@ -76,6 +77,8 @@ export default function Auth() {
   };
 
   return (
+    <>
+      <Seo title="Sign in — GTM Factory" description="Sign in or create your GTM Factory account to save and revisit your AI go-to-market analyses." path="/auth" />
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
@@ -171,5 +174,6 @@ export default function Auth() {
         </CardContent>
       </Card>
     </div>
+    </>
   );
 }

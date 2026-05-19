@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Seo } from "@/components/Seo";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -146,6 +147,8 @@ export default function Projects() {
   };
 
   return (
+    <>
+      <Seo title="Your projects — GTM Factory" description="Manage your saved GTM analyses and pick up where you left off." path="/projects" />
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
@@ -265,5 +268,6 @@ export default function Projects() {
         )}
       </div>
     </div>
+    </>
   );
 }

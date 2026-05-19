@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Seo } from '@/components/Seo';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
@@ -27,6 +28,8 @@ export default function AccountSettings() {
   };
 
   return (
+    <>
+      <Seo title="Account settings — GTM Factory" description="Manage your account preferences and language for GTM Factory." path="/settings" />
     <div className="min-h-screen bg-background">
       <AppHeader />
       <div className="container mx-auto px-4 py-8 max-w-2xl">
@@ -64,5 +67,6 @@ export default function AccountSettings() {
         </Card>
       </div>
     </div>
+    </>
   );
 }

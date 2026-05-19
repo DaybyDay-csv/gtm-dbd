@@ -25,6 +25,7 @@ import { SignupGate } from "@/components/factory/SignupGate";
 import { BudgetInput } from "@/components/factory/BudgetInput";
 import { ChannelStrategy } from "@/components/factory/ChannelStrategy";
 import { FloatingProgress } from "@/components/factory/FloatingProgress";
+import { Seo } from "@/components/Seo";
 
 const Index = () => {
   const [searchParams] = useSearchParams();
@@ -171,8 +172,13 @@ const Index = () => {
   // Show loading spinner while validating project access
   if (loadingProject && projectIdFromUrl) {
     return (
-      <div className="min-h-screen bg-background overflow-x-hidden">
-        <AppHeader
+    <div className="min-h-screen bg-background overflow-x-hidden">
+      <Seo
+        title="GTM Factory — AI Go-to-Market Intelligence for B2B & B2C"
+        description="Turn any product into a complete go-to-market plan: market analysis, buyer personas, value equation, DISC messaging and creative validation."
+        path="/"
+      />
+      <AppHeader
           analysisState={displayState}
           projectName={displayState.phases.phase1?.productNucleus?.name}
           showDownloadButton={false}
