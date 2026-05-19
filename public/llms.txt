@@ -1,0 +1,14 @@
+# GTM Factory
+
+> AI-powered go-to-market intelligence: turn a product URL into market analysis, buyer personas, value equation, DISC messaging, channel strategy and creative validation in minutes.
+
+GTM Factory runs a 7-phase AI pipeline (market analysis, buyer persona, value equation, DISC translator, emotional triggers, channel strategy, creative variations) to help B2B and B2C teams build evidence-based go-to-market plans.
+
+## Pages
+
+- [Home](/): Run a full GTM analysis on any product or website.
+- [Sign in](/auth): Create an account or sign in to save analyses.
+
+## Optional
+
+- [Projects](/projects): Browse previously generated GTM analyses (requires sign in).
