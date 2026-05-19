@@ -21,6 +21,8 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
+    <>
+      <Seo title="Page not found — GTM Factory" description="The page you are looking for doesn't exist." path="/404" />
     <div className="flex min-h-screen items-center justify-center bg-background">
       <div className="text-center">
         <h1 className="mb-4 text-4xl font-bold text-foreground">404</h1>

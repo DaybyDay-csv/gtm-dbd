@@ -67,5 +67,6 @@ export default function AccountSettings() {
         </Card>
       </div>
     </div>
+    </>
   );
 }
