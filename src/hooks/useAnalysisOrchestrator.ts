@@ -59,7 +59,8 @@ export const useAnalysisOrchestrator = () => {
     mission?: string,
     values?: string,
     tone?: string,
-    brandVoice?: string
+    brandVoice?: string,
+    industry?: string
   ) => {
     try {
       // Reset state for fresh analysis
@@ -93,7 +94,8 @@ export const useAnalysisOrchestrator = () => {
           url, 
           user_id: session?.user?.id || null,
           session_token: sessionToken,
-          product_name: productDescription.split(' ').slice(0, 3).join(' ') // First 3 words as product name
+          product_name: productDescription.split(' ').slice(0, 3).join(' '), // First 3 words as product name
+          industry: industry || null
         })
         .select()
         .single();
@@ -112,7 +114,7 @@ export const useAnalysisOrchestrator = () => {
       setState(prev => ({ ...prev, currentPhase: 1 }));
       const phase1Response = await supabase.functions.invoke(
         "phase-1-market-analysis",
-        { body: { projectId: project.id, url, productDescription, competitors, docs, context, vision, mission, values, tone, brandVoice, outputLanguage: language, sessionToken: sessionToken || undefined } }
+        { body: { projectId: project.id, url, productDescription, competitors, docs, context, vision, mission, values, tone, brandVoice, industry, outputLanguage: language, sessionToken: sessionToken || undefined } }
       );
       
       if (phase1Response.error) {

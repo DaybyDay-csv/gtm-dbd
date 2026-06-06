@@ -20,6 +20,7 @@ const inputSchema = z.object({
   docs: z.string().max(5000).optional(),
   tone: z.enum(['professional', 'friendly', 'technical', 'inspirational', 'direct', 'empathetic']).optional(),
   brandVoice: z.string().max(2000).optional(),
+  industry: z.string().max(100).optional(),
   outputLanguage: z.enum(['es', 'en']).default('es'),
   sessionToken: z.string().optional()
 });
@@ -148,7 +149,7 @@ serve(async (req) => {
       );
     }
     
-    const { projectId, url, productDescription, context, competitors, vision, mission, values, docs, tone, brandVoice, outputLanguage } = validated;
+    const { projectId, url, productDescription, context, competitors, vision, mission, values, docs, tone, brandVoice, industry, outputLanguage } = validated;
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
@@ -267,6 +268,7 @@ ${websiteContent}
 - Additional documentation: ${docs || 'None provided'}
 - Communication Tone: ${tone || 'professional'}
 - Brand Voice & Personality: ${brandVoice || 'Not specified'}
+- Industry: ${industry || 'Not specified'}
 
 ⚠️ COMMUNICATION TONE INSTRUCTION:
 The client has selected "${tone || 'professional'}" as their preferred communication tone. 
@@ -587,9 +589,9 @@ Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-pro',
+        model: 'google/gemini-2.5-flash',
         messages: [
-          { role: 'system', content: 'You are a market analysis expert. You MUST respond with ONLY a valid JSON object. Do NOT include any explanatory text, markdown formatting, or code blocks. Return ONLY the raw JSON object starting with { and ending with }. Keep all text fields concise.' },
+          { role: 'system', content: `You are a market analysis expert. You MUST respond with ONLY a valid JSON object. Do NOT include any explanatory text, markdown formatting, or code blocks. Return ONLY the raw JSON object starting with { and ending with }. Keep all text fields concise and factual. Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'}.` },
           { role: 'user', content: prompt }
         ]
       }),

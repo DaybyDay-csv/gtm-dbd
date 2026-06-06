@@ -7,6 +7,7 @@ import {
   MessageSquare, 
   Palette, 
   TestTube,
+  Wand2,
   Clock
 } from "lucide-react";
 
@@ -51,12 +52,19 @@ const phases = [
     tooltipKey: "phase.triggers.tooltip",
     time: "~1 min"
   },
-  { 
-    number: 6, 
-    labelKey: "phase.validation",
-    icon: TestTube, 
-    tooltipKey: "phase.validation.tooltip",
-    time: "~2 min"
+  {
+    number: 6,
+    labelKey: "phase.channels",
+    icon: TestTube,
+    tooltipKey: "phase.channels.tooltip",
+    time: "~1 min"
+  },
+  {
+    number: 7,
+    labelKey: "phase.creatives",
+    icon: Wand2,
+    tooltipKey: "phase.creatives.tooltip",
+    time: "~1 min"
   },
 ];
 
@@ -77,7 +85,7 @@ export const PhaseRibbon = ({ currentPhase, isRunning }: PhaseRibbonProps) => {
         <div className="flex items-center justify-center gap-2 mb-4 text-sm text-muted-foreground">
           <Clock className="w-4 h-4" />
           <span>
-            {t('phase.progress')} {currentPhase}/6 • ~{totalRemainingMinutes} {t('phase.remaining')}
+            {t('phase.progress')} {currentPhase}/7 • ~{totalRemainingMinutes} {t('phase.remaining')}
           </span>
         </div>
       )}

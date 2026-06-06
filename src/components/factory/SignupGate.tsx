@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
@@ -6,8 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Lock, Lightbulb, Unlock, Mail, Chrome, Zap, BarChart3, TestTube, FileText } from "lucide-react";
+import { Lock, Lightbulb, Unlock, Mail, Chrome, Zap, FileDown, Loader2 } from "lucide-react";
 import { UnlockPreview } from "./UnlockPreview";
+import { captureEmailLead } from "@/utils/emailCapture";
+import { supabase } from "@/integrations/supabase/client";
 
 interface SignupGateProps {
   onComplete: () => void;
@@ -19,8 +21,50 @@ export const SignupGate = ({ onComplete }: SignupGateProps) => {
   const [isSignUp, setIsSignUp] = useState(true);
   const [isEmailOnly, setIsEmailOnly] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showSoftEmail, setShowSoftEmail] = useState(false);
+  const [softEmail, setSoftEmail] = useState("");
+  const [softSubmitting, setSoftSubmitting] = useState(false);
+  const [softDone, setSoftDone] = useState(false);
+  const [projectId, setProjectId] = useState<string | null>(null);
   const { signIn, signUp, signInWithOtp, signInWithGoogle } = useAuth();
   const { t } = useLanguage();
+
+  const handleSoftEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!softEmail) return;
+    setSoftSubmitting(true);
+    try {
+      const result = await captureEmailLead({
+        email: softEmail,
+        projectId: projectId,
+        source: "phase_5_email_only",
+        language: (typeof window !== "undefined" && (localStorage.getItem("preferred_language") as "es" | "en")) || "es",
+      });
+      if (result.ok) {
+        setSoftDone(true);
+        toast.success(t("signup.softEmail.success") || "Listo. Te enviamos el PDF. Revisa tu email en los próximos minutos.");
+      } else {
+        toast.error(result.error || t("signup.softEmail.error") || "No se pudo registrar el email.");
+      }
+    } finally {
+      setSoftSubmitting(false);
+    }
+  };
+
+
+  // Resolve the current project id (from URL ?project= or localStorage)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const fromUrl = params.get("project");
+    if (fromUrl) { setProjectId(fromUrl); return; }
+    try {
+      const raw = localStorage.getItem("unclaimedProjects");
+      if (raw) {
+        const arr = JSON.parse(raw);
+        if (Array.isArray(arr) && arr.length > 0) setProjectId(arr[arr.length - 1]);
+      }
+    } catch { /* ignore */ }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -180,6 +224,45 @@ export const SignupGate = ({ onComplete }: SignupGateProps) => {
           >
             {isSignUp ? t('signup.haveAccount') : t('signup.newUser')}
           </button>
+        </div>
+
+        <div className="pt-2 border-t">
+          {!showSoftEmail ? (
+            <button
+              type="button"
+              onClick={() => setShowSoftEmail(true)}
+              className="w-full text-xs text-muted-foreground hover:text-primary flex items-center justify-center gap-1"
+              disabled={isLoading}
+            >
+              <FileDown className="w-3 h-3" />
+              {t("signup.softEmail.cta") || "¿Solo quieres el PDF? Déjanos tu email"}
+            </button>
+          ) : (
+            <form onSubmit={handleSoftEmailSubmit} className="space-y-2">
+              <Label htmlFor="soft-email" className="text-xs text-muted-foreground">
+                {t("signup.softEmail.label") || "Email para enviarte el PDF"}
+              </Label>
+              <Input
+                id="soft-email"
+                type="email"
+                placeholder="tu@email.com"
+                value={softEmail}
+                onChange={(e) => setSoftEmail(e.target.value)}
+                required
+                disabled={softSubmitting || softDone}
+                className="h-8 text-sm"
+              />
+              <div className="flex gap-2">
+                <Button type="submit" size="sm" disabled={softSubmitting || softDone || !softEmail} className="flex-1">
+                  {softSubmitting ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <Mail className="w-3 h-3 mr-1" />}
+                  {softDone ? (t("signup.softEmail.sent") || "Enviado ✓") : (t("signup.softEmail.send") || "Enviar PDF")}
+                </Button>
+                <Button type="button" size="sm" variant="ghost" onClick={() => setShowSoftEmail(false)} disabled={softSubmitting}>
+                  ✕
+                </Button>
+              </div>
+            </form>
+          )}
         </div>
 
         <div className="text-center text-xs text-muted-foreground pt-2 border-t flex items-center justify-center gap-2">

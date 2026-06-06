@@ -226,7 +226,7 @@ export default function Projects() {
                     <Badge variant="secondary" className="text-xs">
                       {project.phasesCompleted} fase{project.phasesCompleted !== 1 ? 's' : ''}
                     </Badge>
-                    {project.lastPhase === 6 ? (
+                    {project.lastPhase === 7 ? (
                       <Badge variant="default" className="text-xs flex items-center gap-1">
                         <CheckCircle2 className="h-3 w-3" />
                         Completado

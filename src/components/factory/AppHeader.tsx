@@ -2,9 +2,15 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
-import { FolderOpen, LogOut, Globe, Settings, Download, Menu } from "lucide-react";
+import { FolderOpen, LogOut, Globe, Settings, Download, Menu, Mail, Loader2, FileText, FileJson } from "lucide-react";
 import { DownloadAnalysisButton } from "./DownloadAnalysisButton";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { downloadAnalysisAsJSON, downloadAnalysisAsPDF } from "@/utils/downloadAnalysis";
+import { captureEmailLead } from "@/utils/emailCapture";
+import { useToast } from "@/hooks/use-toast";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { AnalysisState } from "@/hooks/useAnalysisOrchestrator";
 import { useState, useEffect } from "react";
@@ -21,6 +27,63 @@ export const AppHeader = ({ analysisState, projectName, showDownloadButton = fal
   const { user, signOut } = useAuth();
   const { language, setLanguage, t } = useLanguage();
   const [animateButton, setAnimateButton] = useState(false);
+  const [emailDialogOpen, setEmailDialogOpen] = useState(false);
+  const [emailValue, setEmailValue] = useState("");
+  const [emailSubmitting, setEmailSubmitting] = useState(false);
+  const [pendingFormat, setPendingFormat] = useState<"pdf" | "json" | null>(null);
+  const { toast } = useToast();
+
+  const triggerDownload = async (format: "pdf" | "json") => {
+    if (!analysisState || analysisState.currentPhase < 1) {
+      toast({ title: "Sin contenido", description: "Completa al menos la fase 1 para descargar.", variant: "destructive" });
+      return;
+    }
+    try {
+      if (format === "pdf") {
+        await downloadAnalysisAsPDF(analysisState, projectName || "Analisis");
+      } else {
+        downloadAnalysisAsJSON(analysisState, projectName || "Analisis");
+      }
+      toast({ title: "Descarga completada", description: `Tu analisis se descargo en formato ${format.toUpperCase()}.` });
+    } catch (e) {
+      console.error(e);
+      toast({ title: "Error al generar", description: "No se pudo generar la descarga. Intentalo de nuevo.", variant: "destructive" });
+    }
+  };
+
+  const handleAnonDownloadClick = (format: "pdf" | "json") => {
+    setPendingFormat(format);
+    setEmailDialogOpen(true);
+  };
+
+  const handleEmailSubmit = async (skipEmail: boolean) => {
+    if (!skipEmail && !emailValue) {
+      toast({ title: "Email requerido", description: "Introduce tu email para continuar.", variant: "destructive" });
+      return;
+    }
+    setEmailSubmitting(true);
+    try {
+      if (!skipEmail) {
+        const result = await captureEmailLead({
+          email: emailValue,
+          projectId: analysisState?.projectId || null,
+          source: pendingFormat === "pdf" ? "pdf_download" : "json_download",
+          language: language,
+        });
+        if (!result.ok) {
+          toast({ title: "Error", description: result.error || "No se pudo registrar el email.", variant: "destructive" });
+          return;
+        }
+      }
+      const fmt = pendingFormat || "pdf";
+      setEmailDialogOpen(false);
+      setEmailValue("");
+      setPendingFormat(null);
+      await triggerDownload(fmt);
+    } finally {
+      setEmailSubmitting(false);
+    }
+  };
   
   const hasContent = analysisState && analysisState.currentPhase >= 1;
   const canDownload = hasContent && !analysisState.isRunning;
@@ -68,37 +131,22 @@ export const AppHeader = ({ analysisState, projectName, showDownloadButton = fal
             />
           ) : (
             <>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    disabled={!hasContent}
-                    className="gap-2 hover-scale transition-all"
-                  >
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" disabled={!hasContent} className="gap-2 hover-scale transition-all">
                     <Download className="h-4 w-4" />
                     Descargar Análisis
                   </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-80">
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <h4 className="font-semibold">Loguéate para descargar tu análisis</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Obtén tu análisis completo en PDF y JSON
-                      </p>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <Button onClick={() => navigate("/auth")} className="w-full">
-                        Crear Cuenta
-                      </Button>
-                      <Button onClick={() => navigate("/auth")} variant="outline" className="w-full">
-                        Iniciar Sesión
-                      </Button>
-                    </div>
-                  </div>
-                </PopoverContent>
-              </Popover>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => handleAnonDownloadClick("pdf")} disabled={!hasContent || analysisState?.isRunning} className="gap-2">
+                    <FileText className="h-4 w-4" /> Descargar como PDF
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleAnonDownloadClick("json")} disabled={!hasContent || analysisState?.isRunning} className="gap-2">
+                    <FileJson className="h-4 w-4" /> Descargar como JSON
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <Button 
                 onClick={() => navigate("/auth")}
                 size="sm"
@@ -231,6 +279,44 @@ export const AppHeader = ({ analysisState, projectName, showDownloadButton = fal
           </Sheet>
         </div>
       </div>
+    
+      <Dialog open={emailDialogOpen} onOpenChange={setEmailDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Mail className="h-5 w-5 text-primary" />
+              Recibe tu análisis completo
+            </DialogTitle>
+            <DialogDescription>
+              Déjanos tu email para enviarte también una copia y mantenerte al tanto de las próximas mejoras. O descárgalo directamente sin registrarte.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div>
+              <Label htmlFor="email-capture">Email (opcional)</Label>
+              <Input
+                id="email-capture"
+                type="email"
+                placeholder="tu@email.com"
+                value={emailValue}
+                onChange={(e) => setEmailValue(e.target.value)}
+                disabled={emailSubmitting}
+                onKeyDown={(e) => { if (e.key === "Enter") handleEmailSubmit(false); }}
+              />
+            </div>
+          </div>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <Button variant="ghost" onClick={() => handleEmailSubmit(true)} disabled={emailSubmitting} className="w-full sm:w-auto">
+              {emailSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+              Descargar sin email
+            </Button>
+            <Button onClick={() => handleEmailSubmit(false)} disabled={emailSubmitting || !emailValue} className="w-full sm:w-auto">
+              {emailSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+              Enviar y descargar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </header>
   );
 };

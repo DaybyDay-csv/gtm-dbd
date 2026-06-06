@@ -8,6 +8,7 @@ import {
   MessageSquare, 
   Palette, 
   TestTube,
+  Wand2,
   ChevronUp,
   Loader2
 } from "lucide-react";
@@ -25,7 +26,8 @@ const phases = [
   { number: 3, labelKey: "phase.offers", icon: Package },
   { number: 4, labelKey: "phase.disc", icon: Palette },
   { number: 5, labelKey: "phase.triggers", icon: MessageSquare },
-  { number: 6, labelKey: "phase.validation", icon: TestTube },
+  { number: 6, labelKey: "phase.channels", icon: TestTube },
+  { number: 7, labelKey: "phase.creatives", icon: Wand2 },
 ];
 
 export const FloatingProgress = ({ 
@@ -50,7 +52,7 @@ export const FloatingProgress = ({
   const currentPhaseData = phases.find(p => p.number === currentPhase);
   const CurrentIcon = currentPhaseData?.icon || Map;
   const completedCount = isRunning ? currentPhase - 1 : currentPhase;
-  const progressPercent = (completedCount / 6) * 100;
+  const progressPercent = (completedCount / 7) * 100;
 
   return (
     <div 
@@ -64,7 +66,7 @@ export const FloatingProgress = ({
         <div className="absolute bottom-full right-0 mb-2 bg-card border border-border rounded-xl shadow-lg p-4 min-w-[280px] animate-scale-in">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-medium text-foreground">
-              {t('phase.progress')} {completedCount}/6
+              {t('phase.progress')} {completedCount}/7
             </span>
             {isRunning && (
               <span className="text-xs text-primary flex items-center gap-1">
@@ -162,7 +164,7 @@ export const FloatingProgress = ({
             {isRunning ? t(currentPhaseData?.labelKey || 'phase.market') : t('phase.completed') || 'Completado'}
           </span>
           <span className="text-[10px] text-muted-foreground">
-            {completedCount}/6 {t('phase.phases') || 'fases'}
+            {completedCount}/7 {t('phase.phases') || 'fases'}
           </span>
         </div>
 

@@ -14,6 +14,21 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_users: {
+        Row: {
+          created_at: string
+          email: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+        }
+        Relationships: []
+      }
       anonymous_sessions: {
         Row: {
           created_at: string
@@ -40,6 +55,47 @@ export type Database = {
           token?: string
         }
         Relationships: []
+      }
+      email_leads: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          ip_address: string | null
+          language: string
+          project_id: string | null
+          source: string
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          ip_address?: string | null
+          language?: string
+          project_id?: string | null
+          source: string
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          ip_address?: string | null
+          language?: string
+          project_id?: string | null
+          source?: string
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_leads_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       experiments: {
         Row: {

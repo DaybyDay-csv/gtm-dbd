@@ -1,4 +1,4 @@
-import { Loader2, BarChart3, Target, Search, Lightbulb, User, MessageSquare, Palette, TrendingUp, Gem, ArrowUp, ArrowDown, Gift, Zap, Wrench, FlaskConical, Smartphone, Rocket, Info, Circle } from "lucide-react";
+import { Loader2, BarChart3, Target, Search, Lightbulb, User, MessageSquare, Palette, TrendingUp, Gem, ArrowUp, ArrowDown, Gift, Zap, Wrench, FlaskConical, Sparkles, Smartphone, Rocket, Info, Circle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 interface PhaseExplainerProps {
@@ -64,14 +64,25 @@ const phaseExplanations = [
   },
   {
     phase: 6,
-    title: "Creando tu mapa de validación",
+    title: "Definiendo tu estrategia de canales",
     steps: [
-      { icon: FlaskConical, text: "Transformando todo en hipótesis testeables" },
-      { icon: Smartphone, text: "Definiendo canales: Meta, Google, Email, Landing..." },
-      { icon: BarChart3, text: "Estableciendo KPIs, costes y tiempos para cada test" },
-      { icon: Rocket, text: "Priorizando la siguiente mejor acción a ejecutar" },
+      { icon: Target, text: "Analizando presupuesto, fit con el buyer y madurez del negocio" },
+      { icon: Smartphone, text: "Comparando canales nativos (marketplace) vs externos (Meta, Google, LinkedIn)" },
+      { icon: BarChart3, text: "Estimando CPL, tiempo hasta resultados y ROI por canal" },
+      { icon: Rocket, text: "Recomendando canal principal + 2 alternativas" },
     ],
-    dataSource: "Experimentos diseñados integrando: todas las fases anteriores (buyer, ofertas, mensajes DISC y triggers emocionales) en tests accionables.",
+    dataSource: "Estrategia basada en: tu presupuesto declarado, perfil del buyer, marketplace presence detectado en Fase 1 y las ofertas/disc/triggers definidos anteriormente.",
+  },
+  {
+    phase: 7,
+    title: "Generando variaciones creativas listas para ejecutar",
+    steps: [
+      { icon: Sparkles, text: "Combinando (buyer field × oferta × DISC × canal × trigger) en 10 anuncios" },
+      { icon: Target, text: "Escribiendo headline + subheadline + CTA específico por canal" },
+      { icon: BarChart3, text: "Asignando KPI, coste estimado y tiempo hasta validación" },
+      { icon: Rocket, text: "Marcando la siguiente mejor acción a ejecutar esta semana" },
+    ],
+    dataSource: "Variaciones generadas cruzando: buyer persona (Fase 2), ofertas Hormozi (Fase 3), traducciones DISC (Fase 4), triggers emocionales (Fase 5) y canales recomendados (Fase 6).",
   },
 ];
 

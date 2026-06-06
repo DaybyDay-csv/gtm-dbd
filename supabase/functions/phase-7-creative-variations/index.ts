@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -15,6 +16,30 @@ const inputSchema = z.object({
   outputLanguage: z.enum(['es', 'en']).default('es')
 });
 
+const outputSchema = z.object({
+  variations: z.array(z.object({
+    id: z.string(),
+    channel: z.string(),
+    discProfile: z.string(),
+    effect: z.string(),
+    objective: z.string(),
+    headline: z.string(),
+    subheadline: z.string().optional(),
+    cta: z.string(),
+    emotionalTrigger: z.string(),
+    buyerField: z.string(),
+    offer: z.string(),
+    visualSuggestion: z.string().optional(),
+    kpi: z.string(),
+    estimatedCost: z.string(),
+    ttv: z.string(),
+    state: z.string(),
+    owner: z.string(),
+    reasoning: z.string(),
+  })).min(8).max(12),
+});
+
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -23,6 +48,32 @@ serve(async (req) => {
   try {
     const body = await req.json();
     const { projectId, allPhaseData, recommendedChannels, generateFor, outputLanguage } = inputSchema.parse(body);
+
+    // Rate limiting (Phase 0 stabilization)
+    const supabaseAdmin = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    );
+    const rlAuthHeader = req.headers.get('authorization');
+    const rlIp = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+    let rlKey = rlIp;
+    let rlMax = 10;
+    if (rlAuthHeader) {
+      try {
+        const { data: { user: rlUser } } = await supabaseAdmin.auth.getUser(rlAuthHeader.replace('Bearer ', ''));
+        if (rlUser) { rlKey = rlUser.id; rlMax = 50; }
+      } catch { /* anon */ }
+    }
+    const { data: rlResult } = await supabaseAdmin.rpc('check_rate_limit', {
+      key: rlKey, endpoint: 'phase-7-creative-variations', max_requests: rlMax, window_minutes: 1440,
+    });
+    if (rlResult && !rlResult.allowed) {
+      return new Response(JSON.stringify({
+        error: 'Rate limit exceeded. Please sign up or try again later.',
+        retryAfter: rlResult.retry_after, limit: rlResult.limit, currentCount: rlResult.current_count,
+      }), { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
@@ -130,7 +181,7 @@ Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'
       body: JSON.stringify({
         model: 'google/gemini-2.5-flash',
         messages: [
-          { role: 'system', content: 'Eres un copywriter experto en growth marketing. Siempre devuelves JSON válido sin markdown.' },
+          { role: 'system', content: `You are an expert growth marketing copywriter. Always return valid JSON without markdown. Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'}.` },
           { role: 'user', content: prompt }
         ],
         response_format: { type: "json_object" }
@@ -217,9 +268,39 @@ Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'
       }
     }
 
-    console.log('Phase 7 completed successfully with', result.variations?.length || 0, 'variations');
+    
+    // Validate parsed result against output schema
+    const validation = outputSchema.safeParse(result);
+    if (!validation.success) {
+      console.error('Output schema validation failed:', JSON.stringify(validation.error.issues).slice(0, 500));
+      return new Response(
+        JSON.stringify({
+          error: 'Output schema validation failed',
+          issues: validation.error.issues,
+          raw_preview: JSON.stringify(result).slice(0, 500),
+        }),
+        { status: 422, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    const validatedResult = validation.data;
 
-    return new Response(JSON.stringify(result), {
+    // Validate parsed result against output schema
+    const validation = outputSchema.safeParse(result);
+    if (!validation.success) {
+      console.error('Output schema validation failed:', JSON.stringify(validation.error.issues).slice(0, 500));
+      return new Response(
+        JSON.stringify({
+          error: 'Output schema validation failed',
+          issues: validation.error.issues,
+          raw_preview: JSON.stringify(result).slice(0, 500),
+        }),
+        { status: 422, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    const validatedResult = validation.data;
+console.log('Phase 7 completed successfully with', validatedResult.variations?.length || 0, 'variations');
+
+    return new Response(JSON.stringify(validatedResult), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
