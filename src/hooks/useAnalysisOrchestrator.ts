@@ -87,21 +87,26 @@ export const useAnalysisOrchestrator = () => {
       const sessionToken = !session?.user?.id ? await getOrCreateSessionToken() : null;
 
       // Always create a new project for each analysis
-      const { data: newProject, error: projectError } = await supabase
-        .from("projects")
-        .insert({ 
-          name: projectName, 
-          url, 
-          user_id: session?.user?.id || null,
-          session_token: sessionToken,
-          product_name: productDescription.split(' ').slice(0, 3).join(' '), // First 3 words as product name
-          industry: industry || null
-        })
-        .select()
-        .single();
+      // Use the create-project edge function (service-role, RLS-safe) instead
+      // of a direct REST insert which is blocked for anon users.
+      const { data: created, error: projectError } = await supabase.functions.invoke(
+        "create-project",
+        {
+          body: {
+            url,
+            productDescription,
+            industry: industry || undefined,
+            outputLanguage: language,
+            sessionToken: sessionToken || undefined,
+          },
+        }
+      );
 
       if (projectError) throw projectError;
-      const project = newProject;
+      if (!created?.ok || !created?.projectId) {
+        throw new Error("Could not create project");
+      }
+      const project = { id: created.projectId };
 
       // Save to localStorage if user is not logged in
       if (!session?.user?.id) {
