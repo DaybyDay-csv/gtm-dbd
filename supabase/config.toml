@@ -1,10 +1,19 @@
-project_id = "sehdzomhwoehmxrnwlsa"
+project_id = "llsnjplawndnxbbqzonj"
 
-# Allow phases 1-2 to run without authentication for freemium access
+# Allow phases 1-7 + create-session to run without authentication for freemium access
 [functions.phase-1-market-analysis]
 verify_jwt = false
 
 [functions.phase-2-buyer-persona]
+verify_jwt = false
+
+[functions.phase-3-value-equation]
+verify_jwt = false
+
+[functions.phase-4-disc-translator]
+verify_jwt = false
+
+[functions.phase-5-emotional-triggers]
 verify_jwt = false
 
 [functions.phase-6-channel-strategy]
