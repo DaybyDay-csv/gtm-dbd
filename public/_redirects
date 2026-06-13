@@ -1,0 +1,4 @@
+# Cloudflare Pages: SPA fallback for React Router (BrowserRouter).
+# All non-file routes are served index.html so client-side routing works.
+# 200 = serve existing asset, no rewrite.
+/*    /index.html   200

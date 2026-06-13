@@ -1,4 +1,4 @@
-project_id = "llsnjplawndnxbbqzonj"
+project_id = "sehdzomhwoehmxrnwlsa"
 
 # Allow phases 1-7 + create-session to run without authentication for freemium access
 [functions.phase-1-market-analysis]
