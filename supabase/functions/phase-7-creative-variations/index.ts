@@ -8,6 +8,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Input validation schema
 const inputSchema = z.object({
   projectId: z.string().uuid(),
   allPhaseData: z.record(z.any()).optional(),
@@ -39,6 +40,7 @@ const outputSchema = z.object({
   })).min(8).max(12),
 });
 
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -48,6 +50,7 @@ serve(async (req) => {
     const body = await req.json();
     const { projectId, allPhaseData, recommendedChannels, generateFor, outputLanguage } = inputSchema.parse(body);
 
+    // Rate limiting (Phase 0 stabilization)
     const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
@@ -75,17 +78,17 @@ serve(async (req) => {
     console.log('Starting Phase 7 - Creative Variations for project:', projectId);
     console.log('Generating for:', generateFor || 'all recommended channels');
 
-    const channels = generateFor && generateFor !== 'all'
-      ? [generateFor]
+    const channels = generateFor && generateFor !== 'all' 
+      ? [generateFor] 
       : recommendedChannels || [];
 
     const prompt = `Eres un copywriter experto en growth marketing. Genera 10 variaciones creativas de campañas listas para ejecutar.
 
 CONTEXTO COMPLETO:
-- Buyer Persona: ${JSON.stringify(allPhaseData?.phase2 || {}).slice(0, 1500)}
-- Ofertas: ${JSON.stringify(allPhaseData?.phase3?.offers || []).slice(0, 1500)}
-- DISC Profiles: ${JSON.stringify(allPhaseData?.phase4 || {}).slice(0, 1500)}
-- Triggers Emocionales: ${JSON.stringify(allPhaseData?.phase5 || {}).slice(0, 1500)}
+- Buyer Persona: ${JSON.stringify(allPhaseData?.phase2 || {})}
+- Ofertas: ${JSON.stringify(allPhaseData?.phase3?.offers || [])}
+- DISC Profiles: ${JSON.stringify(allPhaseData?.phase4 || {})}
+- Triggers Emocionales: ${JSON.stringify(allPhaseData?.phase5 || {})}
 - Canales Recomendados: ${JSON.stringify(channels)}
 - Canal Específico: ${generateFor || 'distribuir entre todos'}
 
@@ -114,30 +117,53 @@ FORMATO DE RESPUESTA (JSON estricto, sin markdown):
       "channel": "Meta Ads",
       "discProfile": "Rojo",
       "effect": "Acelera tu pipeline de ventas en 14 días",
-      "objective": "Validar si el deseo de rapidez convierte mejor que mensajes genéricos",
-      "headline": "Pipeline lleno en 2 semanas",
+      "objective": "Validar si el deseo de rapidez en perfiles Rojos convierte mejor que mensajes de eficiencia para otros perfiles DISC",
+      "headline": "Pipeline lleno en 2 semanas. Garantizado.",
       "subheadline": "Automatización que los CEOs aman",
       "cta": "Empieza hoy gratis",
       "emotionalTrigger": "Urgencia + Status",
       "buyerField": "Deseo: Ser líder en su industria",
       "offer": "Trial 14 días + Onboarding 1-on-1",
-      "visualSuggestion": "CEO mirando dashboard con métricas ascendentes",
-      "kpi": "CPL < 50 EUR",
-      "estimatedCost": "1200-1800 EUR (test 7 días)",
+      "visualSuggestion": "CEO mirando dashboard con métricas ascendentes en pantalla grande, expresión confiada",
+      "kpi": "CPL < €50",
+      "estimatedCost": "€1,200-1,800 (test 7 días)",
       "ttv": "7 días para primeros leads",
       "state": "Discover",
       "owner": "PMM",
-      "reasoning": "Rojos priorizan velocidad. Trigger urgencia + status + onboarding reduce fricción."
+      "reasoning": "Los perfiles Rojos priorizan velocidad y resultados inmediatos. El trigger de urgencia + status aprovecha su deseo de liderazgo. El offer de onboarding 1-on-1 reduce fricción y acelera adopción. Hipótesis: Si validamos que Rojos convierten con mensajes de rapidez, podemos segmentar audiencias y reducir CAC un 30%."
+    },
+    {
+      "id": "VAR-002",
+      "channel": "Google Search",
+      "discProfile": "Azul",
+      "effect": "Incrementa precisión de forecasting en 40%",
+      "objective": "Validar si perfiles Azules responden mejor a datos concretos vs promesas genéricas al buscar activamente soluciones",
+      "headline": "Forecasting con 98% de precisión",
+      "subheadline": "Datos en tiempo real. Zero guesswork.",
+      "cta": "Ver demo técnica",
+      "emotionalTrigger": "Seguridad + Control",
+      "buyerField": "Dolor: Falta de datos confiables para decisiones",
+      "offer": "Demo personalizada 30min + Report de precisión",
+      "visualSuggestion": "Gráficos técnicos detallados con métricas de precisión, interfaz profesional",
+      "kpi": "CTR > 8%",
+      "estimatedCost": "€800-1,200 (test 7 días)",
+      "ttv": "10 días para primeros leads",
+      "state": "Discover",
+      "owner": "Growth",
+      "reasoning": "Azules buscan información detallada antes de decidir. Google Search captura alta intención con keywords específicas. El trigger de seguridad + métricas concretas (98%, 40%) genera confianza. Hipótesis: Si Azules convierten mejor con datos técnicos en Search, podemos crear landing pages específicas por perfil y aumentar conversión un 25%."
     }
   ]
 }
 
 IMPORTANTE:
 - Genera EXACTAMENTE 10 variaciones
-- Distribuye entre canales recomendados de forma equilibrada
+- Distribuye entre canales recomendados de forma equilibrada (a menos que se pida un canal específico)
 - Varía los perfiles DISC de forma equilibrada (2-3 por color)
-- Mantén los textos CONCISOS (<120 chars por campo de copy)
+- El "reasoning" debe explicar la lógica estratégica completa y la hipótesis de validación
+- Los "effect" deben ser específicos y medibles
+- Los "objective" deben explicar el por qué estratégico
 - Devuelve SOLO JSON válido, sin bloques markdown
+- Sé creativo pero mantén coherencia con el contexto del negocio
 
 Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'}.`;
 
@@ -146,63 +172,66 @@ Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'
         { role: 'system', content: `You are an expert growth marketing copywriter. Always return valid JSON without markdown. Write all content in ${outputLanguage === 'es' ? 'Spanish (España)' : 'English'}.` },
         { role: 'user', content: prompt }
       ],
-      { temperature: 0.7, maxTokens: 8000, responseFormatJson: true },
+      { temperature: 0.7, responseFormatJson: true, maxTokens: 8000 },
     );
     console.log('LLM provider:', response.provider, 'model:', response.model);
 
-    let content = response.text || '';
-    if (!content || content.trim() === '') {
-      throw new Error('LLM returned empty content');
-    }
-    content = content.trim();
-    if (content.startsWith('```json')) {
-      content = content.replace(/```json\n?/g, '').replace(/```\n?$/g, '');
-    } else if (content.startsWith('```')) {
-      content = content.replace(/```\n?/g, '');
-    }
-    content = content.trim();
-
     let result;
     try {
-      result = JSON.parse(content);
-    } catch (parseError) {
-      console.log('First parse failed, attempting to extract JSON from content...');
-      const jsonMatch = content.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        try {
-          result = JSON.parse(jsonMatch[0]);
-          console.log('Successfully recovered JSON from match');
-        } catch (secondError) {
-          const errorMessage = parseError instanceof Error ? parseError.message : 'Unknown parse error';
-          throw new Error(`Failed to parse AI response as JSON: ${errorMessage}`);
-        }
-      } else {
-        const errorMessage = parseError instanceof Error ? parseError.message : 'Unknown parse error';
-        throw new Error(`Failed to parse AI response as JSON: ${errorMessage}`);
+      let content = response.text || '';
+      content = content.trim();
+      if (content.startsWith('```json')) {
+        content = content.replace(/```json\n?/g, '').replace(/```\n?$/g, '').trim();
+      } else if (content.startsWith('```')) {
+        content = content.replace(/```\n?/g, '').trim();
       }
+      try {
+        result = JSON.parse(content);
+      } catch {
+        const first = content.indexOf('{');
+        const last = content.lastIndexOf('}');
+        if (first >= 0 && last > first) {
+          const jsonText = content.substring(first, last + 1);
+          const cleaned = jsonText
+            .replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"')
+            .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'")
+            .replace(/[\u0000-\u001F\u007F-\u009F]/g, (c) => c === '\n' || c === '\r' || c === '\t' ? ' ' : '')
+            .replace(/,(\s*[}\]])/g, '$1');
+          result = JSON.parse(cleaned);
+        } else {
+          throw new Error('No JSON object found in response');
+        }
+      }
+      console.log('Successfully parsed JSON response');
+    } catch (parseError) {
+      const errorMessage = parseError instanceof Error ? parseError.message : 'Unknown parse error';
+      console.error('JSON parse failed. First 500 chars:', (response.text || '').substring(0, 500));
+      throw new Error(`Failed to parse AI response as JSON: ${errorMessage}`);
     }
 
-    // Output schema validation: log warning but don't reject (schema-first renderer is tolerant)
+
+    
+    // Validate parsed result against output schema
     const validation = outputSchema.safeParse(result);
     if (!validation.success) {
       console.warn('phase-7-creative-variations output schema validation (non-fatal):', JSON.stringify(validation.error.issues).slice(0, 500));
     }
     const validatedResult = validation.success ? validation.data : result;
-    console.log('Phase 7 completed successfully with', validatedResult.variations?.length || 0, 'variations');
 
+    // Validate parsed result against output schema
     return new Response(JSON.stringify(validatedResult), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error('Error in phase-7-creative-variations:', error);
-
+    
     if (error instanceof z.ZodError) {
       return new Response(
         JSON.stringify({ error: 'Invalid input data', details: error.errors }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
-
+    
     return new Response(JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
