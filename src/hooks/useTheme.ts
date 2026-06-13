@@ -11,13 +11,7 @@ export function useTheme() {
   useEffect(() => {
     const root = document.documentElement;
 
-    root.classList.remove("light", "dark");
-
-    if (theme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.add("light");
-    }
+    root.setAttribute("data-theme", theme);
 
     localStorage.setItem("theme", theme);
   }, [theme]);

@@ -69,10 +69,10 @@ const createCoverPageHTML = (
       padding: 80px 60px;
       background-color: #1a1a1a;
       color: white;
-      border-top: 8px solid #de0015;
+      border-top: 8px solid #3B82F6;
       border-bottom: 8px solid #b91c1c;
-      border-left: 6px solid #de0015;
-      border-right: 6px solid #de0015;
+      border-left: 6px solid #3B82F6;
+      border-right: 6px solid #3B82F6;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
@@ -85,7 +85,7 @@ const createCoverPageHTML = (
           font-size: 14px;
           letter-spacing: 3px;
           text-transform: uppercase;
-          color: #de0015;
+          color: #3B82F6;
           margin-bottom: 40px;
           font-weight: 600;
         ">
@@ -104,7 +104,7 @@ const createCoverPageHTML = (
         
         <div style="
           background-color: rgba(239, 68, 68, 0.15);
-          border: 2px solid #de0015;
+          border: 2px solid #3B82F6;
           border-radius: 8px;
           padding: 30px;
           margin: 50px auto;
@@ -112,7 +112,7 @@ const createCoverPageHTML = (
         ">
           <div style="
             font-size: 12px;
-            color: #de0015;
+            color: #3B82F6;
             text-transform: uppercase;
             letter-spacing: 2px;
             margin-bottom: 12px;
@@ -170,7 +170,7 @@ const createSectionDividerHTML = (
       width: 100%;
       padding: 80px 60px;
       background-color: #1a1a1a;
-      border-left: 6px solid #de0015;
+      border-left: 6px solid #3B82F6;
       color: white;
       box-sizing: border-box;
       display: flex;
@@ -182,7 +182,7 @@ const createSectionDividerHTML = (
           font-size: 12px;
           text-transform: uppercase;
           letter-spacing: 3px;
-          color: #de0015;
+          color: #3B82F6;
           margin-bottom: 20px;
           font-weight: 600;
         ">
@@ -202,7 +202,7 @@ const createSectionDividerHTML = (
         <div style="
           height: 4px;
           width: 120px;
-          background-color: #de0015;
+          background-color: #3B82F6;
         "></div>
       </div>
     </div>

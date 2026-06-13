@@ -25,13 +25,10 @@ export const getOrCreateSessionToken = async (): Promise<string> => {
     
     if (error) {
       console.error("Error creating session:", error);
-      // Fallback to client-generated token if server fails
-      const fallbackToken = crypto.randomUUID();
-      localStorage.setItem(SESSION_TOKEN_KEY, fallbackToken);
-      // Set expiry to 48 hours from now
-      const expiry = new Date(Date.now() + 48 * 60 * 60 * 1000);
-      localStorage.setItem(SESSION_EXPIRY_KEY, expiry.toISOString());
-      return fallbackToken;
+      // No fallback — return null and let the caller handle it.
+      // A client-generated UUID would fail RLS because it's not in
+      // anonymous_sessions.
+      return null;
     }
     
     const { token, expiresAt } = data;
@@ -41,12 +38,7 @@ export const getOrCreateSessionToken = async (): Promise<string> => {
     return token;
   } catch (error) {
     console.error("Error managing session token:", error);
-    // Fallback to client-generated token
-    const fallbackToken = crypto.randomUUID();
-    localStorage.setItem(SESSION_TOKEN_KEY, fallbackToken);
-    const expiry = new Date(Date.now() + 48 * 60 * 60 * 1000);
-    localStorage.setItem(SESSION_EXPIRY_KEY, expiry.toISOString());
-    return fallbackToken;
+    return null;
   }
 };
 

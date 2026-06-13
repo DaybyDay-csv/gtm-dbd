@@ -84,7 +84,7 @@ export const useAnalysisOrchestrator = () => {
       const { data: { session } } = await supabase.auth.getSession();
 
       // Get or create session token for unauthenticated access
-      const sessionToken = !session?.user?.id ? await getOrCreateSessionToken() : null;
+      let sessionToken = !session?.user?.id ? await getOrCreateSessionToken() : null;
 
       // Always create a new project for each analysis
       // Use the create-project edge function (service-role, RLS-safe) instead
@@ -107,6 +107,10 @@ export const useAnalysisOrchestrator = () => {
         throw new Error("Could not create project");
       }
       const project = { id: created.projectId };
+      // Use the server-issued session token (may be new) for subsequent
+      // RLS-gated writes. Without this, anon REST writes to phase_outputs
+      // and projects fail with 401.
+      sessionToken = created.sessionToken || sessionToken;
 
       // Save to localStorage if user is not logged in
       if (!session?.user?.id) {
